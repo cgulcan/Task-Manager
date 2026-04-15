@@ -1,7 +1,7 @@
 {
   "name": "HF IT Görev Takip",
   "short_name": "HF IT",
-  "description": "Halk Faktoring IT Birimi Görev Takip Uygulaması",
+  "description": "Halk Faktoring IT Birimi Görev Takip",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#f2f2f7",

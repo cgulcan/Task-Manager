@@ -14,7 +14,7 @@
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body,#root{height:100%;width:100%;overflow:hidden}
 body{font-family:-apple-system,'SF Pro Display','SF Pro Text','Helvetica Neue',sans-serif;-webkit-font-smoothing:antialiased;background:#f2f2f7;color:#000;user-select:none;-webkit-user-select:none}
-input,textarea,select{font-family:inherit}
+input,textarea,select{font-family:inherit;color:#000}
 ::-webkit-scrollbar{width:0;height:0}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
@@ -23,343 +23,706 @@ input,textarea,select{font-family:inherit}
 <body>
 <div id="root"></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.7/babel.min.js"></script>
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
-<script type="text/babel">
-const {useState,useEffect,useMemo} = React;
+<script>
+"use strict";
+
+var e = React.createElement;
+var useState = React.useState;
+var useEffect = React.useEffect;
+var useMemo = React.useMemo;
+var Fragment = React.Fragment;
 
 /* ═══════════════════════════════════════════════════════════
-   🔥 FIREBASE YAPILANDIRMASI
+   FIREBASE YAPILANDIRMASI
    
-   Aşağıdaki bilgileri Firebase Console'dan al:
-   1. https://console.firebase.google.com
-   2. Proje Ayarları → Genel → Web uygulaması
-   3. firebaseConfig bilgilerini buraya yapıştır
-   
-   Boş bırakırsan uygulama çevrimdışı (localStorage) çalışır.
+   Firebase Console'dan aldığın bilgileri buraya yaz.
+   Boş bırakırsan çevrimdışı (localStorage) çalışır.
    ═══════════════════════════════════════════════════════════ */
-const firebaseConfig = {
-  apiKey: "AIzaSyDt1PvJ9C0XM4osJPF6MU_PGbreWUczppU",
-  authDomain: "it-task-manager-8dba4.firebaseapp.com",
-  projectId: "it-task-manager-8dba4",
-  storageBucket: "it-task-manager-8dba4.firebasestorage.app",
-  messagingSenderId: "180579147319",
-  appId: "1:180579147319:web:eee7af59a05ae400b969b2"
+var FIREBASE_CONFIG = {
+  apiKey:            "",
+  authDomain:        "",
+  projectId:         "",
+  storageBucket:     "",
+  messagingSenderId: "",
+  appId:             ""
 };
 
-// ── Firebase Init ──
-let db=null,fbOK=false;
-try{
-  if(FIREBASE_CONFIG.apiKey&&FIREBASE_CONFIG.apiKey.length>5){
+// Firebase Init
+var db = null;
+var fbOK = false;
+try {
+  if (FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.apiKey.length > 5) {
     firebase.initializeApp(FIREBASE_CONFIG);
-    db=firebase.firestore();
-    fbOK=true;
+    db = firebase.firestore();
+    fbOK = true;
+    console.log("Firebase bağlantısı başarılı");
+  } else {
+    console.log("Firebase config boş - çevrimdışı mod");
   }
-}catch(e){console.warn("Firebase yok:",e)}
+} catch(err) {
+  console.warn("Firebase hatası:", err);
+}
 
-// ── Firestore ──
-function fbSub(col,order,cb){if(!fbOK)return()=>{};return db.collection(col).orderBy(order.f,order.d).onSnapshot(s=>cb(s.docs.map(d=>{const dt=d.data();return{id:d.id,...dt,createdAt:dt.createdAt?.toDate?.()?dt.createdAt.toDate().toISOString():dt.createdAt}})),e=>console.error(e))}
-async function fbAdd(col,data){if(!fbOK)return null;const{id,...d}=data;d.createdAt=firebase.firestore.FieldValue.serverTimestamp();d.updatedAt=firebase.firestore.FieldValue.serverTimestamp();return(await db.collection(col).add(d)).id}
-async function fbUp(col,did,data){if(!fbOK)return;const{id,...d}=data;d.updatedAt=firebase.firestore.FieldValue.serverTimestamp();await db.collection(col).doc(did).update(d)}
-async function fbDel(col,did){if(!fbOK)return;await db.collection(col).doc(did).delete()}
+// Firestore helpers
+function fbSub(col, orderField, cb) {
+  if (!fbOK) return function(){};
+  return db.collection(col).orderBy(orderField, "desc").onSnapshot(
+    function(snap) {
+      var items = [];
+      snap.forEach(function(doc) {
+        var d = doc.data();
+        var ca = d.createdAt;
+        if (ca && ca.toDate) ca = ca.toDate().toISOString();
+        items.push(Object.assign({}, d, { id: doc.id, createdAt: ca }));
+      });
+      cb(items);
+    },
+    function(err) { console.error("Firestore:", err); }
+  );
+}
+function fbAdd(col, data) {
+  if (!fbOK) return Promise.resolve(null);
+  var d = Object.assign({}, data);
+  delete d.id;
+  d.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+  d.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
+  return db.collection(col).add(d).then(function(ref) { return ref.id; });
+}
+function fbUp(col, did, data) {
+  if (!fbOK) return Promise.resolve();
+  var d = Object.assign({}, data);
+  delete d.id;
+  d.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
+  return db.collection(col).doc(did).update(d);
+}
+function fbDel(col, did) {
+  if (!fbOK) return Promise.resolve();
+  return db.collection(col).doc(did).delete();
+}
 
-// ── Theme (iOS) ──
-const T={bg:"#f2f2f7",card:"#fff",press:"#e8e8ed",sep:"rgba(60,60,67,.12)",lbl:"#000",lbl2:"#3c3c43cc",lbl3:"#3c3c4399",lbl4:"#3c3c434d",blue:"#007aff",green:"#34c759",orange:"#ff9500",red:"#ff3b30",purple:"#af52de",teal:"#5ac8fa",indigo:"#5856d6",fill:"rgba(120,120,128,.2)",fill2:"rgba(120,120,128,.16)",nav:"rgba(249,249,249,.94)",sheet:"#fff"};
-const P={critical:{l:"Kritik",c:T.red,i:"🔴",s:0},high:{l:"Yüksek",c:T.orange,i:"🟠",s:1},medium:{l:"Orta",c:T.blue,i:"🔵",s:2},low:{l:"Düşük",c:T.green,i:"🟢",s:3}};
-const ST={todo:{l:"Bekliyor",c:"#8e8e93",i:"○"},inprogress:{l:"Devam Ediyor",c:T.blue,i:"◐"},review:{l:"İnceleme",c:T.purple,i:"◑"},done:{l:"Tamamlandı",c:T.green,i:"●"}};
-const CATS=["Sunucu & Altyapı","Veritabanı","Yazılım Geliştirme","Ağ & Güvenlik","Kullanıcı Destek","Raporlama & BDDK","Dijitalleşme","Diğer"];
+// Theme
+var T = {
+  bg:"#f2f2f7",card:"#ffffff",press:"#e5e5ea",
+  sep:"rgba(60,60,67,0.12)",
+  lbl:"#000000",lbl2:"#3c3c43",lbl3:"#8e8e93",lbl4:"#c7c7cc",
+  blue:"#007aff",green:"#34c759",orange:"#ff9500",red:"#ff3b30",
+  purple:"#af52de",teal:"#5ac8fa",indigo:"#5856d6",
+  fill:"rgba(120,120,128,0.2)",fill2:"rgba(120,120,128,0.16)",
+  nav:"rgba(249,249,249,0.94)",sheet:"#ffffff"
+};
 
-const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
-const fmtD=d=>{if(!d)return"";return new Date(d).toLocaleDateString("tr-TR",{day:"numeric",month:"short"})};
-const fmtDL=d=>{if(!d)return"";return new Date(d).toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric"})};
-const dLeft=d=>{if(!d)return null;return Math.ceil((new Date(d)-new Date())/864e5)};
-const relD=d=>{const dl=dLeft(d);if(dl===null)return"";if(dl<-1)return Math.abs(dl)+" gün gecikmiş";if(dl===-1)return"Dün";if(dl===0)return"Bugün";if(dl===1)return"Yarın";if(dl<=7)return dl+" gün";return fmtD(d)};
+var PRIOS = {
+  critical: {l:"Kritik",c:"#ff3b30",i:"\uD83D\uDD34",s:0},
+  high:     {l:"Yüksek",c:"#ff9500",i:"\uD83D\uDFE0",s:1},
+  medium:   {l:"Orta",c:"#007aff",i:"\uD83D\uDD35",s:2},
+  low:      {l:"Düşük",c:"#34c759",i:"\uD83D\uDFE2",s:3}
+};
 
-const LS={g:(k,f)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):f}catch{return f}},s:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}}};
+var STATS = {
+  todo:       {l:"Bekliyor",c:"#8e8e93",i:"\u25CB"},
+  inprogress: {l:"Devam Ediyor",c:"#007aff",i:"\u25D0"},
+  review:     {l:"\u0130nceleme",c:"#af52de",i:"\u25D1"},
+  done:       {l:"Tamamland\u0131",c:"#34c759",i:"\u25CF"}
+};
 
-const SAMPLE=[
-  {id:"s1",title:"BDDK Aylık Rapor Hazırlığı",description:"Regülatif raporların kontrol edilmesi ve BDDK portalına yüklenmesi",priority:"critical",status:"inprogress",category:"Raporlama & BDDK",assignee:"1",dueDate:"2026-04-16",createdAt:new Date().toISOString(),subtasks:[{id:"a",text:"Verilerin doğrulanması",done:true},{id:"b",text:"Rapor formatının kontrolü",done:false}]},
-  {id:"s2",title:"SQL Server Yedekleme Kontrolü",description:"dbfactoring ve dbfactoring_log yedeklerinin doğrulanması (HFVM-SQLSRV)",priority:"high",status:"todo",category:"Veritabanı",assignee:"1",dueDate:"2026-04-15",createdAt:new Date().toISOString(),subtasks:[]},
-  {id:"s3",title:"Mobil Uygulama Test Senaryoları",description:"QR scan → Infact → RatingPro → PowerCurve akışının test ortamında doğrulanması",priority:"high",status:"review",category:"Yazılım Geliştirme",assignee:"1",dueDate:"2026-04-20",createdAt:new Date().toISOString(),subtasks:[{id:"c",text:"QR scan testi",done:true},{id:"d",text:"RatingPro entegrasyonu",done:true},{id:"e",text:"PowerCurve karar motoru",done:false}]},
-  {id:"s4",title:"Hyper-V Sunucu Bakımı",description:"Sanal sunucuların performans kontrolü ve güncelleme planlaması",priority:"medium",status:"todo",category:"Sunucu & Altyapı",assignee:"",dueDate:"2026-04-22",createdAt:new Date().toISOString(),subtasks:[]},
-  {id:"s5",title:"Dijital Mizan Nihai Rapor",description:"Prometeia projesi kapanış belgelerinin tamamlanması",priority:"low",status:"done",category:"Dijitalleşme",assignee:"1",dueDate:"2026-04-05",createdAt:new Date().toISOString(),subtasks:[]},
-  {id:"s6",title:"Elektronik Defter Tebliği Uyumu",description:"1 Temmuz 2025 tarihli tebliğ kapsamında gerekli aksiyonların planlanması",priority:"medium",status:"inprogress",category:"Dijitalleşme",assignee:"1",dueDate:"2026-05-01",createdAt:new Date().toISOString(),subtasks:[{id:"f",text:"Tebliğ gereksinimlerinin analizi",done:true},{id:"g",text:"BIS Infact entegrasyonu",done:false}]},
+var CATS = ["Sunucu & Altyap\u0131","Veritaban\u0131","Yaz\u0131l\u0131m Geli\u015Ftirme","A\u011F & G\u00FCvenlik","Kullan\u0131c\u0131 Destek","Raporlama & BDDK","Dijitalle\u015Fme","Di\u011Fer"];
+
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
+function fmtD(d) { if(!d) return ""; try { return new Date(d).toLocaleDateString("tr-TR",{day:"numeric",month:"short"}); } catch(e) { return ""; } }
+function fmtDL(d) { if(!d) return ""; try { return new Date(d).toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric"}); } catch(e) { return ""; } }
+function dLeft(d) { if(!d) return null; return Math.ceil((new Date(d) - new Date()) / 86400000); }
+function relD(d) {
+  var dl = dLeft(d);
+  if (dl === null) return "";
+  if (dl < -1) return Math.abs(dl) + " g\u00FCn gecikmi\u015F";
+  if (dl === -1) return "D\u00FCn";
+  if (dl === 0) return "Bug\u00FCn";
+  if (dl === 1) return "Yar\u0131n";
+  if (dl <= 7) return dl + " g\u00FCn";
+  return fmtD(d);
+}
+
+// Local Storage
+function lsGet(k, fb) { try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : fb; } catch(e) { return fb; } }
+function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e) {} }
+
+// Sample data
+var SAMPLE = [
+  {id:"s1",title:"BDDK Ayl\u0131k Rapor Haz\u0131rl\u0131\u011F\u0131",description:"Reg\u00FClatif raporlar\u0131n kontrol\u00FC ve BDDK portal\u0131na y\u00FCklenmesi",priority:"critical",status:"inprogress",category:"Raporlama & BDDK",assignee:"1",dueDate:"2026-04-16",createdAt:new Date().toISOString(),subtasks:[{id:"a",text:"Verilerin do\u011Frulanmas\u0131",done:true},{id:"b",text:"Rapor format\u0131 kontrol\u00FC",done:false}]},
+  {id:"s2",title:"SQL Server Yedekleme Kontrol\u00FC",description:"dbfactoring ve dbfactoring_log yedeklerinin do\u011Frulanmas\u0131",priority:"high",status:"todo",category:"Veritaban\u0131",assignee:"1",dueDate:"2026-04-15",createdAt:new Date().toISOString(),subtasks:[]},
+  {id:"s3",title:"Mobil Uygulama Test Senaryolar\u0131",description:"QR scan \u2192 Infact \u2192 RatingPro ak\u0131\u015F\u0131n\u0131n test ortam\u0131nda do\u011Frulanmas\u0131",priority:"high",status:"review",category:"Yaz\u0131l\u0131m Geli\u015Ftirme",assignee:"1",dueDate:"2026-04-20",createdAt:new Date().toISOString(),subtasks:[{id:"c",text:"QR scan testi",done:true},{id:"d",text:"RatingPro entegrasyonu",done:true},{id:"e",text:"PowerCurve karar motoru",done:false}]},
+  {id:"s4",title:"Hyper-V Sunucu Bak\u0131m\u0131",description:"Sanal sunucular\u0131n performans kontrol\u00FC",priority:"medium",status:"todo",category:"Sunucu & Altyap\u0131",assignee:"",dueDate:"2026-04-22",createdAt:new Date().toISOString(),subtasks:[]},
+  {id:"s5",title:"Dijital Mizan Nihai Rapor",description:"Prometeia projesi kapan\u0131\u015F belgelerinin tamamlanmas\u0131",priority:"low",status:"done",category:"Dijitalle\u015Fme",assignee:"1",dueDate:"2026-04-05",createdAt:new Date().toISOString(),subtasks:[]},
+  {id:"s6",title:"Elektronik Defter Tebli\u011Fi Uyumu",description:"1 Temmuz 2025 tebli\u011Fi kapsam\u0131nda aksiyonlar",priority:"medium",status:"inprogress",category:"Dijitalle\u015Fme",assignee:"1",dueDate:"2026-05-01",createdAt:new Date().toISOString(),subtasks:[{id:"f",text:"Tebli\u011F analizi",done:true},{id:"g",text:"BIS Infact entegrasyonu",done:false}]}
 ];
-const DTEAM=[{id:"1",name:"Cengiz Gülcan",role:"IT Yönetici"}];
+var DTEAM = [{id:"1",name:"Cengiz G\u00FClcan",role:"IT Y\u00F6netici"}];
 
-// ═══════ UI COMPONENTS ═══════
+// ===== UI COMPONENTS =====
 
-const h=React.createElement;
-
-function Ring({p=0,sz=24,sw=3,cl=T.blue}){
-  const r=(sz-sw)/2,c=2*Math.PI*r;
-  return h("svg",{width:sz,height:sz,style:{transform:"rotate(-90deg)"}},
-    h("circle",{cx:sz/2,cy:sz/2,r,fill:"none",stroke:T.fill,strokeWidth:sw}),
-    h("circle",{cx:sz/2,cy:sz/2,r,fill:"none",stroke:cl,strokeWidth:sw,strokeDasharray:c,strokeDashoffset:c*(1-p),strokeLinecap:"round",style:{transition:"stroke-dashoffset .5s"}}));
+function Ring(props) {
+  var p = props.p || 0, sz = props.sz || 24, sw = props.sw || 3, cl = props.cl || T.blue;
+  var r = (sz - sw) / 2, c = 2 * Math.PI * r;
+  return e("svg", {width:sz, height:sz, style:{transform:"rotate(-90deg)"}},
+    e("circle", {cx:sz/2, cy:sz/2, r:r, fill:"none", stroke:T.fill, strokeWidth:sw}),
+    e("circle", {cx:sz/2, cy:sz/2, r:r, fill:"none", stroke:cl, strokeWidth:sw,
+      strokeDasharray:c, strokeDashoffset:c*(1-p), strokeLinecap:"round",
+      style:{transition:"stroke-dashoffset 0.5s"}}));
 }
 
-function Av({name,sz=32}){
-  const ini=name.split(" ").map(n=>n[0]).join("").slice(0,2);
-  const hu=name.split("").reduce((a,c)=>a+c.charCodeAt(0),0)%360;
-  return h("div",{style:{width:sz,height:sz,borderRadius:"50%",background:`linear-gradient(135deg,hsl(${hu},50%,55%),hsl(${hu+30},55%,45%))`,display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontSize:sz*.38,fontWeight:600,flexShrink:0}},ini);
+function Av(props) {
+  var name = props.name || "?", sz = props.sz || 32;
+  var parts = name.split(" ");
+  var ini = parts.map(function(n){return n.charAt(0)}).join("").slice(0,2);
+  var hu = 0;
+  for (var i=0; i<name.length; i++) hu += name.charCodeAt(i);
+  hu = hu % 360;
+  return e("div", {style:{width:sz,height:sz,borderRadius:"50%",
+    background:"linear-gradient(135deg,hsl("+hu+",50%,55%),hsl("+(hu+30)+",55%,45%))",
+    display:"flex",alignItems:"center",justifyContent:"center",
+    color:"#fff",fontSize:sz*0.38,fontWeight:"600",flexShrink:0}}, ini);
 }
 
-function Bdg({n,cl=T.red}){
-  if(!n)return null;
-  return h("span",{style:{background:cl,color:"#fff",borderRadius:10,fontSize:13,fontWeight:600,minWidth:20,height:20,display:"inline-flex",alignItems:"center",justifyContent:"center",padding:"0 6px"}},n);
+function Bdg(props) {
+  if (!props.n) return null;
+  return e("span", {style:{background:props.cl||T.red,color:"#fff",borderRadius:10,
+    fontSize:13,fontWeight:"600",minWidth:20,height:20,
+    display:"inline-flex",alignItems:"center",justifyContent:"center",padding:"0 6px"}}, props.n);
 }
 
-function Seg({opts,val,onChange}){
-  return h("div",{style:{display:"flex",background:T.fill,borderRadius:8,padding:2}},
-    opts.map(o=>h("button",{key:o.v,onClick:()=>onChange(o.v),style:{flex:1,padding:"6px 6px",borderRadius:7,border:"none",background:val===o.v?T.card:"transparent",color:T.lbl,fontSize:12.5,fontWeight:val===o.v?600:400,fontFamily:"inherit",cursor:"pointer",boxShadow:val===o.v?"0 1px 4px rgba(0,0,0,.08)":"none",whiteSpace:"nowrap",transition:"all .15s"}},o.l)));
+function Seg(props) {
+  return e("div", {style:{display:"flex",background:T.fill,borderRadius:8,padding:2}},
+    props.opts.map(function(o) {
+      var active = props.val === o.v;
+      return e("button", {key:o.v, onClick:function(){props.onChange(o.v)},
+        style:{flex:1,padding:"6px 6px",borderRadius:7,border:"none",
+          background:active?T.card:"transparent",color:T.lbl,
+          fontSize:12.5,fontWeight:active?"600":"400",fontFamily:"inherit",
+          cursor:"pointer",boxShadow:active?"0 1px 4px rgba(0,0,0,0.08)":"none",
+          whiteSpace:"nowrap",transition:"all 0.15s"}}, o.l);
+    }));
 }
 
-function NavB({title,large,right}){
-  return h("div",{style:{position:"sticky",top:0,zIndex:100,background:T.nav,backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",borderBottom:`.5px solid ${T.sep}`,padding:"env(safe-area-inset-top,0) 16px 0"}},
-    h("div",{style:{height:44,display:"flex",alignItems:"center",justifyContent:"space-between"}},
-      h("div",{style:{minWidth:44}}),
-      !large&&h("span",{style:{fontSize:17,fontWeight:600}},title),
-      h("div",{style:{minWidth:44,textAlign:"right"}},
-        right&&h("button",{onClick:right.fn,style:{background:"none",border:"none",color:T.blue,fontSize:28,cursor:"pointer",fontWeight:300,fontFamily:"inherit",padding:0}},right.ic))),
-    large&&h("div",{style:{padding:"0 0 8px"}},h("h1",{style:{margin:0,fontSize:34,fontWeight:700,letterSpacing:.4}},title)));
+function NavB(props) {
+  return e("div", {style:{position:"sticky",top:0,zIndex:100,background:T.nav,
+    backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",
+    borderBottom:"0.5px solid "+T.sep,padding:"env(safe-area-inset-top,0) 16px 0"}},
+    e("div", {style:{height:44,display:"flex",alignItems:"center",justifyContent:"space-between"}},
+      e("div", {style:{minWidth:44}}),
+      !props.large ? e("span", {style:{fontSize:17,fontWeight:"600"}}, props.title) : null,
+      e("div", {style:{minWidth:44,textAlign:"right"}},
+        props.right ? e("button", {onClick:props.right.fn,
+          style:{background:"none",border:"none",color:T.blue,fontSize:28,
+            cursor:"pointer",fontWeight:"300",fontFamily:"inherit",padding:0}},
+          props.right.ic) : null)),
+    props.large ? e("div", {style:{padding:"0 0 8px"}},
+      e("h1", {style:{margin:0,fontSize:34,fontWeight:"700",letterSpacing:0.4}}, props.title)) : null);
 }
 
-function Grp({header,children}){
-  return h("div",{style:{margin:"0 16px 20px"}},
-    header&&h("div",{style:{fontSize:13,color:T.lbl2,textTransform:"uppercase",padding:"0 16px 6px",letterSpacing:-.1}},header),
-    h("div",{style:{background:T.card,borderRadius:10,overflow:"hidden"}},children));
+function Grp(props) {
+  return e("div", {style:{margin:"0 16px 20px"}},
+    props.header ? e("div", {style:{fontSize:13,color:T.lbl2,textTransform:"uppercase",
+      padding:"0 16px 6px",letterSpacing:-0.1,opacity:0.6}}, props.header) : null,
+    e("div", {style:{background:T.card,borderRadius:10,overflow:"hidden"}}, props.children));
 }
 
-function Cell({label,detail,icon,icBg,chevron,destructive,onPress,trailing,sub}){
-  const[pr,setPr]=useState(false);
-  return h("div",{onClick:onPress,onPointerDown:()=>setPr(true),onPointerUp:()=>setPr(false),onPointerLeave:()=>setPr(false),
-    style:{display:"flex",alignItems:"center",gap:12,padding:"11px 16px",minHeight:44,background:pr&&onPress?T.press:T.card,cursor:onPress?"pointer":"default",borderBottom:`.5px solid ${T.sep}`,transition:"background .1s"}},
-    icon&&h("div",{style:{width:29,height:29,borderRadius:6,background:icBg||T.blue,display:"flex",alignItems:"center",justifyContent:"center",fontSize:15,flexShrink:0,color:"#fff"}},icon),
-    h("div",{style:{flex:1,minWidth:0}},
-      h("div",{style:{fontSize:17,color:destructive?T.red:T.lbl,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}},label),
-      sub&&h("div",{style:{fontSize:13,color:T.lbl2,marginTop:1}},sub)),
-    trailing,detail&&h("span",{style:{fontSize:17,color:T.lbl2}},detail),
-    chevron&&h("span",{style:{color:T.lbl4,fontSize:18}},"›"));
+function Cell(props) {
+  var ref = useState(false);
+  var pr = ref[0], setPr = ref[1];
+  return e("div", {
+    onClick: props.onPress,
+    onPointerDown: function(){setPr(true)},
+    onPointerUp: function(){setPr(false)},
+    onPointerLeave: function(){setPr(false)},
+    style:{display:"flex",alignItems:"center",gap:12,padding:"11px 16px",minHeight:44,
+      background:(pr && props.onPress)?T.press:T.card,
+      cursor:props.onPress?"pointer":"default",
+      borderBottom:"0.5px solid "+T.sep,transition:"background 0.1s"}},
+    props.icon ? e("div", {style:{width:29,height:29,borderRadius:6,
+      background:props.icBg||T.blue,display:"flex",alignItems:"center",justifyContent:"center",
+      fontSize:15,flexShrink:0,color:"#fff"}}, props.icon) : null,
+    e("div", {style:{flex:1,minWidth:0}},
+      e("div", {style:{fontSize:17,color:props.destructive?T.red:T.lbl,
+        overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}, props.label),
+      props.sub ? e("div", {style:{fontSize:13,color:T.lbl3,marginTop:1}}, props.sub) : null),
+    props.trailing || null,
+    props.detail ? e("span", {style:{fontSize:17,color:T.lbl3}}, props.detail) : null,
+    props.chevron ? e("span", {style:{color:T.lbl4,fontSize:20}}, "\u203A") : null);
 }
 
-function Sheet({title,onClose,rightAct,children}){
-  return h("div",{style:{position:"fixed",inset:0,zIndex:1e3,background:"rgba(0,0,0,.4)",display:"flex",alignItems:"flex-end",justifyContent:"center",animation:"fadeIn .2s"},onClick:onClose},
-    h("div",{onClick:e=>e.stopPropagation(),style:{background:T.sheet,width:"100%",maxWidth:600,borderRadius:"14px 14px 0 0",maxHeight:"92vh",overflow:"hidden",display:"flex",flexDirection:"column",animation:"slideUp .35s cubic-bezier(.32,.72,0,1)"}},
-      h("div",{style:{display:"flex",justifyContent:"center",padding:"8px 0 4px"}},h("div",{style:{width:36,height:5,borderRadius:3,background:T.fill}})),
-      h("div",{style:{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 16px 12px",borderBottom:`.5px solid ${T.sep}`}},
-        h("button",{onClick:onClose,style:{background:"none",border:"none",color:T.blue,fontSize:17,fontFamily:"inherit",cursor:"pointer",minWidth:60}},"İptal"),
-        h("span",{style:{fontSize:17,fontWeight:600}},title),
-        h("div",{style:{minWidth:60,textAlign:"right"}},
-          rightAct&&h("button",{onClick:rightAct.fn,disabled:rightAct.dis,style:{background:"none",border:"none",color:rightAct.dis?T.lbl3:T.blue,fontSize:17,fontWeight:600,fontFamily:"inherit",cursor:rightAct.dis?"default":"pointer"}},rightAct.l))),
-      h("div",{style:{flex:1,overflow:"auto",WebkitOverflowScrolling:"touch"}},children)));
+function Sheet(props) {
+  return e("div", {
+    style:{position:"fixed",inset:0,zIndex:1000,background:"rgba(0,0,0,0.4)",
+      display:"flex",alignItems:"flex-end",justifyContent:"center",animation:"fadeIn 0.2s"},
+    onClick: props.onClose},
+    e("div", {
+      onClick: function(ev){ev.stopPropagation()},
+      style:{background:T.sheet,width:"100%",maxWidth:600,borderRadius:"14px 14px 0 0",
+        maxHeight:"92vh",overflow:"hidden",display:"flex",flexDirection:"column",
+        animation:"slideUp 0.35s cubic-bezier(0.32,0.72,0,1)"}},
+      e("div", {style:{display:"flex",justifyContent:"center",padding:"8px 0 4px"}},
+        e("div", {style:{width:36,height:5,borderRadius:3,background:T.fill}})),
+      e("div", {style:{display:"flex",alignItems:"center",justifyContent:"space-between",
+        padding:"8px 16px 12px",borderBottom:"0.5px solid "+T.sep}},
+        e("button", {onClick:props.onClose,style:{background:"none",border:"none",color:T.blue,
+          fontSize:17,fontFamily:"inherit",cursor:"pointer",minWidth:60}}, "\u0130ptal"),
+        e("span", {style:{fontSize:17,fontWeight:"600"}}, props.title),
+        e("div", {style:{minWidth:60,textAlign:"right"}},
+          props.rightAct ? e("button", {onClick:props.rightAct.fn,disabled:props.rightAct.dis,
+            style:{background:"none",border:"none",
+              color:props.rightAct.dis?T.lbl4:T.blue,
+              fontSize:17,fontWeight:"600",fontFamily:"inherit",
+              cursor:props.rightAct.dis?"default":"pointer"}}, props.rightAct.l) : null)),
+      e("div", {style:{flex:1,overflow:"auto",WebkitOverflowScrolling:"touch"}}, props.children)));
 }
 
-function FF({label,children}){
-  return h("div",{style:{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"11px 16px",minHeight:44,borderBottom:`.5px solid ${T.sep}`,background:T.card}},
-    h("span",{style:{fontSize:17,flexShrink:0,marginRight:12}},label),
-    h("div",{style:{flex:1,display:"flex",justifyContent:"flex-end"}},children));
+function FF(props) {
+  return e("div", {style:{display:"flex",alignItems:"center",justifyContent:"space-between",
+    padding:"11px 16px",minHeight:44,borderBottom:"0.5px solid "+T.sep,background:T.card}},
+    e("span", {style:{fontSize:17,flexShrink:0,marginRight:12}}, props.label),
+    e("div", {style:{flex:1,display:"flex",justifyContent:"flex-end"}}, props.children));
 }
 
-function Pk({value,onChange,opts}){
-  return h("select",{value,onChange:e=>onChange(e.target.value),style:{border:"none",background:"none",outline:"none",fontSize:17,color:T.blue,fontFamily:"inherit",direction:"rtl",cursor:"pointer",appearance:"none",maxWidth:180}},
-    opts.map(o=>h("option",{key:o.v,value:o.v},o.l)));
+function Pk(props) {
+  return e("select", {value:props.value, onChange:function(ev){props.onChange(ev.target.value)},
+    style:{border:"none",background:"none",outline:"none",fontSize:17,color:T.blue,
+      fontFamily:"inherit",direction:"rtl",cursor:"pointer",WebkitAppearance:"none",
+      appearance:"none",maxWidth:180}},
+    props.opts.map(function(o) { return e("option", {key:o.v, value:o.v}, o.l); }));
 }
 
-// ═══════ TASK FORM ═══════
-function TaskForm({task,team,onSave,onClose}){
-  const ed=!!task;
-  const[f,setF]=useState(task||{title:"",description:"",priority:"medium",status:"todo",category:CATS[0],assignee:"",dueDate:"",createdAt:new Date().toISOString(),subtasks:[]});
-  const[ns,setNs]=useState("");
-  const s=(k,v)=>setF(p=>({...p,[k]:v}));
-  const addS=()=>{if(!ns.trim())return;s("subtasks",[...(f.subtasks||[]),{id:uid(),text:ns.trim(),done:false}]);setNs("")};
+// ===== TASK FORM =====
+function TaskForm(props) {
+  var task = props.task, team = props.team, onSave = props.onSave, onClose = props.onClose;
+  var ed = !!task;
+  var ref = useState(task || {
+    title:"",description:"",priority:"medium",status:"todo",
+    category:CATS[0],assignee:"",dueDate:"",
+    createdAt:new Date().toISOString(),subtasks:[]
+  });
+  var f = ref[0], setF = ref[1];
+  var ref2 = useState("");
+  var ns = ref2[0], setNs = ref2[1];
 
-  return h(Sheet,{title:ed?"Görevi Düzenle":"Yeni Görev",onClose,rightAct:{l:ed?"Kaydet":"Ekle",fn:()=>f.title.trim()&&onSave(f),dis:!f.title.trim()}},
-    h("div",{style:{padding:"16px 0"}},
-      h(Grp,null,
-        h("div",{style:{padding:"11px 16px",borderBottom:`.5px solid ${T.sep}`}},h("input",{value:f.title,onChange:e=>s("title",e.target.value),placeholder:"Görev başlığı",style:{border:"none",background:"none",outline:"none",width:"100%",fontSize:17,fontFamily:"inherit",fontWeight:500}})),
-        h("div",{style:{padding:"11px 16px"}},h("textarea",{value:f.description,onChange:e=>s("description",e.target.value),placeholder:"Açıklama...",rows:3,style:{border:"none",background:"none",outline:"none",width:"100%",fontSize:15,fontFamily:"inherit",resize:"none"}}))),
-      h(Grp,{header:"Detaylar"},
-        h(FF,{label:"Öncelik"},h(Pk,{value:f.priority,onChange:v=>s("priority",v),opts:Object.entries(P).map(([k,v])=>({v:k,l:v.i+" "+v.l}))})),
-        h(FF,{label:"Durum"},h(Pk,{value:f.status,onChange:v=>s("status",v),opts:Object.entries(ST).map(([k,v])=>({v:k,l:v.l}))})),
-        h(FF,{label:"Kategori"},h(Pk,{value:f.category,onChange:v=>s("category",v),opts:CATS.map(c=>({v:c,l:c}))})),
-        h(FF,{label:"Atanan"},h(Pk,{value:f.assignee,onChange:v=>s("assignee",v),opts:[{v:"",l:"Seçilmedi"},...team.map(t=>({v:t.id,l:t.name}))]})),
-        h(FF,{label:"Tarih"},h("input",{type:"date",value:f.dueDate,onChange:e=>s("dueDate",e.target.value),style:{border:"none",background:"none",outline:"none",fontSize:17,color:T.blue,fontFamily:"inherit"}}))),
-      h(Grp,{header:"Alt Görevler"},
-        (f.subtasks||[]).map(st=>
-          h("div",{key:st.id,style:{display:"flex",alignItems:"center",gap:12,padding:"10px 16px",borderBottom:`.5px solid ${T.sep}`}},
-            h("button",{onClick:()=>s("subtasks",f.subtasks.map(x=>x.id===st.id?{...x,done:!x.done}:x)),style:{width:22,height:22,borderRadius:"50%",border:st.done?"none":`2px solid ${T.lbl3}`,background:st.done?T.blue:"transparent",display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",flexShrink:0,color:"#fff",fontSize:13,padding:0}},st.done&&"✓"),
-            h("span",{style:{flex:1,fontSize:17,color:st.done?T.lbl3:T.lbl,textDecoration:st.done?"line-through":"none"}},st.text),
-            h("button",{onClick:()=>s("subtasks",f.subtasks.filter(x=>x.id!==st.id)),style:{background:"none",border:"none",color:T.red,fontSize:18,cursor:"pointer"}},"−"))),
-        h("div",{style:{display:"flex",alignItems:"center",gap:8,padding:"8px 16px"}},
-          h("input",{value:ns,onChange:e=>setNs(e.target.value),onKeyDown:e=>e.key==="Enter"&&addS(),placeholder:"Alt görev ekle...",style:{border:"none",background:"none",outline:"none",width:"100%",fontSize:17,fontFamily:"inherit"}}),
-          ns.trim()&&h("button",{onClick:addS,style:{background:T.blue,color:"#fff",border:"none",borderRadius:"50%",width:26,height:26,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",fontSize:16,fontWeight:700,flexShrink:0}},"+")))
-      ),
-      ed&&h(Grp,null,h(Cell,{label:"Görevi Sil",destructive:true,onPress:()=>onSave(null)})),
-      h("div",{style:{height:40}})));
+  function s(k,v) { setF(function(p){ var n=Object.assign({},p); n[k]=v; return n; }); }
+  function addS() {
+    if (!ns.trim()) return;
+    s("subtasks", (f.subtasks||[]).concat([{id:uid(),text:ns.trim(),done:false}]));
+    setNs("");
+  }
+
+  return e(Sheet, {title:ed?"G\u00F6revi D\u00FCzenle":"Yeni G\u00F6rev", onClose:onClose,
+    rightAct:{l:ed?"Kaydet":"Ekle", fn:function(){if(f.title.trim()) onSave(f)}, dis:!f.title.trim()}},
+    e("div", {style:{padding:"16px 0"}},
+      e(Grp, null,
+        e("div", {style:{padding:"11px 16px",borderBottom:"0.5px solid "+T.sep}},
+          e("input", {value:f.title, onChange:function(ev){s("title",ev.target.value)},
+            placeholder:"G\u00F6rev ba\u015Fl\u0131\u011F\u0131",
+            style:{border:"none",background:"none",outline:"none",width:"100%",
+              fontSize:17,fontFamily:"inherit",fontWeight:"500"}})),
+        e("div", {style:{padding:"11px 16px"}},
+          e("textarea", {value:f.description, onChange:function(ev){s("description",ev.target.value)},
+            placeholder:"A\u00E7\u0131klama...", rows:3,
+            style:{border:"none",background:"none",outline:"none",width:"100%",
+              fontSize:15,fontFamily:"inherit",resize:"none"}}))),
+
+      e(Grp, {header:"Detaylar"},
+        e(FF, {label:"\u00D6ncelik"}, e(Pk, {value:f.priority, onChange:function(v){s("priority",v)},
+          opts:Object.keys(PRIOS).map(function(k){return {v:k,l:PRIOS[k].i+" "+PRIOS[k].l}})})),
+        e(FF, {label:"Durum"}, e(Pk, {value:f.status, onChange:function(v){s("status",v)},
+          opts:Object.keys(STATS).map(function(k){return {v:k,l:STATS[k].l}})})),
+        e(FF, {label:"Kategori"}, e(Pk, {value:f.category, onChange:function(v){s("category",v)},
+          opts:CATS.map(function(c){return {v:c,l:c}})})),
+        e(FF, {label:"Atanan"}, e(Pk, {value:f.assignee, onChange:function(v){s("assignee",v)},
+          opts:[{v:"",l:"Se\u00E7ilmedi"}].concat(team.map(function(t){return {v:t.id,l:t.name}}))})),
+        e(FF, {label:"Tarih"}, e("input", {type:"date",value:f.dueDate,
+          onChange:function(ev){s("dueDate",ev.target.value)},
+          style:{border:"none",background:"none",outline:"none",fontSize:17,color:T.blue,fontFamily:"inherit"}}))),
+
+      e(Grp, {header:"Alt G\u00F6revler"},
+        (f.subtasks||[]).map(function(st) {
+          return e("div", {key:st.id, style:{display:"flex",alignItems:"center",gap:12,
+            padding:"10px 16px",borderBottom:"0.5px solid "+T.sep}},
+            e("button", {onClick:function(){s("subtasks",f.subtasks.map(function(x){
+              return x.id===st.id?Object.assign({},x,{done:!x.done}):x}))},
+              style:{width:22,height:22,borderRadius:"50%",
+                border:st.done?"none":"2px solid "+T.lbl3,
+                background:st.done?T.blue:"transparent",display:"flex",
+                alignItems:"center",justifyContent:"center",cursor:"pointer",
+                flexShrink:0,color:"#fff",fontSize:13,padding:0}},
+              st.done?"\u2713":null),
+            e("span", {style:{flex:1,fontSize:17,color:st.done?T.lbl3:T.lbl,
+              textDecoration:st.done?"line-through":"none"}}, st.text),
+            e("button", {onClick:function(){s("subtasks",f.subtasks.filter(function(x){return x.id!==st.id}))},
+              style:{background:"none",border:"none",color:T.red,fontSize:18,cursor:"pointer"}}, "\u2212"));
+        }),
+        e("div", {style:{display:"flex",alignItems:"center",gap:8,padding:"8px 16px"}},
+          e("input", {value:ns, onChange:function(ev){setNs(ev.target.value)},
+            onKeyDown:function(ev){if(ev.key==="Enter")addS()},
+            placeholder:"Alt g\u00F6rev ekle...",
+            style:{border:"none",background:"none",outline:"none",width:"100%",fontSize:17,fontFamily:"inherit"}}),
+          ns.trim() ? e("button", {onClick:addS,
+            style:{background:T.blue,color:"#fff",border:"none",borderRadius:"50%",
+              width:26,height:26,display:"flex",alignItems:"center",justifyContent:"center",
+              cursor:"pointer",fontSize:16,fontWeight:"700",flexShrink:0}}, "+") : null)),
+
+      ed ? e(Grp, null, e(Cell, {label:"G\u00F6revi Sil",destructive:true,
+        onPress:function(){onSave(null)}})) : null,
+      e("div", {style:{height:40}})));
 }
 
-// ═══════ TEAM SHEET ═══════
-function TeamSheet({team,onAdd,onDel,onClose}){
-  const[n,sN]=useState(""),[r,sR]=useState("");
-  const add=()=>{if(!n.trim())return;onAdd({name:n.trim(),role:r.trim()||"Ekip Üyesi"});sN("");sR("")};
-  return h(Sheet,{title:"Ekip Yönetimi",onClose},
-    h("div",{style:{padding:"16px 0"}},
-      h(Grp,{header:team.length+" Üye"},team.map(m=>
-        h("div",{key:m.id,style:{display:"flex",alignItems:"center",gap:12,padding:"10px 16px",borderBottom:`.5px solid ${T.sep}`}},
-          h(Av,{name:m.name,sz:36}),h("div",{style:{flex:1}},h("div",{style:{fontSize:17}},m.name),h("div",{style:{fontSize:13,color:T.lbl2}},m.role)),
-          h("button",{onClick:()=>onDel(m.id),style:{background:"none",border:"none",color:T.red,fontSize:20,cursor:"pointer"}},"−")))),
-      h(Grp,{header:"Yeni Üye"},
-        h(FF,{label:"Ad Soyad"},h("input",{value:n,onChange:e=>sN(e.target.value),placeholder:"İsim",style:{border:"none",background:"none",outline:"none",fontSize:17,textAlign:"right",fontFamily:"inherit",width:"100%"}})),
-        h(FF,{label:"Rol"},h("input",{value:r,onChange:e=>sR(e.target.value),onKeyDown:e=>e.key==="Enter"&&add(),placeholder:"Örn: Yazılımcı",style:{border:"none",background:"none",outline:"none",fontSize:17,textAlign:"right",fontFamily:"inherit",width:"100%"}})),
-        h("div",{style:{padding:16}},h("button",{onClick:add,disabled:!n.trim(),style:{width:"100%",padding:12,borderRadius:10,border:"none",background:n.trim()?T.blue:T.fill,color:n.trim()?"#fff":T.lbl3,fontSize:17,fontWeight:600,fontFamily:"inherit",cursor:n.trim()?"pointer":"default"}},"Ekle")))));
+// ===== TEAM SHEET =====
+function TeamSheet(props) {
+  var team=props.team, onAdd=props.onAdd, onDel=props.onDel, onClose=props.onClose;
+  var ref=useState(""); var n=ref[0],sN=ref[1];
+  var ref2=useState(""); var r=ref2[0],sR=ref2[1];
+  function add(){if(!n.trim())return;onAdd({name:n.trim(),role:r.trim()||"Ekip \u00DCyesi"});sN("");sR("")}
+
+  return e(Sheet,{title:"Ekip Y\u00F6netimi",onClose:onClose},
+    e("div",{style:{padding:"16px 0"}},
+      e(Grp,{header:team.length+" \u00DCye"},
+        team.map(function(m){
+          return e("div",{key:m.id,style:{display:"flex",alignItems:"center",gap:12,padding:"10px 16px",borderBottom:"0.5px solid "+T.sep}},
+            e(Av,{name:m.name,sz:36}),
+            e("div",{style:{flex:1}},e("div",{style:{fontSize:17}},m.name),e("div",{style:{fontSize:13,color:T.lbl3}},m.role)),
+            e("button",{onClick:function(){onDel(m.id)},style:{background:"none",border:"none",color:T.red,fontSize:20,cursor:"pointer"}},"\u2212"))
+        })),
+      e(Grp,{header:"Yeni \u00DCye"},
+        e(FF,{label:"Ad Soyad"},e("input",{value:n,onChange:function(ev){sN(ev.target.value)},
+          placeholder:"\u0130sim",style:{border:"none",background:"none",outline:"none",fontSize:17,textAlign:"right",fontFamily:"inherit",width:"100%"}})),
+        e(FF,{label:"Rol"},e("input",{value:r,onChange:function(ev){sR(ev.target.value)},
+          onKeyDown:function(ev){if(ev.key==="Enter")add()},
+          placeholder:"\u00D6rn: Yaz\u0131l\u0131mc\u0131",style:{border:"none",background:"none",outline:"none",fontSize:17,textAlign:"right",fontFamily:"inherit",width:"100%"}})),
+        e("div",{style:{padding:16}},e("button",{onClick:add,disabled:!n.trim(),
+          style:{width:"100%",padding:12,borderRadius:10,border:"none",
+            background:n.trim()?T.blue:T.fill,color:n.trim()?"#fff":T.lbl3,
+            fontSize:17,fontWeight:"600",fontFamily:"inherit",
+            cursor:n.trim()?"pointer":"default"}},"Ekle")))));
 }
 
-// ═══════ TASK DETAIL ═══════
-function TaskDetail({task,team,onEdit,onSC,onClose}){
-  const p=P[task.priority],s=ST[task.status],a=team.find(t=>t.id===task.assignee),dl=dLeft(task.dueDate);
-  const sd=(task.subtasks||[]).filter(s=>s.done).length,st=(task.subtasks||[]).length;
-  return h(Sheet,{title:"Görev Detayı",onClose,rightAct:{l:"Düzenle",fn:()=>onEdit(task)}},
-    h("div",{style:{padding:"16px 0"}},
-      h("div",{style:{padding:"0 16px 16px"}},h("h2",{style:{margin:"0 0 6px",fontSize:22,fontWeight:700}},task.title),task.description&&h("p",{style:{margin:0,fontSize:15,color:T.lbl2,lineHeight:1.5}},task.description)),
-      h("div",{style:{padding:"0 16px 16px"}},h(Seg,{opts:Object.entries(ST).map(([k,v])=>({v:k,l:v.l})),val:task.status,onChange:v=>onSC(task.id,v)})),
-      h(Grp,{header:"Bilgiler"},
-        h(Cell,{icon:"⚡",icBg:p.c,label:"Öncelik",detail:p.l}),
-        h(Cell,{icon:"📁",icBg:T.teal,label:"Kategori",detail:task.category}),
-        a&&h(Cell,{icon:"👤",icBg:T.indigo,label:"Atanan",detail:a.name}),
-        task.dueDate&&h(Cell,{icon:"📅",icBg:dl<0?T.red:T.orange,label:"Son Tarih",detail:fmtDL(task.dueDate),trailing:dl!==null&&dl<0?h(Bdg,{n:"Gecikmiş"}):null})),
-      st>0&&h(Grp,{header:`Alt Görevler — ${sd}/${st}`},(task.subtasks||[]).map(sub=>
-        h("div",{key:sub.id,style:{display:"flex",alignItems:"center",gap:12,padding:"10px 16px",borderBottom:`.5px solid ${T.sep}`}},
-          h("div",{style:{width:22,height:22,borderRadius:"50%",border:sub.done?"none":`2px solid ${T.lbl3}`,background:sub.done?T.blue:"transparent",display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontSize:13}},sub.done&&"✓"),
-          h("span",{style:{fontSize:17,color:sub.done?T.lbl3:T.lbl,textDecoration:sub.done?"line-through":"none"}},sub.text))))));
+// ===== TASK DETAIL =====
+function TaskDetail(props) {
+  var task=props.task,team=props.team,onEdit=props.onEdit,onSC=props.onSC,onClose=props.onClose;
+  var p=PRIOS[task.priority]||PRIOS.medium, s=STATS[task.status]||STATS.todo;
+  var a=null; team.forEach(function(t){if(t.id===task.assignee)a=t});
+  var dl=dLeft(task.dueDate);
+  var subs=task.subtasks||[];
+  var sd=subs.filter(function(x){return x.done}).length, st=subs.length;
+
+  return e(Sheet,{title:"G\u00F6rev Detay\u0131",onClose:onClose,
+    rightAct:{l:"D\u00FCzenle",fn:function(){onEdit(task)}}},
+    e("div",{style:{padding:"16px 0"}},
+      e("div",{style:{padding:"0 16px 16px"}},
+        e("h2",{style:{margin:"0 0 6px",fontSize:22,fontWeight:"700"}},task.title),
+        task.description?e("p",{style:{margin:0,fontSize:15,color:T.lbl2,lineHeight:1.5}},task.description):null),
+      e("div",{style:{padding:"0 16px 16px"}},
+        e(Seg,{opts:Object.keys(STATS).map(function(k){return{v:k,l:STATS[k].l}}),val:task.status,onChange:function(v){onSC(task.id,v)}})),
+      e(Grp,{header:"Bilgiler"},
+        e(Cell,{icon:"\u26A1",icBg:p.c,label:"\u00D6ncelik",detail:p.l}),
+        e(Cell,{icon:"\uD83D\uDCC1",icBg:T.teal,label:"Kategori",detail:task.category}),
+        a?e(Cell,{icon:"\uD83D\uDC64",icBg:T.indigo,label:"Atanan",detail:a.name}):null,
+        task.dueDate?e(Cell,{icon:"\uD83D\uDCC5",icBg:dl!==null&&dl<0?T.red:T.orange,label:"Son Tarih",detail:fmtDL(task.dueDate),
+          trailing:dl!==null&&dl<0?e(Bdg,{n:"Gecikmi\u015F"}):null}):null),
+      st>0?e(Grp,{header:"Alt G\u00F6revler \u2014 "+sd+"/"+st},
+        subs.map(function(sub){
+          return e("div",{key:sub.id,style:{display:"flex",alignItems:"center",gap:12,padding:"10px 16px",borderBottom:"0.5px solid "+T.sep}},
+            e("div",{style:{width:22,height:22,borderRadius:"50%",border:sub.done?"none":"2px solid "+T.lbl3,
+              background:sub.done?T.blue:"transparent",display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontSize:13}},sub.done?"\u2713":null),
+            e("span",{style:{fontSize:17,color:sub.done?T.lbl3:T.lbl,textDecoration:sub.done?"line-through":"none"}},sub.text))
+        })):null));
 }
 
-// ═══════ TASK ROW ═══════
-function TaskRow({task,team,onPress}){
-  const[pr,sP]=useState(false);
-  const p=P[task.priority],s=ST[task.status],a=team.find(t=>t.id===task.assignee),dl=dLeft(task.dueDate);
-  const sd=(task.subtasks||[]).filter(s=>s.done).length,st=(task.subtasks||[]).length;
-  return h("div",{onClick:()=>onPress(task),onPointerDown:()=>sP(true),onPointerUp:()=>sP(false),onPointerLeave:()=>sP(false),
-    style:{display:"flex",alignItems:"center",gap:12,padding:"12px 16px",background:pr?T.press:T.card,borderBottom:`.5px solid ${T.sep}`,cursor:"pointer",transition:"background .1s"}},
-    h("div",{style:{width:4,height:36,borderRadius:2,background:p.c,flexShrink:0}}),
-    h("div",{style:{flex:1,minWidth:0}},
-      h("div",{style:{fontSize:17,fontWeight:500,color:task.status==="done"?T.lbl3:T.lbl,textDecoration:task.status==="done"?"line-through":"none",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}},task.title),
-      h("div",{style:{display:"flex",alignItems:"center",gap:6,flexWrap:"wrap",marginTop:2}},
-        h("span",{style:{fontSize:13,color:s.c,fontWeight:500}},s.i+" "+s.l),
-        h("span",{style:{fontSize:13,color:T.lbl3}},"·"),
-        h("span",{style:{fontSize:13,color:T.lbl3}},task.category),
-        task.dueDate&&h(React.Fragment,null,h("span",{style:{fontSize:13,color:T.lbl3}},"·"),
-          h("span",{style:{fontSize:13,fontWeight:500,color:dl!==null&&dl<0?T.red:dl!==null&&dl<=2?T.orange:T.lbl3}},relD(task.dueDate))))),
-    h("div",{style:{display:"flex",alignItems:"center",gap:8,flexShrink:0}},
-      st>0&&h(Ring,{p:sd/st,sz:22,sw:2.5}),a&&h(Av,{name:a.name,sz:28}),h("span",{style:{color:T.lbl4,fontSize:18}},"›")));
+// ===== TASK ROW =====
+function TaskRow(props) {
+  var task=props.task,team=props.team,onPress=props.onPress;
+  var ref=useState(false); var pr=ref[0],sP=ref[1];
+  var p=PRIOS[task.priority]||PRIOS.medium, s=STATS[task.status]||STATS.todo;
+  var a=null; team.forEach(function(t){if(t.id===task.assignee)a=t});
+  var dl=dLeft(task.dueDate);
+  var subs=task.subtasks||[];
+  var sd=subs.filter(function(x){return x.done}).length, st=subs.length;
+
+  return e("div",{
+    onClick:function(){onPress(task)},
+    onPointerDown:function(){sP(true)},onPointerUp:function(){sP(false)},onPointerLeave:function(){sP(false)},
+    style:{display:"flex",alignItems:"center",gap:12,padding:"12px 16px",
+      background:pr?T.press:T.card,borderBottom:"0.5px solid "+T.sep,cursor:"pointer",transition:"background 0.1s"}},
+    e("div",{style:{width:4,height:36,borderRadius:2,background:p.c,flexShrink:0}}),
+    e("div",{style:{flex:1,minWidth:0}},
+      e("div",{style:{fontSize:17,fontWeight:"500",color:task.status==="done"?T.lbl3:T.lbl,
+        textDecoration:task.status==="done"?"line-through":"none",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}},task.title),
+      e("div",{style:{display:"flex",alignItems:"center",gap:6,flexWrap:"wrap",marginTop:2}},
+        e("span",{style:{fontSize:13,color:s.c,fontWeight:"500"}},s.i+" "+s.l),
+        e("span",{style:{fontSize:13,color:T.lbl3}},"\u00B7"),
+        e("span",{style:{fontSize:13,color:T.lbl3}},task.category),
+        task.dueDate?e(Fragment,null,
+          e("span",{style:{fontSize:13,color:T.lbl3}},"\u00B7"),
+          e("span",{style:{fontSize:13,fontWeight:"500",color:dl!==null&&dl<0?T.red:dl!==null&&dl<=2?T.orange:T.lbl3}},relD(task.dueDate))):null)),
+    e("div",{style:{display:"flex",alignItems:"center",gap:8,flexShrink:0}},
+      st>0?e(Ring,{p:sd/st,sz:22,sw:2.5}):null,
+      a?e(Av,{name:a.name,sz:28}):null,
+      e("span",{style:{color:T.lbl4,fontSize:20}},"\u203A")));
 }
 
-// ═══════════════════════ MAIN APP ═══════════════════════
-function App(){
-  const[tasks,setTasks]=useState(()=>LS.g("hf-t",SAMPLE));
-  const[team,setTeam]=useState(()=>LS.g("hf-m",DTEAM));
-  const[tab,setTab]=useState("dash");
-  const[sheet,setSheet]=useState(null);
-  const[flt,setFlt]=useState({q:"",st:"all"});
+// ===== MAIN APP =====
+function App() {
+  var ref1=useState(function(){return lsGet("hf-t",SAMPLE)}); var tasks=ref1[0],setTasks=ref1[1];
+  var ref2=useState(function(){return lsGet("hf-m",DTEAM)}); var team=ref2[0],setTeam=ref2[1];
+  var ref3=useState("dash"); var tab=ref3[0],setTab=ref3[1];
+  var ref4=useState(null); var sheet=ref4[0],setSheet=ref4[1];
+  var ref5=useState({q:"",st:"all"}); var flt=ref5[0],setFlt=ref5[1];
 
-  useEffect(()=>{if(!fbOK)return;const u1=fbSub("tasks",{f:"createdAt",d:"desc"},d=>{if(d.length)setTasks(d)});const u2=db.collection("team").orderBy("name").onSnapshot(s=>{const t=s.docs.map(d=>({id:d.id,...d.data()}));if(t.length)setTeam(t)});return()=>{u1();u2()}},[]);
-  useEffect(()=>{LS.s("hf-t",tasks)},[tasks]);
-  useEffect(()=>{LS.s("hf-m",team)},[team]);
+  // Firebase sync
+  useEffect(function(){
+    if(!fbOK) return;
+    var u1=fbSub("tasks","createdAt",function(d){if(d.length)setTasks(d)});
+    var u2=db.collection("team").orderBy("name").onSnapshot(function(s){
+      var t=[];s.forEach(function(doc){t.push(Object.assign({id:doc.id},doc.data()))});
+      if(t.length)setTeam(t);
+    });
+    return function(){u1();u2()};
+  },[]);
 
-  const saveTask=async fd=>{
-    if(fd===null){const tid=sheet?.id||sheet?.task?.id;if(!tid)return;if(fbOK)await fbDel("tasks",tid);setTasks(p=>p.filter(t=>t.id!==tid));setSheet(null);return}
-    if(fbOK){if(fd.id&&tasks.find(t=>t.id===fd.id)){await fbUp("tasks",fd.id,fd);setTasks(p=>p.map(t=>t.id===fd.id?{...t,...fd}:t))}else{const nid=await fbAdd("tasks",fd);setTasks(p=>[{...fd,id:nid||uid()},...p])}}
-    else{setTasks(p=>{const i=p.findIndex(t=>t.id===fd.id);if(i>=0){const n=[...p];n[i]=fd;return n}return[{...fd,id:uid()},...p]})}
-    setSheet(null)};
+  useEffect(function(){lsSet("hf-t",tasks)},[tasks]);
+  useEffect(function(){lsSet("hf-m",team)},[team]);
 
-  const chgSt=async(id,st)=>{if(fbOK)await fbUp("tasks",id,{status:st});setTasks(p=>p.map(t=>t.id===id?{...t,status:st}:t))};
-  const addMbr=async m=>{if(fbOK){const nid=await fbAdd("team",m);setTeam(p=>[...p,{...m,id:nid||uid()}])}else setTeam(p=>[...p,{...m,id:uid()}])};
-  const delMbr=async id=>{if(fbOK)await fbDel("team",id);setTeam(p=>p.filter(m=>m.id!==id))};
+  // CRUD
+  function saveTask(fd) {
+    if (fd===null) {
+      var tid=(sheet&&sheet.id)?sheet.id:((sheet&&sheet.task)?sheet.task.id:null);
+      if(!tid){setSheet(null);return}
+      if(fbOK) fbDel("tasks",tid);
+      setTasks(function(p){return p.filter(function(t){return t.id!==tid})});
+      setSheet(null);return;
+    }
+    if(fbOK){
+      var existing=false;
+      tasks.forEach(function(t){if(t.id===fd.id)existing=true});
+      if(existing){
+        fbUp("tasks",fd.id,fd);
+        setTasks(function(p){return p.map(function(t){return t.id===fd.id?Object.assign({},t,fd):t})});
+      } else {
+        fbAdd("tasks",fd).then(function(nid){
+          setTasks(function(p){return [Object.assign({},fd,{id:nid||uid()})].concat(p)});
+        });
+      }
+    } else {
+      setTasks(function(p){
+        var i=-1;p.forEach(function(t,idx){if(t.id===fd.id)i=idx});
+        if(i>=0){var n=p.slice();n[i]=fd;return n}
+        return [Object.assign({},fd,{id:uid()})].concat(p);
+      });
+    }
+    setSheet(null);
+  }
 
-  const filtered=useMemo(()=>tasks.filter(t=>{if(flt.st!=="all"&&t.status!==flt.st)return false;if(flt.q&&!t.title.toLowerCase().includes(flt.q.toLowerCase()))return false;return true}).sort((a,b)=>(P[a.priority]?.s||2)-(P[b.priority]?.s||2)),[tasks,flt]);
+  function chgSt(id,st){
+    if(fbOK) fbUp("tasks",id,{status:st});
+    setTasks(function(p){return p.map(function(t){return t.id===id?Object.assign({},t,{status:st}):t})});
+  }
+  function addMbr(m){
+    if(fbOK){fbAdd("team",m).then(function(nid){setTeam(function(p){return p.concat([Object.assign({},m,{id:nid||uid()})])})})}
+    else{setTeam(function(p){return p.concat([Object.assign({},m,{id:uid()})])})}
+  }
+  function delMbr(id){
+    if(fbOK) fbDel("team",id);
+    setTeam(function(p){return p.filter(function(m){return m.id!==id})});
+  }
 
-  const stats=useMemo(()=>{const d=tasks.filter(t=>t.status==="done").length;return{total:tasks.length,todo:tasks.filter(t=>t.status==="todo").length,ip:tasks.filter(t=>t.status==="inprogress").length,rev:tasks.filter(t=>t.status==="review").length,done:d,ov:tasks.filter(t=>{const dl=dLeft(t.dueDate);return dl!==null&&dl<0&&t.status!=="done"}).length,pct:tasks.length?Math.round(d/tasks.length*100):0}},[tasks]);
+  var filtered=useMemo(function(){
+    return tasks.filter(function(t){
+      if(flt.st!=="all"&&t.status!==flt.st) return false;
+      if(flt.q&&t.title.toLowerCase().indexOf(flt.q.toLowerCase())===-1) return false;
+      return true;
+    }).sort(function(a,b){return (PRIOS[a.priority]?PRIOS[a.priority].s:2)-(PRIOS[b.priority]?PRIOS[b.priority].s:2)});
+  },[tasks,flt]);
 
-  const openDetail=t=>setSheet({type:"detail",task:t});
+  var stats=useMemo(function(){
+    var d=0,ov=0,todo=0,ip=0,rev=0;
+    tasks.forEach(function(t){
+      if(t.status==="done")d++;
+      if(t.status==="todo")todo++;
+      if(t.status==="inprogress")ip++;
+      if(t.status==="review")rev++;
+      var dl=dLeft(t.dueDate);
+      if(dl!==null&&dl<0&&t.status!=="done")ov++;
+    });
+    return{total:tasks.length,todo:todo,ip:ip,rev:rev,done:d,ov:ov,pct:tasks.length?Math.round(d/tasks.length*100):0};
+  },[tasks]);
 
-  // ── Dashboard ──
-  const Dash=()=>h("div",null,
-    h(NavB,{title:"HF IT Görev Takip",large:true,right:{ic:"＋",fn:()=>setSheet("new")}}),
-    h("div",{style:{padding:"0 16px 6px"}},h("div",{style:{display:"flex",alignItems:"center",gap:6,fontSize:12,color:fbOK?T.green:T.orange}},h("div",{style:{width:6,height:6,borderRadius:"50%",background:fbOK?T.green:T.orange}}),fbOK?"Firebase bağlı — senkronize":"Çevrimdışı — localStorage")),
-    h("div",{style:{padding:"0 16px 16px"}},
-      h("div",{style:{background:`linear-gradient(135deg,${T.blue},${T.indigo})`,borderRadius:14,padding:20,color:"#fff",marginBottom:12}},
-        h("div",{style:{fontSize:13,opacity:.8,marginBottom:6}},"Tamamlanma Oranı"),
-        h("div",{style:{display:"flex",alignItems:"center",gap:16}},
-          h(Ring,{p:stats.pct/100,sz:60,sw:5,cl:"#fff"}),
-          h("div",null,h("div",{style:{fontSize:42,fontWeight:700,lineHeight:1}},"%"+stats.pct),h("div",{style:{fontSize:13,opacity:.75,marginTop:2}},stats.done+"/"+stats.total+" görev")))),
-      h("div",{style:{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(80px,1fr))",gap:8}},
-        [{n:stats.todo,l:"Bekliyor",c:"#8e8e93",i:"○"},{n:stats.ip,l:"Devam",c:T.blue,i:"◐"},{n:stats.rev,l:"İnceleme",c:T.purple,i:"◑"},{n:stats.ov,l:"Gecikmiş",c:T.red,i:"⚠"}].map(s=>
-          h("div",{key:s.l,style:{background:T.card,borderRadius:12,padding:"12px 8px",textAlign:"center"}},h("div",{style:{fontSize:12,color:T.lbl3}},s.i+" "+s.l),h("div",{style:{fontSize:26,fontWeight:700,color:s.c,marginTop:2}},s.n))))),
-    stats.ov>0&&h(Grp,{header:"⚠️ Gecikmiş Görevler"},tasks.filter(t=>{const dl=dLeft(t.dueDate);return dl!==null&&dl<0&&t.status!=="done"}).map(t=>h(TaskRow,{key:t.id,task:t,team,onPress:openDetail}))),
-    h(Grp,{header:"Son Görevler"},
-      tasks.length===0?h("div",{style:{padding:40,textAlign:"center",color:T.lbl3}},h("div",{style:{fontSize:48,marginBottom:8}},"📋"),"Henüz görev yok — ＋ butonuyla ekle"):
-      tasks.slice(0,6).map(t=>h(TaskRow,{key:t.id,task:t,team,onPress:openDetail}))),
-    h("div",{style:{height:100}}));
+  function openDetail(t){setSheet({type:"detail",task:t})}
 
-  // ── Tasks ──
-  const TasksTab=()=>h("div",null,
-    h(NavB,{title:"Görevler",large:true,right:{ic:"＋",fn:()=>setSheet("new")}}),
-    h("div",{style:{padding:"0 16px 12px"}},
-      h("div",{style:{display:"flex",alignItems:"center",gap:6,background:T.fill,borderRadius:10,padding:"7px 10px",marginBottom:10}},
-        h("span",{style:{color:T.lbl3,fontSize:15}},"🔍"),
-        h("input",{value:flt.q,onChange:e=>setFlt(f=>({...f,q:e.target.value})),placeholder:"Görev ara...",style:{border:"none",background:"none",outline:"none",fontSize:17,width:"100%",fontFamily:"inherit",color:T.lbl}}),
-        flt.q&&h("button",{onClick:()=>setFlt(f=>({...f,q:""})),style:{background:T.fill2,border:"none",borderRadius:"50%",width:18,height:18,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",color:T.lbl3,fontSize:10,flexShrink:0}},"✕")),
-      h(Seg,{opts:[{v:"all",l:"Tümü"},{v:"todo",l:"Bekliyor"},{v:"inprogress",l:"Devam"},{v:"review",l:"İnceleme"},{v:"done",l:"Bitti"}],val:flt.st,onChange:v=>setFlt(f=>({...f,st:v}))})),
-    filtered.length===0?h("div",{style:{textAlign:"center",padding:60,color:T.lbl3}},h("div",{style:{fontSize:48,marginBottom:8}},"📋"),"Görev bulunamadı"):
-      h(Grp,null,filtered.map(t=>h(TaskRow,{key:t.id,task:t,team,onPress:openDetail}))),
-    h("div",{style:{height:100}}));
+  // Dashboard
+  function Dash(){
+    return e("div",null,
+      e(NavB,{title:"HF IT G\u00F6rev Takip",large:true,right:{ic:"\uFF0B",fn:function(){setSheet("new")}}}),
+      e("div",{style:{padding:"0 16px 6px"}},
+        e("div",{style:{display:"flex",alignItems:"center",gap:6,fontSize:12,color:fbOK?T.green:T.orange}},
+          e("div",{style:{width:6,height:6,borderRadius:"50%",background:fbOK?T.green:T.orange}}),
+          fbOK?"Firebase ba\u011Fl\u0131 \u2014 senkronize":"\u00C7evrimd\u0131\u015F\u0131 \u2014 localStorage")),
+      e("div",{style:{padding:"0 16px 16px"}},
+        e("div",{style:{background:"linear-gradient(135deg,"+T.blue+","+T.indigo+")",borderRadius:14,padding:20,color:"#fff",marginBottom:12}},
+          e("div",{style:{fontSize:13,opacity:0.8,marginBottom:6}},"Tamamlanma Oran\u0131"),
+          e("div",{style:{display:"flex",alignItems:"center",gap:16}},
+            e(Ring,{p:stats.pct/100,sz:60,sw:5,cl:"#fff"}),
+            e("div",null,
+              e("div",{style:{fontSize:42,fontWeight:"700",lineHeight:1}},"%"+stats.pct),
+              e("div",{style:{fontSize:13,opacity:0.75,marginTop:2}},stats.done+"/"+stats.total+" g\u00F6rev")))),
+        e("div",{style:{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(80px,1fr))",gap:8}},
+          [{n:stats.todo,l:"Bekliyor",c:"#8e8e93",i:"\u25CB"},
+           {n:stats.ip,l:"Devam",c:T.blue,i:"\u25D0"},
+           {n:stats.rev,l:"\u0130nceleme",c:T.purple,i:"\u25D1"},
+           {n:stats.ov,l:"Gecikmi\u015F",c:T.red,i:"\u26A0"}].map(function(s){
+            return e("div",{key:s.l,style:{background:T.card,borderRadius:12,padding:"12px 8px",textAlign:"center"}},
+              e("div",{style:{fontSize:12,color:T.lbl3}},s.i+" "+s.l),
+              e("div",{style:{fontSize:26,fontWeight:"700",color:s.c,marginTop:2}},s.n))}))),
+      stats.ov>0?e(Grp,{header:"\u26A0\uFE0F Gecikmi\u015F G\u00F6revler"},
+        tasks.filter(function(t){var dl=dLeft(t.dueDate);return dl!==null&&dl<0&&t.status!=="done"})
+          .map(function(t){return e(TaskRow,{key:t.id,task:t,team:team,onPress:openDetail})})):null,
+      e(Grp,{header:"Son G\u00F6revler"},
+        tasks.length===0?e("div",{style:{padding:40,textAlign:"center",color:T.lbl3}},
+          e("div",{style:{fontSize:48,marginBottom:8}},"\uD83D\uDCCB"),
+          "Hen\u00FCz g\u00F6rev yok \u2014 \uFF0B butonuyla ekle"):
+        tasks.slice(0,6).map(function(t){return e(TaskRow,{key:t.id,task:t,team:team,onPress:openDetail})})),
+      e("div",{style:{height:100}}));
+  }
 
-  // ── Board ──
-  const BoardTab=()=>h("div",null,
-    h(NavB,{title:"Kanban Pano",large:true,right:{ic:"＋",fn:()=>setSheet("new")}}),
-    h("div",{style:{display:"flex",gap:12,padding:"0 16px",overflowX:"auto",WebkitOverflowScrolling:"touch",scrollSnapType:"x mandatory",paddingBottom:100}},
-      Object.entries(ST).map(([sk,sv])=>{
-        const col=tasks.filter(t=>t.status===sk);
-        return h("div",{key:sk,style:{minWidth:280,flex:"0 0 280px",scrollSnapAlign:"start"}},
-          h("div",{style:{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 4px 10px"}},
-            h("div",{style:{display:"flex",alignItems:"center",gap:6}},h("span",{style:{color:sv.c}},sv.i),h("span",{style:{fontSize:15,fontWeight:600}},sv.l)),
-            h(Bdg,{n:col.length,cl:sv.c})),
-          h("div",{style:{display:"flex",flexDirection:"column",gap:8}},
-            col.map(t=>{const pr=P[t.priority],a=team.find(m=>m.id===t.assignee),sd=(t.subtasks||[]).filter(s=>s.done).length,stt=(t.subtasks||[]).length;
-              return h("div",{key:t.id,onClick:()=>openDetail(t),style:{background:T.card,borderRadius:12,padding:14,borderLeft:`3px solid ${pr.c}`,cursor:"pointer",transition:"transform .1s"},onPointerDown:e=>e.currentTarget.style.transform="scale(.98)",onPointerUp:e=>e.currentTarget.style.transform="none",onPointerLeave:e=>e.currentTarget.style.transform="none"},
-                h("div",{style:{fontSize:15,fontWeight:600,marginBottom:6}},t.title),
-                h("div",{style:{display:"flex",gap:6,fontSize:12,flexWrap:"wrap"}},h("span",{style:{color:pr.c}},pr.i+" "+pr.l),t.dueDate&&h("span",{style:{color:dLeft(t.dueDate)<0?T.red:T.lbl3}},"📅 "+relD(t.dueDate))),
-                stt>0&&h("div",{style:{marginTop:8}},h("div",{style:{height:3,background:T.fill,borderRadius:2,overflow:"hidden"}},h("div",{style:{height:"100%",width:(sd/stt*100)+"%",background:T.green,borderRadius:2}})),h("div",{style:{fontSize:11,color:T.lbl3,marginTop:3}},sd+"/"+stt)),
-                h("div",{style:{display:"flex",justifyContent:"flex-end",marginTop:8}},a&&h(Av,{name:a.name,sz:24})))}),
-            col.length===0&&h("div",{style:{padding:24,textAlign:"center",fontSize:14,color:T.lbl4,border:`1.5px dashed ${T.sep}`,borderRadius:10}},"Görev yok")))}));
+  // Tasks tab
+  function TasksTab(){
+    return e("div",null,
+      e(NavB,{title:"G\u00F6revler",large:true,right:{ic:"\uFF0B",fn:function(){setSheet("new")}}}),
+      e("div",{style:{padding:"0 16px 12px"}},
+        e("div",{style:{display:"flex",alignItems:"center",gap:6,background:T.fill,borderRadius:10,padding:"7px 10px",marginBottom:10}},
+          e("span",{style:{color:T.lbl3,fontSize:15}},"\uD83D\uDD0D"),
+          e("input",{value:flt.q,onChange:function(ev){setFlt(function(f){return Object.assign({},f,{q:ev.target.value})})},
+            placeholder:"G\u00F6rev ara...",style:{border:"none",background:"none",outline:"none",fontSize:17,width:"100%",fontFamily:"inherit"}}),
+          flt.q?e("button",{onClick:function(){setFlt(function(f){return Object.assign({},f,{q:""})})},
+            style:{background:T.fill2,border:"none",borderRadius:"50%",width:18,height:18,
+              display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",color:T.lbl3,fontSize:10,flexShrink:0}},"\u2715"):null),
+        e(Seg,{opts:[{v:"all",l:"T\u00FCm\u00FC"},{v:"todo",l:"Bekliyor"},{v:"inprogress",l:"Devam"},{v:"review",l:"\u0130nceleme"},{v:"done",l:"Bitti"}],
+          val:flt.st,onChange:function(v){setFlt(function(f){return Object.assign({},f,{st:v})})}})),
+      filtered.length===0?
+        e("div",{style:{textAlign:"center",padding:60,color:T.lbl3}},e("div",{style:{fontSize:48,marginBottom:8}},"\uD83D\uDCCB"),"G\u00F6rev bulunamad\u0131"):
+        e(Grp,null,filtered.map(function(t){return e(TaskRow,{key:t.id,task:t,team:team,onPress:openDetail})})),
+      e("div",{style:{height:100}}));
+  }
 
-  // ── Settings ──
-  const SettingsTab=()=>h("div",null,
-    h(NavB,{title:"Ayarlar",large:true}),
-    h(Grp,{header:"Bağlantı"},h(Cell,{icon:fbOK?"🟢":"🟠",icBg:fbOK?T.green:T.orange,label:"Firebase",detail:fbOK?"Bağlı":"Çevrimdışı"}),!fbOK&&h(Cell,{icon:"ℹ️",icBg:T.teal,label:"Kurulum",sub:"FIREBASE_CONFIG bilgilerini girin"})),
-    h(Grp,{header:"Ekip"},team.map(m=>h(Cell,{key:m.id,label:m.name,detail:m.role})),h(Cell,{label:"Ekip Yönetimi",icon:"👥",icBg:T.blue,chevron:true,onPress:()=>setSheet("team")})),
-    h(Grp,{header:"İstatistikler"},h(Cell,{icon:"📊",icBg:T.teal,label:"Toplam",detail:""+stats.total}),h(Cell,{icon:"✅",icBg:T.green,label:"Tamamlanan",detail:""+stats.done}),h(Cell,{icon:"⚠️",icBg:T.red,label:"Gecikmiş",detail:""+stats.ov}),h(Cell,{icon:"📈",icBg:T.indigo,label:"Tamamlanma",detail:"%"+stats.pct})),
-    h(Grp,{header:"Hakkında"},h(Cell,{icon:"🏢",icBg:T.blue,label:"Kurum",detail:"Halk Faktoring"}),h(Cell,{icon:"💼",icBg:T.indigo,label:"Birim",detail:"IT Departmanı"}),h(Cell,{icon:"📱",icBg:T.green,label:"Versiyon",detail:"1.0.0"})),
-    h("div",{style:{height:100}}));
+  // Board tab
+  function BoardTab(){
+    return e("div",null,
+      e(NavB,{title:"Kanban Pano",large:true,right:{ic:"\uFF0B",fn:function(){setSheet("new")}}}),
+      e("div",{style:{display:"flex",gap:12,padding:"0 16px",overflowX:"auto",WebkitOverflowScrolling:"touch",scrollSnapType:"x mandatory",paddingBottom:100}},
+        Object.keys(STATS).map(function(sk){
+          var sv=STATS[sk];
+          var col=tasks.filter(function(t){return t.status===sk});
+          return e("div",{key:sk,style:{minWidth:280,flex:"0 0 280px",scrollSnapAlign:"start"}},
+            e("div",{style:{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 4px 10px"}},
+              e("div",{style:{display:"flex",alignItems:"center",gap:6}},
+                e("span",{style:{color:sv.c}},sv.i),e("span",{style:{fontSize:15,fontWeight:"600"}},sv.l)),
+              e(Bdg,{n:col.length,cl:sv.c})),
+            e("div",{style:{display:"flex",flexDirection:"column",gap:8}},
+              col.map(function(t){
+                var pr=PRIOS[t.priority]||PRIOS.medium;
+                var a=null;team.forEach(function(m){if(m.id===t.assignee)a=m});
+                var subs=t.subtasks||[];var sd=subs.filter(function(x){return x.done}).length,stt=subs.length;
+                return e("div",{key:t.id,onClick:function(){openDetail(t)},
+                  style:{background:T.card,borderRadius:12,padding:14,borderLeft:"3px solid "+pr.c,cursor:"pointer",transition:"transform 0.1s"},
+                  onPointerDown:function(ev){ev.currentTarget.style.transform="scale(0.98)"},
+                  onPointerUp:function(ev){ev.currentTarget.style.transform="none"},
+                  onPointerLeave:function(ev){ev.currentTarget.style.transform="none"}},
+                  e("div",{style:{fontSize:15,fontWeight:"600",marginBottom:6}},t.title),
+                  e("div",{style:{display:"flex",gap:6,fontSize:12,flexWrap:"wrap"}},
+                    e("span",{style:{color:pr.c}},pr.i+" "+pr.l),
+                    t.dueDate?e("span",{style:{color:dLeft(t.dueDate)<0?T.red:T.lbl3}},"\uD83D\uDCC5 "+relD(t.dueDate)):null),
+                  stt>0?e("div",{style:{marginTop:8}},
+                    e("div",{style:{height:3,background:T.fill,borderRadius:2,overflow:"hidden"}},
+                      e("div",{style:{height:"100%",width:(sd/stt*100)+"%",background:T.green,borderRadius:2}})),
+                    e("div",{style:{fontSize:11,color:T.lbl3,marginTop:3}},sd+"/"+stt)):null,
+                  e("div",{style:{display:"flex",justifyContent:"flex-end",marginTop:8}},a?e(Av,{name:a.name,sz:24}):null))
+              }),
+              col.length===0?e("div",{style:{padding:24,textAlign:"center",fontSize:14,color:T.lbl4,
+                border:"1.5px dashed "+T.sep,borderRadius:10}},"G\u00F6rev yok"):null));
+        })));
+  }
 
-  const tabDefs=[{id:"dash",ic:"📊",l:"Özet"},{id:"tasks",ic:"📋",l:"Görevler"},{id:"board",ic:"▦",l:"Pano"},{id:"settings",ic:"⚙️",l:"Ayarlar"}];
+  // Settings tab
+  function SettingsTab(){
+    return e("div",null,
+      e(NavB,{title:"Ayarlar",large:true}),
+      e(Grp,{header:"Ba\u011Flant\u0131"},
+        e(Cell,{icon:fbOK?"\uD83D\uDFE2":"\uD83D\uDFE0",icBg:fbOK?T.green:T.orange,label:"Firebase",detail:fbOK?"Ba\u011Fl\u0131":"\u00C7evrimd\u0131\u015F\u0131"}),
+        !fbOK?e(Cell,{icon:"\u2139\uFE0F",icBg:T.teal,label:"Kurulum",sub:"FIREBASE_CONFIG bilgilerini girin"}):null),
+      e(Grp,{header:"Ekip"},
+        team.map(function(m){return e(Cell,{key:m.id,label:m.name,detail:m.role})}),
+        e(Cell,{label:"Ekip Y\u00F6netimi",icon:"\uD83D\uDC65",icBg:T.blue,chevron:true,onPress:function(){setSheet("team")}})),
+      e(Grp,{header:"\u0130statistikler"},
+        e(Cell,{icon:"\uD83D\uDCCA",icBg:T.teal,label:"Toplam",detail:""+stats.total}),
+        e(Cell,{icon:"\u2705",icBg:T.green,label:"Tamamlanan",detail:""+stats.done}),
+        e(Cell,{icon:"\u26A0\uFE0F",icBg:T.red,label:"Gecikmi\u015F",detail:""+stats.ov}),
+        e(Cell,{icon:"\uD83D\uDCC8",icBg:T.indigo,label:"Tamamlanma",detail:"%"+stats.pct})),
+      e(Grp,{header:"Hakk\u0131nda"},
+        e(Cell,{icon:"\uD83C\uDFE2",icBg:T.blue,label:"Kurum",detail:"Halk Faktoring"}),
+        e(Cell,{icon:"\uD83D\uDCBC",icBg:T.indigo,label:"Birim",detail:"IT Departman\u0131"}),
+        e(Cell,{icon:"\uD83D\uDCF1",icBg:T.green,label:"Versiyon",detail:"1.0.0"})),
+      e("div",{style:{height:100}}));
+  }
 
-  return h("div",{style:{height:"100vh",display:"flex",flexDirection:"column",background:T.bg,maxWidth:900,margin:"0 auto"}},
-    h("div",{style:{flex:1,overflow:"auto",WebkitOverflowScrolling:"touch"}},
-      tab==="dash"&&h(Dash),tab==="tasks"&&h(TasksTab),tab==="board"&&h(BoardTab),tab==="settings"&&h(SettingsTab)),
-    h("div",{style:{flexShrink:0,background:T.nav,backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",borderTop:`.5px solid ${T.sep}`,display:"flex",justifyContent:"space-around",padding:"6px 0 calc(env(safe-area-inset-bottom,8px) + 4px)"}},
-      tabDefs.map(t=>h("button",{key:t.id,onClick:()=>setTab(t.id),style:{display:"flex",flexDirection:"column",alignItems:"center",gap:1,background:"none",border:"none",color:tab===t.id?T.blue:"#8e8e93",fontSize:10,fontWeight:tab===t.id?600:500,cursor:"pointer",padding:"4px 16px",fontFamily:"inherit",minWidth:50}},h("span",{style:{fontSize:24,lineHeight:"1.1"}},t.ic),h("span",null,t.l)))),
-    h("button",{onClick:()=>setSheet("new"),style:{position:"fixed",bottom:80,right:20,zIndex:400,width:56,height:56,borderRadius:"50%",background:T.blue,color:"#fff",border:"none",fontSize:28,fontWeight:300,cursor:"pointer",boxShadow:"0 4px 16px rgba(0,122,255,.4)",display:"flex",alignItems:"center",justifyContent:"center",transition:"transform .15s"},onPointerDown:e=>e.currentTarget.style.transform="scale(.9)",onPointerUp:e=>e.currentTarget.style.transform="none",onPointerLeave:e=>e.currentTarget.style.transform="none"},"＋"),
-    (sheet==="new"||(sheet&&sheet.id&&!sheet.type))&&h(TaskForm,{task:sheet==="new"?null:sheet,team,onSave:saveTask,onClose:()=>setSheet(null)}),
-    sheet==="team"&&h(TeamSheet,{team,onAdd:addMbr,onDel:delMbr,onClose:()=>setSheet(null)}),
-    sheet?.type==="detail"&&h(TaskDetail,{task:sheet.task,team,onEdit:t=>setSheet(t),onSC:(id,s)=>{chgSt(id,s);setSheet(p=>({...p,task:{...p.task,status:s}}))},onClose:()=>setSheet(null)}));
+  var tabDefs=[
+    {id:"dash",ic:"\uD83D\uDCCA",l:"\u00D6zet"},
+    {id:"tasks",ic:"\uD83D\uDCCB",l:"G\u00F6revler"},
+    {id:"board",ic:"\u25A6",l:"Pano"},
+    {id:"settings",ic:"\u2699\uFE0F",l:"Ayarlar"}
+  ];
+
+  return e("div",{style:{height:"100vh",display:"flex",flexDirection:"column",background:T.bg,maxWidth:900,margin:"0 auto"}},
+    // Content
+    e("div",{style:{flex:1,overflow:"auto",WebkitOverflowScrolling:"touch"}},
+      tab==="dash"?e(Dash):null,
+      tab==="tasks"?e(TasksTab):null,
+      tab==="board"?e(BoardTab):null,
+      tab==="settings"?e(SettingsTab):null),
+    // Tab Bar
+    e("div",{style:{flexShrink:0,background:T.nav,backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",
+      borderTop:"0.5px solid "+T.sep,display:"flex",justifyContent:"space-around",
+      padding:"6px 0 calc(env(safe-area-inset-bottom,8px) + 4px)"}},
+      tabDefs.map(function(t){
+        return e("button",{key:t.id,onClick:function(){setTab(t.id)},
+          style:{display:"flex",flexDirection:"column",alignItems:"center",gap:1,
+            background:"none",border:"none",color:tab===t.id?T.blue:"#8e8e93",
+            fontSize:10,fontWeight:tab===t.id?"600":"500",cursor:"pointer",
+            padding:"4px 16px",fontFamily:"inherit",minWidth:50}},
+          e("span",{style:{fontSize:24,lineHeight:"1.1"}},t.ic),
+          e("span",null,t.l))
+      })),
+    // FAB
+    e("button",{onClick:function(){setSheet("new")},
+      style:{position:"fixed",bottom:80,right:20,zIndex:400,width:56,height:56,
+        borderRadius:"50%",background:T.blue,color:"#fff",border:"none",fontSize:28,
+        fontWeight:"300",cursor:"pointer",boxShadow:"0 4px 16px rgba(0,122,255,0.4)",
+        display:"flex",alignItems:"center",justifyContent:"center",transition:"transform 0.15s"},
+      onPointerDown:function(ev){ev.currentTarget.style.transform="scale(0.9)"},
+      onPointerUp:function(ev){ev.currentTarget.style.transform="none"},
+      onPointerLeave:function(ev){ev.currentTarget.style.transform="none"}},"\uFF0B"),
+    // Sheets
+    (sheet==="new"||(sheet&&sheet.id&&!(sheet.type)))?
+      e(TaskForm,{task:sheet==="new"?null:sheet,team:team,onSave:saveTask,onClose:function(){setSheet(null)}}):null,
+    sheet==="team"?
+      e(TeamSheet,{team:team,onAdd:addMbr,onDel:delMbr,onClose:function(){setSheet(null)}}):null,
+    (sheet&&sheet.type==="detail")?
+      e(TaskDetail,{task:sheet.task,team:team,onEdit:function(t){setSheet(t)},
+        onSC:function(id,s){chgSt(id,s);setSheet(function(prev){return{type:"detail",task:Object.assign({},prev.task,{status:s})}})},
+        onClose:function(){setSheet(null)}}):null
+  );
 }
 
-ReactDOM.createRoot(document.getElementById("root")).render(h(App));
+// Mount
+ReactDOM.createRoot(document.getElementById("root")).render(e(App));
+console.log("HF IT G\u00F6rev Takip y\u00FCklendi");
 </script>
 </body>
 </html>
