@@ -1,10 +1,11 @@
 <!DOCTYPE html>
+
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no,maximum-scale=1">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="HF IT">
 <meta name="theme-color" content="#007aff">
 <link rel="manifest" href="manifest.json">
@@ -13,8 +14,8 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body,#root{height:100%;width:100%;overflow:hidden}
-body{font-family:-apple-system,'SF Pro Display','SF Pro Text','Helvetica Neue',sans-serif;-webkit-font-smoothing:antialiased;background:#f2f2f7;color:#000;user-select:none;-webkit-user-select:none}
-input,textarea,select{font-family:inherit;color:#000}
+body{font-family:-apple-system,'SF Pro Display','Helvetica Neue',sans-serif;-webkit-font-smoothing:antialiased;user-select:none;-webkit-user-select:none}
+input,textarea,select{font-family:inherit}
 ::-webkit-scrollbar{width:0;height:0}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
@@ -22,707 +23,163 @@ input,textarea,select{font-family:inherit;color:#000}
 </head>
 <body>
 <div id="root"></div>
-
 <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
 <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
-
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-
 <script>
 "use strict";
+var h=React.createElement,uS=React.useState,uE=React.useEffect,uM=React.useMemo,Fr=React.Fragment;
 
-var e = React.createElement;
-var useState = React.useState;
-var useEffect = React.useEffect;
-var useMemo = React.useMemo;
-var Fragment = React.Fragment;
+var FB={apiKey:””,authDomain:””,projectId:””,storageBucket:””,messagingSenderId:””,appId:””};
+var db=null,fbOK=false;
+try{if(FB.apiKey&&FB.apiKey.length>5){firebase.initializeApp(FB);db=firebase.firestore();fbOK=true}}catch(e){}
 
-/* ═══════════════════════════════════════════════════════════
-   FIREBASE YAPILANDIRMASI
-   
-   Firebase Console'dan aldığın bilgileri buraya yaz.
-   Boş bırakırsan çevrimdışı (localStorage) çalışır.
-   ═══════════════════════════════════════════════════════════ */
-var FIREBASE_CONFIG = {
-  apiKey:            "",
-  authDomain:        "",
-  projectId:         "",
-  storageBucket:     "",
-  messagingSenderId: "",
-  appId:             ""
-};
+function fbSub(c,o,cb){if(!fbOK)return function(){};return db.collection(c).orderBy(o,“desc”).onSnapshot(function(s){var r=[];s.forEach(function(d){var x=d.data();if(x.createdAt&&x.createdAt.toDate)x.createdAt=x.createdAt.toDate().toISOString();r.push(Object.assign({id:d.id},x))});cb(r)})}
+function fbAdd(c,d){if(!fbOK)return Promise.resolve(null);var x=Object.assign({},d);delete x.id;x.createdAt=firebase.firestore.FieldValue.serverTimestamp();return db.collection(c).add(x).then(function(r){return r.id})}
+function fbUp(c,i,d){if(!fbOK)return Promise.resolve();var x=Object.assign({},d);delete x.id;x.updatedAt=firebase.firestore.FieldValue.serverTimestamp();return db.collection(c).doc(i).update(x)}
+function fbDel(c,i){if(!fbOK)return Promise.resolve();return db.collection(c).doc(i).delete()}
 
-// Firebase Init
-var db = null;
-var fbOK = false;
-try {
-  if (FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.apiKey.length > 5) {
-    firebase.initializeApp(FIREBASE_CONFIG);
-    db = firebase.firestore();
-    fbOK = true;
-    console.log("Firebase bağlantısı başarılı");
-  } else {
-    console.log("Firebase config boş - çevrimdışı mod");
-  }
-} catch(err) {
-  console.warn("Firebase hatası:", err);
-}
+var LT={bg:”#f2f2f7”,card:”#fff”,press:”#e5e5ea”,sep:“rgba(60,60,67,.12)”,lbl:”#000”,lbl2:”#3c3c43”,lbl3:”#8e8e93”,lbl4:”#c7c7cc”,blue:”#007aff”,green:”#34c759”,orange:”#ff9500”,red:”#ff3b30”,purple:”#af52de”,teal:”#5ac8fa”,indigo:”#5856d6”,fill:“rgba(120,120,128,.2)”,fill2:“rgba(120,120,128,.16)”,nav:“rgba(249,249,249,.94)”,sheet:”#fff”,overlay:“rgba(0,0,0,.4)”,gA:”#007aff”,gB:”#5856d6”};
+var DK={bg:”#000”,card:”#1c1c1e”,press:”#2c2c2e”,sep:“rgba(84,84,88,.65)”,lbl:”#fff”,lbl2:”#ebebf5cc”,lbl3:”#ebebf599”,lbl4:”#ebebf54d”,blue:”#0a84ff”,green:”#30d158”,orange:”#ff9f0a”,red:”#ff453a”,purple:”#bf5af2”,teal:”#64d2ff”,indigo:”#5e5ce6”,fill:“rgba(120,120,128,.36)”,fill2:“rgba(120,120,128,.32)”,nav:“rgba(29,29,31,.94)”,sheet:”#1c1c1e”,overlay:“rgba(0,0,0,.6)”,gA:”#0a84ff”,gB:”#5e5ce6”};
 
-// Firestore helpers
-function fbSub(col, orderField, cb) {
-  if (!fbOK) return function(){};
-  return db.collection(col).orderBy(orderField, "desc").onSnapshot(
-    function(snap) {
-      var items = [];
-      snap.forEach(function(doc) {
-        var d = doc.data();
-        var ca = d.createdAt;
-        if (ca && ca.toDate) ca = ca.toDate().toISOString();
-        items.push(Object.assign({}, d, { id: doc.id, createdAt: ca }));
-      });
-      cb(items);
-    },
-    function(err) { console.error("Firestore:", err); }
-  );
-}
-function fbAdd(col, data) {
-  if (!fbOK) return Promise.resolve(null);
-  var d = Object.assign({}, data);
-  delete d.id;
-  d.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-  d.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
-  return db.collection(col).add(d).then(function(ref) { return ref.id; });
-}
-function fbUp(col, did, data) {
-  if (!fbOK) return Promise.resolve();
-  var d = Object.assign({}, data);
-  delete d.id;
-  d.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
-  return db.collection(col).doc(did).update(d);
-}
-function fbDel(col, did) {
-  if (!fbOK) return Promise.resolve();
-  return db.collection(col).doc(did).delete();
-}
+var PR={critical:{l:“Kritik”,c:”#ff3b30”,i:”\ud83d\udd34”,s:0},high:{l:“Y\u00fcksek”,c:”#ff9500”,i:”\ud83d\udfe0”,s:1},medium:{l:“Orta”,c:”#007aff”,i:”\ud83d\udd35”,s:2},low:{l:“D\u00fc\u015f\u00fck”,c:”#34c759”,i:”\ud83d\udfe2”,s:3}};
+var SS={todo:{l:“Bekliyor”,c:”#8e8e93”,i:”\u25cb”},inprogress:{l:“Devam Ediyor”,c:”#007aff”,i:”\u25d0”},review:{l:”\u0130nceleme”,c:”#af52de”,i:”\u25d1”},done:{l:“Tamamland\u0131”,c:”#34c759”,i:”\u25cf”}};
+var CATS=[“Sunucu & Altyap\u0131”,“Veritaban\u0131”,“Yaz\u0131l\u0131m Geli\u015ftirme”,“A\u011f & G\u00fcvenlik”,“Kullan\u0131c\u0131 Destek”,“Raporlama & BDDK”,“Dijitalle\u015fme”,“Di\u011fer”];
 
-// Theme
-var T = {
-  bg:"#f2f2f7",card:"#ffffff",press:"#e5e5ea",
-  sep:"rgba(60,60,67,0.12)",
-  lbl:"#000000",lbl2:"#3c3c43",lbl3:"#8e8e93",lbl4:"#c7c7cc",
-  blue:"#007aff",green:"#34c759",orange:"#ff9500",red:"#ff3b30",
-  purple:"#af52de",teal:"#5ac8fa",indigo:"#5856d6",
-  fill:"rgba(120,120,128,0.2)",fill2:"rgba(120,120,128,0.16)",
-  nav:"rgba(249,249,249,0.94)",sheet:"#ffffff"
-};
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
+function fmtD(d){if(!d)return””;try{return new Date(d).toLocaleDateString(“tr-TR”,{day:“numeric”,month:“short”})}catch(e){return””}}
+function fmtDL(d){if(!d)return””;try{return new Date(d).toLocaleDateString(“tr-TR”,{day:“numeric”,month:“long”,year:“numeric”})}catch(e){return””}}
+function dL(d){if(!d)return null;return Math.ceil((new Date(d)-new Date())/864e5)}
+function relD(d){var x=dL(d);if(x===null)return””;if(x<-1)return Math.abs(x)+” g\u00fcn gecikmi\u015f”;if(x===-1)return”D\u00fcn”;if(x===0)return”Bug\u00fcn”;if(x===1)return”Yar\u0131n”;if(x<=7)return x+” g\u00fcn”;return fmtD(d)}
+function lG(k,f){try{var v=localStorage.getItem(k);return v?JSON.parse(v):f}catch(e){return f}}
+function lS(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 
-var PRIOS = {
-  critical: {l:"Kritik",c:"#ff3b30",i:"\uD83D\uDD34",s:0},
-  high:     {l:"Yüksek",c:"#ff9500",i:"\uD83D\uDFE0",s:1},
-  medium:   {l:"Orta",c:"#007aff",i:"\uD83D\uDD35",s:2},
-  low:      {l:"Düşük",c:"#34c759",i:"\uD83D\uDFE2",s:3}
-};
-
-var STATS = {
-  todo:       {l:"Bekliyor",c:"#8e8e93",i:"\u25CB"},
-  inprogress: {l:"Devam Ediyor",c:"#007aff",i:"\u25D0"},
-  review:     {l:"\u0130nceleme",c:"#af52de",i:"\u25D1"},
-  done:       {l:"Tamamland\u0131",c:"#34c759",i:"\u25CF"}
-};
-
-var CATS = ["Sunucu & Altyap\u0131","Veritaban\u0131","Yaz\u0131l\u0131m Geli\u015Ftirme","A\u011F & G\u00FCvenlik","Kullan\u0131c\u0131 Destek","Raporlama & BDDK","Dijitalle\u015Fme","Di\u011Fer"];
-
-function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
-function fmtD(d) { if(!d) return ""; try { return new Date(d).toLocaleDateString("tr-TR",{day:"numeric",month:"short"}); } catch(e) { return ""; } }
-function fmtDL(d) { if(!d) return ""; try { return new Date(d).toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric"}); } catch(e) { return ""; } }
-function dLeft(d) { if(!d) return null; return Math.ceil((new Date(d) - new Date()) / 86400000); }
-function relD(d) {
-  var dl = dLeft(d);
-  if (dl === null) return "";
-  if (dl < -1) return Math.abs(dl) + " g\u00FCn gecikmi\u015F";
-  if (dl === -1) return "D\u00FCn";
-  if (dl === 0) return "Bug\u00FCn";
-  if (dl === 1) return "Yar\u0131n";
-  if (dl <= 7) return dl + " g\u00FCn";
-  return fmtD(d);
-}
-
-// Local Storage
-function lsGet(k, fb) { try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : fb; } catch(e) { return fb; } }
-function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e) {} }
-
-// Sample data
-var SAMPLE = [
-  {id:"s1",title:"BDDK Ayl\u0131k Rapor Haz\u0131rl\u0131\u011F\u0131",description:"Reg\u00FClatif raporlar\u0131n kontrol\u00FC ve BDDK portal\u0131na y\u00FCklenmesi",priority:"critical",status:"inprogress",category:"Raporlama & BDDK",assignee:"1",dueDate:"2026-04-16",createdAt:new Date().toISOString(),subtasks:[{id:"a",text:"Verilerin do\u011Frulanmas\u0131",done:true},{id:"b",text:"Rapor format\u0131 kontrol\u00FC",done:false}]},
-  {id:"s2",title:"SQL Server Yedekleme Kontrol\u00FC",description:"dbfactoring ve dbfactoring_log yedeklerinin do\u011Frulanmas\u0131",priority:"high",status:"todo",category:"Veritaban\u0131",assignee:"1",dueDate:"2026-04-15",createdAt:new Date().toISOString(),subtasks:[]},
-  {id:"s3",title:"Mobil Uygulama Test Senaryolar\u0131",description:"QR scan \u2192 Infact \u2192 RatingPro ak\u0131\u015F\u0131n\u0131n test ortam\u0131nda do\u011Frulanmas\u0131",priority:"high",status:"review",category:"Yaz\u0131l\u0131m Geli\u015Ftirme",assignee:"1",dueDate:"2026-04-20",createdAt:new Date().toISOString(),subtasks:[{id:"c",text:"QR scan testi",done:true},{id:"d",text:"RatingPro entegrasyonu",done:true},{id:"e",text:"PowerCurve karar motoru",done:false}]},
-  {id:"s4",title:"Hyper-V Sunucu Bak\u0131m\u0131",description:"Sanal sunucular\u0131n performans kontrol\u00FC",priority:"medium",status:"todo",category:"Sunucu & Altyap\u0131",assignee:"",dueDate:"2026-04-22",createdAt:new Date().toISOString(),subtasks:[]},
-  {id:"s5",title:"Dijital Mizan Nihai Rapor",description:"Prometeia projesi kapan\u0131\u015F belgelerinin tamamlanmas\u0131",priority:"low",status:"done",category:"Dijitalle\u015Fme",assignee:"1",dueDate:"2026-04-05",createdAt:new Date().toISOString(),subtasks:[]},
-  {id:"s6",title:"Elektronik Defter Tebli\u011Fi Uyumu",description:"1 Temmuz 2025 tebli\u011Fi kapsam\u0131nda aksiyonlar",priority:"medium",status:"inprogress",category:"Dijitalle\u015Fme",assignee:"1",dueDate:"2026-05-01",createdAt:new Date().toISOString(),subtasks:[{id:"f",text:"Tebli\u011F analizi",done:true},{id:"g",text:"BIS Infact entegrasyonu",done:false}]}
+var SAM=[
+{id:“s1”,title:“BDDK Ayl\u0131k Rapor”,description:“Reg\u00fclatif raporlar\u0131n kontrol\u00fc”,priority:“critical”,status:“inprogress”,category:“Raporlama & BDDK”,assignee:“1”,dueDate:“2026-04-16”,createdAt:new Date().toISOString(),subtasks:[{id:“a1”,text:“Veri do\u011frulama”,done:true},{id:“a2”,text:“Format kontrol\u00fc”,done:false}]},
+{id:“s2”,title:“SQL Yedekleme Kontrol\u00fc”,description:“dbfactoring yedekleri”,priority:“high”,status:“todo”,category:“Veritaban\u0131”,assignee:“1”,dueDate:“2026-04-15”,createdAt:new Date().toISOString(),subtasks:[]},
+{id:“s3”,title:“Mobil App Test”,description:“QR\u2192Infact\u2192RatingPro\u2192PowerCurve”,priority:“high”,status:“review”,category:“Yaz\u0131l\u0131m Geli\u015ftirme”,assignee:“1”,dueDate:“2026-04-20”,createdAt:new Date().toISOString(),subtasks:[{id:“b1”,text:“QR test”,done:true},{id:“b2”,text:“RatingPro”,done:true},{id:“b3”,text:“PowerCurve”,done:false}]},
+{id:“s4”,title:“Hyper-V Bak\u0131m”,description:“Sanal sunucu kontrol\u00fc”,priority:“medium”,status:“todo”,category:“Sunucu & Altyap\u0131”,assignee:””,dueDate:“2026-04-22”,createdAt:new Date().toISOString(),subtasks:[]},
+{id:“s5”,title:“Dijital Mizan Rapor”,description:“Prometeia kapan\u0131\u015f”,priority:“low”,status:“done”,category:“Dijitalle\u015fme”,assignee:“1”,dueDate:“2026-04-05”,createdAt:new Date().toISOString(),subtasks:[]},
+{id:“s6”,title:“E-Defter Tebli\u011fi”,description:“Tebli\u011f uyum aksiyonlar\u0131”,priority:“medium”,status:“inprogress”,category:“Dijitalle\u015fme”,assignee:“1”,dueDate:“2026-05-01”,createdAt:new Date().toISOString(),subtasks:[{id:“c1”,text:“Analiz”,done:true},{id:“c2”,text:“Entegrasyon”,done:false}]}
 ];
-var DTEAM = [{id:"1",name:"Cengiz G\u00FClcan",role:"IT Y\u00F6netici"}];
+var DTM=[{id:“1”,name:“Cengiz G\u00fclcan”,role:“IT Y\u00f6netici”}];
 
-// ===== UI COMPONENTS =====
+function Ring(p){var pr=p.p||0,sz=p.sz||24,sw=p.sw||3,cl=p.cl||”#007aff”,bg=p.bg||“rgba(120,120,128,.2)”;var r=(sz-sw)/2,c=2*Math.PI*r;return h(“svg”,{width:sz,height:sz,style:{transform:“rotate(-90deg)”}},h(“circle”,{cx:sz/2,cy:sz/2,r:r,fill:“none”,stroke:bg,strokeWidth:sw}),h(“circle”,{cx:sz/2,cy:sz/2,r:r,fill:“none”,stroke:cl,strokeWidth:sw,strokeDasharray:c,strokeDashoffset:c*(1-pr),strokeLinecap:“round”,style:{transition:“stroke-dashoffset .5s”}}))}
+function Av(p){var nm=p.name||”?”,sz=p.sz||32,ini=nm.split(” “).map(function(n){return n[0]}).join(””).slice(0,2),hu=0;for(var i=0;i<nm.length;i++)hu+=nm.charCodeAt(i);hu%=360;return h(“div”,{style:{width:sz,height:sz,borderRadius:“50%”,background:“linear-gradient(135deg,hsl(”+hu+”,50%,55%),hsl(”+(hu+30)+”,55%,45%))”,display:“flex”,alignItems:“center”,justifyContent:“center”,color:”#fff”,fontSize:sz*.38,fontWeight:600,flexShrink:0}},ini)}
+function Bdg(p){if(!p.n)return null;return h(“span”,{style:{background:p.cl||”#ff3b30”,color:”#fff”,borderRadius:10,fontSize:12,fontWeight:600,minWidth:20,height:20,display:“inline-flex”,alignItems:“center”,justifyContent:“center”,padding:“0 6px”}},p.n)}
+function Chk(p){return h(“button”,{onClick:p.onClick,style:{width:24,height:24,borderRadius:“50%”,border:p.done?“none”:“2px solid “+p.t.lbl3,background:p.done?p.t.blue:“transparent”,display:“flex”,alignItems:“center”,justifyContent:“center”,cursor:“pointer”,flexShrink:0,color:”#fff”,fontSize:14,padding:0}},p.done?”\u2713”:null)}
 
-function Ring(props) {
-  var p = props.p || 0, sz = props.sz || 24, sw = props.sw || 3, cl = props.cl || T.blue;
-  var r = (sz - sw) / 2, c = 2 * Math.PI * r;
-  return e("svg", {width:sz, height:sz, style:{transform:"rotate(-90deg)"}},
-    e("circle", {cx:sz/2, cy:sz/2, r:r, fill:"none", stroke:T.fill, strokeWidth:sw}),
-    e("circle", {cx:sz/2, cy:sz/2, r:r, fill:"none", stroke:cl, strokeWidth:sw,
-      strokeDasharray:c, strokeDashoffset:c*(1-p), strokeLinecap:"round",
-      style:{transition:"stroke-dashoffset 0.5s"}}));
-}
+function Seg(p){var t=p.t;return h(“div”,{style:{display:“flex”,background:t.fill,borderRadius:9,padding:2}},p.opts.map(function(o){var a=p.val===o.v;return h(“button”,{key:o.v,onClick:function(){p.onChange(o.v)},style:{flex:1,padding:“7px 4px”,borderRadius:8,border:“none”,background:a?t.card:“transparent”,color:t.lbl,fontSize:12,fontWeight:a?600:400,fontFamily:“inherit”,cursor:“pointer”,boxShadow:a?“0 1px 4px rgba(0,0,0,.12)”:“none”,whiteSpace:“nowrap”}},o.l)}))}
+function Nav(p){var t=p.t;return h(“div”,{style:{position:“sticky”,top:0,zIndex:100,background:t.nav,backdropFilter:“blur(20px)”,WebkitBackdropFilter:“blur(20px)”,borderBottom:”.5px solid “+t.sep,padding:“env(safe-area-inset-top,0) 16px 0”}},h(“div”,{style:{height:44,display:“flex”,alignItems:“center”,justifyContent:“space-between”}},h(“div”,{style:{minWidth:44}}),!p.large?h(“span”,{style:{fontSize:17,fontWeight:600,color:t.lbl}},p.title):null,h(“div”,{style:{minWidth:44,textAlign:“right”,display:“flex”,justifyContent:“flex-end”,gap:10}},p.acts?p.acts.map(function(a,i){return h(“button”,{key:i,onClick:a.fn,style:{background:“none”,border:“none”,color:t.blue,fontSize:a.sz||22,cursor:“pointer”,padding:0}},a.ic)}):null)),p.large?h(“div”,{style:{padding:“0 0 8px”}},h(“h1”,{style:{margin:0,fontSize:34,fontWeight:700,color:t.lbl}},p.title)):null)}
+function Grp(p){var t=p.t;return h(“div”,{style:{margin:“0 16px 20px”}},p.header?h(“div”,{style:{fontSize:13,color:t.lbl3,textTransform:“uppercase”,padding:“0 16px 6px”}},p.header):null,h(“div”,{style:{background:t.card,borderRadius:10,overflow:“hidden”}},p.children))}
+function Cell(p){var t=p.t,r=uS(false),pr=r[0],sP=r[1];return h(“div”,{onClick:p.onPress,onPointerDown:function(){sP(true)},onPointerUp:function(){sP(false)},onPointerLeave:function(){sP(false)},style:{display:“flex”,alignItems:“center”,gap:12,padding:“11px 16px”,minHeight:44,background:pr&&p.onPress?t.press:t.card,cursor:p.onPress?“pointer”:“default”,borderBottom:”.5px solid “+t.sep}},p.icon?h(“div”,{style:{width:29,height:29,borderRadius:6,background:p.icBg||t.blue,display:“flex”,alignItems:“center”,justifyContent:“center”,fontSize:15,flexShrink:0,color:”#fff”}},p.icon):null,h(“div”,{style:{flex:1,minWidth:0}},h(“div”,{style:{fontSize:17,color:p.destructive?t.red:t.lbl,overflow:“hidden”,textOverflow:“ellipsis”,whiteSpace:“nowrap”}},p.label),p.sub?h(“div”,{style:{fontSize:13,color:t.lbl3,marginTop:1}},p.sub):null),p.trailing||null,p.detail?h(“span”,{style:{fontSize:17,color:t.lbl3}},p.detail):null,p.chevron?h(“span”,{style:{color:t.lbl4,fontSize:20}},”\u203a”):null)}
 
-function Av(props) {
-  var name = props.name || "?", sz = props.sz || 32;
-  var parts = name.split(" ");
-  var ini = parts.map(function(n){return n.charAt(0)}).join("").slice(0,2);
-  var hu = 0;
-  for (var i=0; i<name.length; i++) hu += name.charCodeAt(i);
-  hu = hu % 360;
-  return e("div", {style:{width:sz,height:sz,borderRadius:"50%",
-    background:"linear-gradient(135deg,hsl("+hu+",50%,55%),hsl("+(hu+30)+",55%,45%))",
-    display:"flex",alignItems:"center",justifyContent:"center",
-    color:"#fff",fontSize:sz*0.38,fontWeight:"600",flexShrink:0}}, ini);
-}
+function Sheet(p){var t=p.t;return h(“div”,{style:{position:“fixed”,inset:0,zIndex:1e3,background:t.overlay,display:“flex”,alignItems:“flex-end”,justifyContent:“center”,animation:“fadeIn .2s”},onClick:p.onClose},h(“div”,{onClick:function(e){e.stopPropagation()},style:{background:t.sheet,width:“100%”,maxWidth:600,borderRadius:“14px 14px 0 0”,maxHeight:“92vh”,overflow:“hidden”,display:“flex”,flexDirection:“column”,animation:“slideUp .35s cubic-bezier(.32,.72,0,1)”}},h(“div”,{style:{display:“flex”,justifyContent:“center”,padding:“8px 0 4px”}},h(“div”,{style:{width:36,height:5,borderRadius:3,background:t.fill}})),h(“div”,{style:{display:“flex”,alignItems:“center”,justifyContent:“space-between”,padding:“8px 16px 12px”,borderBottom:”.5px solid “+t.sep}},h(“button”,{onClick:p.onClose,style:{background:“none”,border:“none”,color:t.blue,fontSize:17,fontFamily:“inherit”,cursor:“pointer”,minWidth:60}},”\u0130ptal”),h(“span”,{style:{fontSize:17,fontWeight:600,color:t.lbl}},p.title),h(“div”,{style:{minWidth:60,textAlign:“right”}},p.rA?h(“button”,{onClick:p.rA.fn,disabled:p.rA.dis,style:{background:“none”,border:“none”,color:p.rA.dis?t.lbl4:t.blue,fontSize:17,fontWeight:600,fontFamily:“inherit”,cursor:p.rA.dis?“default”:“pointer”}},p.rA.l):null)),h(“div”,{style:{flex:1,overflow:“auto”,WebkitOverflowScrolling:“touch”}},p.children)))}
+function FF(p){var t=p.t;return h(“div”,{style:{display:“flex”,alignItems:“center”,justifyContent:“space-between”,padding:“11px 16px”,minHeight:44,borderBottom:”.5px solid “+t.sep,background:t.card}},h(“span”,{style:{fontSize:17,flexShrink:0,marginRight:12,color:t.lbl}},p.label),h(“div”,{style:{flex:1,display:“flex”,justifyContent:“flex-end”}},p.children))}
+function Pk(p){var t=p.t;return h(“select”,{value:p.value,onChange:function(e){p.onChange(e.target.value)},style:{border:“none”,background:“none”,outline:“none”,fontSize:17,color:t.blue,fontFamily:“inherit”,direction:“rtl”,cursor:“pointer”,WebkitAppearance:“none”,appearance:“none”,maxWidth:200}},p.opts.map(function(o){return h(“option”,{key:o.v,value:o.v},o.l)}))}
 
-function Bdg(props) {
-  if (!props.n) return null;
-  return e("span", {style:{background:props.cl||T.red,color:"#fff",borderRadius:10,
-    fontSize:13,fontWeight:"600",minWidth:20,height:20,
-    display:"inline-flex",alignItems:"center",justifyContent:"center",padding:"0 6px"}}, props.n);
-}
+function TaskForm(p){var t=p.t,ed=!!p.task;var r=uS(p.task?JSON.parse(JSON.stringify(p.task)):{title:””,description:””,priority:“medium”,status:“todo”,category:CATS[0],assignee:””,dueDate:””,createdAt:new Date().toISOString(),subtasks:[]}),f=r[0],sF=r[1];var r2=uS(””),ns=r2[0],sN=r2[1];
+function s(k,v){sF(function(o){var n=Object.assign({},o);n[k]=v;return n})}
+function addS(){if(!ns.trim())return;s(“subtasks”,(f.subtasks||[]).concat([{id:uid(),text:ns.trim(),done:false}]));sN(””)}
+return h(Sheet,{t:t,title:ed?“G\u00f6revi D\u00fczenle”:“Yeni G\u00f6rev”,onClose:p.onClose,rA:{l:ed?“Kaydet”:“Ekle”,fn:function(){if(f.title.trim())p.onSave(f)},dis:!f.title.trim()}},
+h(“div”,{style:{padding:“16px 0”}},
+h(Grp,{t:t},h(“div”,{style:{padding:“11px 16px”,borderBottom:”.5px solid “+t.sep}},h(“input”,{value:f.title,onChange:function(e){s(“title”,e.target.value)},placeholder:“G\u00f6rev ba\u015fl\u0131\u011f\u0131”,style:{border:“none”,background:“none”,outline:“none”,width:“100%”,fontSize:17,fontFamily:“inherit”,fontWeight:500,color:t.lbl}})),h(“div”,{style:{padding:“11px 16px”}},h(“textarea”,{value:f.description||””,onChange:function(e){s(“description”,e.target.value)},placeholder:“A\u00e7\u0131klama…”,rows:3,style:{border:“none”,background:“none”,outline:“none”,width:“100%”,fontSize:15,fontFamily:“inherit”,resize:“none”,color:t.lbl}}))),
+h(Grp,{t:t,header:“Detaylar”},
+h(FF,{t:t,label:”\u00d6ncelik”},h(Pk,{t:t,value:f.priority,onChange:function(v){s(“priority”,v)},opts:Object.keys(PR).map(function(k){return{v:k,l:PR[k].i+” “+PR[k].l}})})),
+h(FF,{t:t,label:“Durum”},h(Pk,{t:t,value:f.status,onChange:function(v){s(“status”,v)},opts:Object.keys(SS).map(function(k){return{v:k,l:SS[k].l}})})),
+h(FF,{t:t,label:“Kategori”},h(Pk,{t:t,value:f.category,onChange:function(v){s(“category”,v)},opts:CATS.map(function(c){return{v:c,l:c}})})),
+h(FF,{t:t,label:“Atanan”},h(Pk,{t:t,value:f.assignee,onChange:function(v){s(“assignee”,v)},opts:[{v:””,l:“Se\u00e7ilmedi”}].concat(p.team.map(function(m){return{v:m.id,l:m.name}}))})),
+h(FF,{t:t,label:“Tarih”},h(“input”,{type:“date”,value:f.dueDate||””,onChange:function(e){s(“dueDate”,e.target.value)},style:{border:“none”,background:“none”,outline:“none”,fontSize:17,color:t.blue,fontFamily:“inherit”}}))),
+h(Grp,{t:t,header:“Alt G\u00f6revler”},
+(f.subtasks||[]).map(function(st){return h(“div”,{key:st.id,style:{display:“flex”,alignItems:“center”,gap:12,padding:“10px 16px”,borderBottom:”.5px solid “+t.sep}},h(Chk,{t:t,done:st.done,onClick:function(){s(“subtasks”,f.subtasks.map(function(x){return x.id===st.id?Object.assign({},x,{done:!x.done}):x}))}}),h(“span”,{style:{flex:1,fontSize:17,color:st.done?t.lbl3:t.lbl,textDecoration:st.done?“line-through”:“none”}},st.text),h(“button”,{onClick:function(){s(“subtasks”,f.subtasks.filter(function(x){return x.id!==st.id}))},style:{background:“none”,border:“none”,color:t.red,fontSize:20,cursor:“pointer”}},”\u2212”))}),
+h(“div”,{style:{display:“flex”,alignItems:“center”,gap:8,padding:“8px 16px”}},h(“input”,{value:ns,onChange:function(e){sN(e.target.value)},onKeyDown:function(e){if(e.key===“Enter”)addS()},placeholder:“Alt g\u00f6rev ekle…”,style:{border:“none”,background:“none”,outline:“none”,width:“100%”,fontSize:17,fontFamily:“inherit”,color:t.lbl}}),ns.trim()?h(“button”,{onClick:addS,style:{background:t.blue,color:”#fff”,border:“none”,borderRadius:“50%”,width:28,height:28,display:“flex”,alignItems:“center”,justifyContent:“center”,cursor:“pointer”,fontSize:18,fontWeight:700,flexShrink:0}},”+”):null)),
+ed?h(Grp,{t:t},h(Cell,{t:t,label:“G\u00f6revi Sil”,destructive:true,onPress:function(){p.onDel(p.task.id)}})):null,
+h(“div”,{style:{height:50}})))}
 
-function Seg(props) {
-  return e("div", {style:{display:"flex",background:T.fill,borderRadius:8,padding:2}},
-    props.opts.map(function(o) {
-      var active = props.val === o.v;
-      return e("button", {key:o.v, onClick:function(){props.onChange(o.v)},
-        style:{flex:1,padding:"6px 6px",borderRadius:7,border:"none",
-          background:active?T.card:"transparent",color:T.lbl,
-          fontSize:12.5,fontWeight:active?"600":"400",fontFamily:"inherit",
-          cursor:"pointer",boxShadow:active?"0 1px 4px rgba(0,0,0,0.08)":"none",
-          whiteSpace:"nowrap",transition:"all 0.15s"}}, o.l);
-    }));
-}
+function TeamSh(p){var t=p.t,r=uS(””),n=r[0],sN=r[1],r2=uS(””),rl=r2[0],sR=r2[1];function add(){if(!n.trim())return;p.onAdd({name:n.trim(),role:rl.trim()||“Ekip \u00dcyesi”});sN(””);sR(””)}
+return h(Sheet,{t:t,title:“Ekip Y\u00f6netimi”,onClose:p.onClose},h(“div”,{style:{padding:“16px 0”}},
+h(Grp,{t:t,header:p.team.length+” \u00dcye”},p.team.map(function(m){return h(“div”,{key:m.id,style:{display:“flex”,alignItems:“center”,gap:12,padding:“10px 16px”,borderBottom:”.5px solid “+t.sep}},h(Av,{name:m.name,sz:36}),h(“div”,{style:{flex:1}},h(“div”,{style:{fontSize:17,color:t.lbl}},m.name),h(“div”,{style:{fontSize:13,color:t.lbl3}},m.role)),h(“button”,{onClick:function(){p.onDel(m.id)},style:{background:“none”,border:“none”,color:t.red,fontSize:22,cursor:“pointer”}},”\u2212”))})),
+h(Grp,{t:t,header:“Yeni \u00dcye”},h(FF,{t:t,label:“Ad Soyad”},h(“input”,{value:n,onChange:function(e){sN(e.target.value)},placeholder:”\u0130sim”,style:{border:“none”,background:“none”,outline:“none”,fontSize:17,textAlign:“right”,fontFamily:“inherit”,width:“100%”,color:t.lbl}})),h(FF,{t:t,label:“Rol”},h(“input”,{value:rl,onChange:function(e){sR(e.target.value)},onKeyDown:function(e){if(e.key===“Enter”)add()},placeholder:”\u00d6rn: Yaz\u0131l\u0131mc\u0131”,style:{border:“none”,background:“none”,outline:“none”,fontSize:17,textAlign:“right”,fontFamily:“inherit”,width:“100%”,color:t.lbl}})),h(“div”,{style:{padding:16}},h(“button”,{onClick:add,disabled:!n.trim(),style:{width:“100%”,padding:12,borderRadius:10,border:“none”,background:n.trim()?t.blue:t.fill,color:n.trim()?”#fff”:t.lbl3,fontSize:17,fontWeight:600,fontFamily:“inherit”,cursor:n.trim()?“pointer”:“default”}},“Ekle”)))))}
 
-function NavB(props) {
-  return e("div", {style:{position:"sticky",top:0,zIndex:100,background:T.nav,
-    backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",
-    borderBottom:"0.5px solid "+T.sep,padding:"env(safe-area-inset-top,0) 16px 0"}},
-    e("div", {style:{height:44,display:"flex",alignItems:"center",justifyContent:"space-between"}},
-      e("div", {style:{minWidth:44}}),
-      !props.large ? e("span", {style:{fontSize:17,fontWeight:"600"}}, props.title) : null,
-      e("div", {style:{minWidth:44,textAlign:"right"}},
-        props.right ? e("button", {onClick:props.right.fn,
-          style:{background:"none",border:"none",color:T.blue,fontSize:28,
-            cursor:"pointer",fontWeight:"300",fontFamily:"inherit",padding:0}},
-          props.right.ic) : null)),
-    props.large ? e("div", {style:{padding:"0 0 8px"}},
-      e("h1", {style:{margin:0,fontSize:34,fontWeight:"700",letterSpacing:0.4}}, props.title)) : null);
-}
+function Detail(p){var t=p.t,tk=p.task,tm=p.team,pr=PR[tk.priority]||PR.medium,ss=SS[tk.status]||SS.todo;var a=null;tm.forEach(function(m){if(m.id===tk.assignee)a=m});var dl=dL(tk.dueDate),subs=tk.subtasks||[],sd=subs.filter(function(x){return x.done}).length,st=subs.length;
+function togSub(sid){var ns=subs.map(function(x){return x.id===sid?Object.assign({},x,{done:!x.done}):x});p.onUpd(Object.assign({},tk,{subtasks:ns}))}
+return h(Sheet,{t:t,title:“G\u00f6rev Detay\u0131”,onClose:p.onClose,rA:{l:“D\u00fczenle”,fn:function(){p.onEdit(tk)}}},h(“div”,{style:{padding:“16px 0”}},
+h(“div”,{style:{padding:“0 16px 16px”}},h(“h2”,{style:{margin:“0 0 6px”,fontSize:22,fontWeight:700,color:t.lbl}},tk.title),tk.description?h(“p”,{style:{margin:0,fontSize:15,color:t.lbl2,lineHeight:1.5}},tk.description):null),
+h(“div”,{style:{padding:“0 16px 16px”}},h(Seg,{t:t,opts:Object.keys(SS).map(function(k){return{v:k,l:SS[k].l}}),val:tk.status,onChange:function(v){p.onSC(tk.id,v)}})),
+h(Grp,{t:t,header:“Bilgiler”},h(Cell,{t:t,icon:”\u26a1”,icBg:pr.c,label:”\u00d6ncelik”,detail:pr.l}),h(Cell,{t:t,icon:”\ud83d\udcc1”,icBg:t.teal,label:“Kategori”,detail:tk.category}),a?h(Cell,{t:t,icon:”\ud83d\udc64”,icBg:t.indigo,label:“Atanan”,detail:a.name}):null,tk.dueDate?h(Cell,{t:t,icon:”\ud83d\udcc5”,icBg:dl!==null&&dl<0?t.red:t.orange,label:“Son Tarih”,detail:fmtDL(tk.dueDate),trailing:dl!==null&&dl<0?h(Bdg,{n:“Gecikmi\u015f”}):null}):null),
+st>0?h(Grp,{t:t,header:“Alt G\u00f6revler \u2014 “+sd+”/”+st},subs.map(function(sub){return h(“div”,{key:sub.id,style:{display:“flex”,alignItems:“center”,gap:12,padding:“10px 16px”,borderBottom:”.5px solid “+t.sep}},h(Chk,{t:t,done:sub.done,onClick:function(){togSub(sub.id)}}),h(“span”,{style:{fontSize:17,color:sub.done?t.lbl3:t.lbl,textDecoration:sub.done?“line-through”:“none”}},sub.text))}),h(“div”,{style:{padding:“10px 16px”}},h(“div”,{style:{height:6,background:t.fill,borderRadius:3,overflow:“hidden”}},h(“div”,{style:{height:“100%”,width:(st>0?sd/st*100:0)+”%”,background:t.green,borderRadius:3,transition:“width .3s”}})))):null,
+h(Grp,{t:t},h(Cell,{t:t,label:“G\u00f6revi Sil”,destructive:true,onPress:function(){p.onDel(tk.id)}})),h(“div”,{style:{height:40}})))}
 
-function Grp(props) {
-  return e("div", {style:{margin:"0 16px 20px"}},
-    props.header ? e("div", {style:{fontSize:13,color:T.lbl2,textTransform:"uppercase",
-      padding:"0 16px 6px",letterSpacing:-0.1,opacity:0.6}}, props.header) : null,
-    e("div", {style:{background:T.card,borderRadius:10,overflow:"hidden"}}, props.children));
-}
+function TRow(p){var t=p.t,tk=p.task,tm=p.team,r=uS(false),pr2=r[0],sP=r[1];var pr=PR[tk.priority]||PR.medium,ss=SS[tk.status]||SS.todo;var a=null;tm.forEach(function(m){if(m.id===tk.assignee)a=m});var dl=dL(tk.dueDate),subs=tk.subtasks||[],sd=subs.filter(function(x){return x.done}).length,st=subs.length;
+return h(“div”,{onClick:function(){p.onPress(tk)},onPointerDown:function(){sP(true)},onPointerUp:function(){sP(false)},onPointerLeave:function(){sP(false)},style:{display:“flex”,alignItems:“center”,gap:12,padding:“12px 16px”,background:pr2?t.press:t.card,borderBottom:”.5px solid “+t.sep,cursor:“pointer”,transition:“background .1s”}},h(“div”,{style:{width:4,height:38,borderRadius:2,background:pr.c,flexShrink:0}}),h(“div”,{style:{flex:1,minWidth:0}},h(“div”,{style:{fontSize:17,fontWeight:500,color:tk.status===“done”?t.lbl3:t.lbl,textDecoration:tk.status===“done”?“line-through”:“none”,overflow:“hidden”,textOverflow:“ellipsis”,whiteSpace:“nowrap”}},tk.title),h(“div”,{style:{display:“flex”,alignItems:“center”,gap:6,flexWrap:“wrap”,marginTop:3}},h(“span”,{style:{fontSize:13,color:ss.c,fontWeight:500}},ss.i+” “+ss.l),h(“span”,{style:{fontSize:13,color:t.lbl4}},”\u00b7”),h(“span”,{style:{fontSize:13,color:t.lbl3}},tk.category),tk.dueDate?h(Fr,null,h(“span”,{style:{fontSize:13,color:t.lbl4}},”\u00b7”),h(“span”,{style:{fontSize:13,fontWeight:500,color:dl!==null&&dl<0?t.red:dl!==null&&dl<=2?t.orange:t.lbl3}},relD(tk.dueDate))):null)),h(“div”,{style:{display:“flex”,alignItems:“center”,gap:8,flexShrink:0}},st>0?h(Ring,{p:sd/st,sz:22,sw:2.5,cl:t.blue,bg:t.fill}):null,a?h(Av,{name:a.name,sz:28}):null,h(“span”,{style:{color:t.lbl4,fontSize:20}},”\u203a”)))}
 
-function Cell(props) {
-  var ref = useState(false);
-  var pr = ref[0], setPr = ref[1];
-  return e("div", {
-    onClick: props.onPress,
-    onPointerDown: function(){setPr(true)},
-    onPointerUp: function(){setPr(false)},
-    onPointerLeave: function(){setPr(false)},
-    style:{display:"flex",alignItems:"center",gap:12,padding:"11px 16px",minHeight:44,
-      background:(pr && props.onPress)?T.press:T.card,
-      cursor:props.onPress?"pointer":"default",
-      borderBottom:"0.5px solid "+T.sep,transition:"background 0.1s"}},
-    props.icon ? e("div", {style:{width:29,height:29,borderRadius:6,
-      background:props.icBg||T.blue,display:"flex",alignItems:"center",justifyContent:"center",
-      fontSize:15,flexShrink:0,color:"#fff"}}, props.icon) : null,
-    e("div", {style:{flex:1,minWidth:0}},
-      e("div", {style:{fontSize:17,color:props.destructive?T.red:T.lbl,
-        overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}, props.label),
-      props.sub ? e("div", {style:{fontSize:13,color:T.lbl3,marginTop:1}}, props.sub) : null),
-    props.trailing || null,
-    props.detail ? e("span", {style:{fontSize:17,color:T.lbl3}}, props.detail) : null,
-    props.chevron ? e("span", {style:{color:T.lbl4,fontSize:20}}, "\u203A") : null);
-}
+function App(){
+var r1=uS(function(){return lG(“hf-dk”,false)}),dark=r1[0],sDk=r1[1];var t=dark?DK:LT;
+var r2=uS(function(){return lG(“hf-t”,SAM)}),tasks=r2[0],sT=r2[1];
+var r3=uS(function(){return lG(“hf-m”,DTM)}),team=r3[0],sTm=r3[1];
+var r4=uS(“dash”),tab=r4[0],sTab=r4[1];
+var r5=uS(null),sh=r5[0],sSh=r5[1];
+var r6=uS({q:””,st:“all”}),fl=r6[0],sFl=r6[1];
 
-function Sheet(props) {
-  return e("div", {
-    style:{position:"fixed",inset:0,zIndex:1000,background:"rgba(0,0,0,0.4)",
-      display:"flex",alignItems:"flex-end",justifyContent:"center",animation:"fadeIn 0.2s"},
-    onClick: props.onClose},
-    e("div", {
-      onClick: function(ev){ev.stopPropagation()},
-      style:{background:T.sheet,width:"100%",maxWidth:600,borderRadius:"14px 14px 0 0",
-        maxHeight:"92vh",overflow:"hidden",display:"flex",flexDirection:"column",
-        animation:"slideUp 0.35s cubic-bezier(0.32,0.72,0,1)"}},
-      e("div", {style:{display:"flex",justifyContent:"center",padding:"8px 0 4px"}},
-        e("div", {style:{width:36,height:5,borderRadius:3,background:T.fill}})),
-      e("div", {style:{display:"flex",alignItems:"center",justifyContent:"space-between",
-        padding:"8px 16px 12px",borderBottom:"0.5px solid "+T.sep}},
-        e("button", {onClick:props.onClose,style:{background:"none",border:"none",color:T.blue,
-          fontSize:17,fontFamily:"inherit",cursor:"pointer",minWidth:60}}, "\u0130ptal"),
-        e("span", {style:{fontSize:17,fontWeight:"600"}}, props.title),
-        e("div", {style:{minWidth:60,textAlign:"right"}},
-          props.rightAct ? e("button", {onClick:props.rightAct.fn,disabled:props.rightAct.dis,
-            style:{background:"none",border:"none",
-              color:props.rightAct.dis?T.lbl4:T.blue,
-              fontSize:17,fontWeight:"600",fontFamily:"inherit",
-              cursor:props.rightAct.dis?"default":"pointer"}}, props.rightAct.l) : null)),
-      e("div", {style:{flex:1,overflow:"auto",WebkitOverflowScrolling:"touch"}}, props.children)));
-}
+function tDk(){sDk(function(d){lS(“hf-dk”,!d);return!d})}
+uE(function(){if(!fbOK)return;var u1=fbSub(“tasks”,“createdAt”,function(d){if(d.length)sT(d)});var u2=db.collection(“team”).orderBy(“name”).onSnapshot(function(s){var r=[];s.forEach(function(d){r.push(Object.assign({id:d.id},d.data()))});if(r.length)sTm(r)});return function(){u1();u2()}},[]);
+uE(function(){lS(“hf-t”,tasks)},[tasks]);
+uE(function(){lS(“hf-m”,team)},[team]);
+uE(function(){document.body.style.background=t.bg;document.body.style.color=t.lbl},[dark]);
 
-function FF(props) {
-  return e("div", {style:{display:"flex",alignItems:"center",justifyContent:"space-between",
-    padding:"11px 16px",minHeight:44,borderBottom:"0.5px solid "+T.sep,background:T.card}},
-    e("span", {style:{fontSize:17,flexShrink:0,marginRight:12}}, props.label),
-    e("div", {style:{flex:1,display:"flex",justifyContent:"flex-end"}}, props.children));
-}
+function svTk(fd){
+if(fbOK){var ex=false;tasks.forEach(function(x){if(x.id===fd.id)ex=true});if(ex){fbUp(“tasks”,fd.id,fd);sT(function(p){return p.map(function(x){return x.id===fd.id?Object.assign({},x,fd):x})})}else{fbAdd(“tasks”,fd).then(function(nid){sT(function(p){return[Object.assign({},fd,{id:nid||uid()})].concat(p)})})}}
+else{sT(function(p){var i=-1;p.forEach(function(x,idx){if(x.id===fd.id)i=idx});if(i>=0){var n=p.slice();n[i]=fd;return n}return[Object.assign({},fd,{id:uid()})].concat(p)})}
+sSh(null)}
+function dlTk(id){if(fbOK)fbDel(“tasks”,id);sT(function(p){return p.filter(function(x){return x.id!==id})});sSh(null)}
+function cSt(id,st){if(fbOK)fbUp(“tasks”,id,{status:st});sT(function(p){return p.map(function(x){return x.id===id?Object.assign({},x,{status:st}):x})});sSh(function(prev){if(prev&&prev.type===“detail”&&prev.task.id===id)return{type:“detail”,task:Object.assign({},prev.task,{status:st})};return prev})}
+function upTk(ud){if(fbOK)fbUp(“tasks”,ud.id,ud);sT(function(p){return p.map(function(x){return x.id===ud.id?ud:x})});sSh(function(prev){if(prev&&prev.type===“detail”)return{type:“detail”,task:ud};return prev})}
+function addM(m){if(fbOK){fbAdd(“team”,m).then(function(nid){sTm(function(p){return p.concat([Object.assign({},m,{id:nid||uid()})])})})}else{sTm(function(p){return p.concat([Object.assign({},m,{id:uid()})])})}}
+function delM(id){if(fbOK)fbDel(“team”,id);sTm(function(p){return p.filter(function(x){return x.id!==id})})}
 
-function Pk(props) {
-  return e("select", {value:props.value, onChange:function(ev){props.onChange(ev.target.value)},
-    style:{border:"none",background:"none",outline:"none",fontSize:17,color:T.blue,
-      fontFamily:"inherit",direction:"rtl",cursor:"pointer",WebkitAppearance:"none",
-      appearance:"none",maxWidth:180}},
-    props.opts.map(function(o) { return e("option", {key:o.v, value:o.v}, o.l); }));
-}
+var filt=uM(function(){return tasks.filter(function(x){if(fl.st!==“all”&&x.status!==fl.st)return false;if(fl.q&&x.title.toLowerCase().indexOf(fl.q.toLowerCase())===-1)return false;return true}).sort(function(a,b){return(PR[a.priority]?PR[a.priority].s:2)-(PR[b.priority]?PR[b.priority].s:2)})},[tasks,fl]);
+var st=uM(function(){var d=0,ov=0,todo=0,ip=0,rv=0;tasks.forEach(function(x){if(x.status===“done”)d++;if(x.status===“todo”)todo++;if(x.status===“inprogress”)ip++;if(x.status===“review”)rv++;var dl2=dL(x.dueDate);if(dl2!==null&&dl2<0&&x.status!==“done”)ov++});return{total:tasks.length,todo:todo,ip:ip,rv:rv,done:d,ov:ov,pct:tasks.length?Math.round(d/tasks.length*100):0}},[tasks]);
+function opD(tk){sSh({type:“detail”,task:tk})}
 
-// ===== TASK FORM =====
-function TaskForm(props) {
-  var task = props.task, team = props.team, onSave = props.onSave, onClose = props.onClose;
-  var ed = !!task;
-  var ref = useState(task || {
-    title:"",description:"",priority:"medium",status:"todo",
-    category:CATS[0],assignee:"",dueDate:"",
-    createdAt:new Date().toISOString(),subtasks:[]
-  });
-  var f = ref[0], setF = ref[1];
-  var ref2 = useState("");
-  var ns = ref2[0], setNs = ref2[1];
+function Dash(){return h(“div”,null,
+h(Nav,{t:t,title:“HF IT G\u00f6rev Takip”,large:true,acts:[{ic:dark?”\u2600\ufe0f”:”\ud83c\udf19”,fn:tDk,sz:24},{ic:”\uff0b”,fn:function(){sSh(“new”)},sz:28}]}),
+h(“div”,{style:{padding:“0 16px 6px”}},h(“div”,{style:{display:“flex”,alignItems:“center”,gap:6,fontSize:12,color:fbOK?t.green:t.orange}},h(“div”,{style:{width:6,height:6,borderRadius:“50%”,background:fbOK?t.green:t.orange}}),fbOK?“Firebase ba\u011fl\u0131”:”\u00c7evrimd\u0131\u015f\u0131”)),
+h(“div”,{style:{padding:“0 16px 16px”}},h(“div”,{style:{background:“linear-gradient(135deg,”+t.gA+”,”+t.gB+”)”,borderRadius:16,padding:20,color:”#fff”,marginBottom:12}},h(“div”,{style:{fontSize:13,opacity:.8,marginBottom:6}},“Tamamlanma Oran\u0131”),h(“div”,{style:{display:“flex”,alignItems:“center”,gap:16}},h(Ring,{p:st.pct/100,sz:60,sw:5,cl:”#fff”,bg:“rgba(255,255,255,.25)”}),h(“div”,null,h(“div”,{style:{fontSize:42,fontWeight:700,lineHeight:1}},”%”+st.pct),h(“div”,{style:{fontSize:13,opacity:.75,marginTop:2}},st.done+”/”+st.total)))),
+h(“div”,{style:{display:“grid”,gridTemplateColumns:“repeat(auto-fit,minmax(80px,1fr))”,gap:8}},[{n:st.todo,l:“Bekliyor”,c:t.lbl3,i:”\u25cb”},{n:st.ip,l:“Devam”,c:t.blue,i:”\u25d0”},{n:st.rv,l:”\u0130nceleme”,c:t.purple,i:”\u25d1”},{n:st.ov,l:“Gecikmi\u015f”,c:t.red,i:”\u26a0”}].map(function(s){return h(“div”,{key:s.l,style:{background:t.card,borderRadius:12,padding:“12px 8px”,textAlign:“center”}},h(“div”,{style:{fontSize:12,color:t.lbl3}},s.i+” “+s.l),h(“div”,{style:{fontSize:26,fontWeight:700,color:s.c,marginTop:2}},s.n))}))),
+st.ov>0?h(Grp,{t:t,header:”\u26a0\ufe0f Gecikmi\u015f”},tasks.filter(function(x){var dl2=dL(x.dueDate);return dl2!==null&&dl2<0&&x.status!==“done”}).map(function(x){return h(TRow,{key:x.id,t:t,task:x,team:team,onPress:opD})})):null,
+h(Grp,{t:t,header:“Son G\u00f6revler”},tasks.length===0?h(“div”,{style:{padding:40,textAlign:“center”,color:t.lbl3}},“Hen\u00fcz g\u00f6rev yok”):tasks.slice(0,6).map(function(x){return h(TRow,{key:x.id,t:t,task:x,team:team,onPress:opD})})),h(“div”,{style:{height:100}}))}
 
-  function s(k,v) { setF(function(p){ var n=Object.assign({},p); n[k]=v; return n; }); }
-  function addS() {
-    if (!ns.trim()) return;
-    s("subtasks", (f.subtasks||[]).concat([{id:uid(),text:ns.trim(),done:false}]));
-    setNs("");
-  }
+function TTab(){return h(“div”,null,
+h(Nav,{t:t,title:“G\u00f6revler”,large:true,acts:[{ic:dark?”\u2600\ufe0f”:”\ud83c\udf19”,fn:tDk,sz:24},{ic:”\uff0b”,fn:function(){sSh(“new”)},sz:28}]}),
+h(“div”,{style:{padding:“0 16px 12px”}},h(“div”,{style:{display:“flex”,alignItems:“center”,gap:6,background:t.fill,borderRadius:10,padding:“7px 10px”,marginBottom:10}},h(“span”,{style:{color:t.lbl3}},”\ud83d\udd0d”),h(“input”,{value:fl.q,onChange:function(e){sFl(function(f){return Object.assign({},f,{q:e.target.value})})},placeholder:“G\u00f6rev ara…”,style:{border:“none”,background:“none”,outline:“none”,fontSize:17,width:“100%”,fontFamily:“inherit”,color:t.lbl}}),fl.q?h(“button”,{onClick:function(){sFl(function(f){return Object.assign({},f,{q:””})})},style:{background:t.fill2,border:“none”,borderRadius:“50%”,width:20,height:20,display:“flex”,alignItems:“center”,justifyContent:“center”,cursor:“pointer”,color:t.lbl3,fontSize:11,flexShrink:0}},”\u2715”):null),h(Seg,{t:t,opts:[{v:“all”,l:“T\u00fcm\u00fc”},{v:“todo”,l:“Bekliyor”},{v:“inprogress”,l:“Devam”},{v:“review”,l:”\u0130nceleme”},{v:“done”,l:“Bitti”}],val:fl.st,onChange:function(v){sFl(function(f){return Object.assign({},f,{st:v})})}})),
+filt.length===0?h(“div”,{style:{textAlign:“center”,padding:60,color:t.lbl3}},“G\u00f6rev bulunamad\u0131”):h(Grp,{t:t},filt.map(function(x){return h(TRow,{key:x.id,t:t,task:x,team:team,onPress:opD})})),h(“div”,{style:{height:100}}))}
 
-  return e(Sheet, {title:ed?"G\u00F6revi D\u00FCzenle":"Yeni G\u00F6rev", onClose:onClose,
-    rightAct:{l:ed?"Kaydet":"Ekle", fn:function(){if(f.title.trim()) onSave(f)}, dis:!f.title.trim()}},
-    e("div", {style:{padding:"16px 0"}},
-      e(Grp, null,
-        e("div", {style:{padding:"11px 16px",borderBottom:"0.5px solid "+T.sep}},
-          e("input", {value:f.title, onChange:function(ev){s("title",ev.target.value)},
-            placeholder:"G\u00F6rev ba\u015Fl\u0131\u011F\u0131",
-            style:{border:"none",background:"none",outline:"none",width:"100%",
-              fontSize:17,fontFamily:"inherit",fontWeight:"500"}})),
-        e("div", {style:{padding:"11px 16px"}},
-          e("textarea", {value:f.description, onChange:function(ev){s("description",ev.target.value)},
-            placeholder:"A\u00E7\u0131klama...", rows:3,
-            style:{border:"none",background:"none",outline:"none",width:"100%",
-              fontSize:15,fontFamily:"inherit",resize:"none"}}))),
+function BTab(){return h(“div”,null,
+h(Nav,{t:t,title:“Kanban Pano”,large:true,acts:[{ic:dark?”\u2600\ufe0f”:”\ud83c\udf19”,fn:tDk,sz:24},{ic:”\uff0b”,fn:function(){sSh(“new”)},sz:28}]}),
+h(“div”,{style:{display:“flex”,gap:12,padding:“0 16px”,overflowX:“auto”,WebkitOverflowScrolling:“touch”,scrollSnapType:“x mandatory”,paddingBottom:100}},Object.keys(SS).map(function(sk){var sv=SS[sk],col=tasks.filter(function(x){return x.status===sk});return h(“div”,{key:sk,style:{minWidth:280,flex:“0 0 280px”,scrollSnapAlign:“start”}},h(“div”,{style:{display:“flex”,alignItems:“center”,justifyContent:“space-between”,padding:“8px 4px 10px”}},h(“div”,{style:{display:“flex”,alignItems:“center”,gap:6}},h(“span”,{style:{color:sv.c}},sv.i),h(“span”,{style:{fontSize:15,fontWeight:600,color:t.lbl}},sv.l)),h(Bdg,{n:col.length,cl:sv.c})),h(“div”,{style:{display:“flex”,flexDirection:“column”,gap:8}},col.map(function(x){var p2=PR[x.priority]||PR.medium,a2=null;team.forEach(function(m){if(m.id===x.assignee)a2=m});var su=x.subtasks||[],sd2=su.filter(function(s){return s.done}).length,st2=su.length;return h(“div”,{key:x.id,onClick:function(){opD(x)},style:{background:t.card,borderRadius:12,padding:14,borderLeft:“3px solid “+p2.c,cursor:“pointer”},onPointerDown:function(e){e.currentTarget.style.transform=“scale(.98)”},onPointerUp:function(e){e.currentTarget.style.transform=“none”},onPointerLeave:function(e){e.currentTarget.style.transform=“none”}},h(“div”,{style:{fontSize:15,fontWeight:600,marginBottom:6,color:t.lbl}},x.title),h(“div”,{style:{display:“flex”,gap:6,fontSize:12,flexWrap:“wrap”}},h(“span”,{style:{color:p2.c}},p2.i+” “+p2.l),x.dueDate?h(“span”,{style:{color:dL(x.dueDate)<0?t.red:t.lbl3}},”\ud83d\udcc5 “+relD(x.dueDate)):null),st2>0?h(“div”,{style:{marginTop:8}},h(“div”,{style:{height:3,background:t.fill,borderRadius:2,overflow:“hidden”}},h(“div”,{style:{height:“100%”,width:(sd2/st2*100)+”%”,background:t.green,borderRadius:2}})),h(“div”,{style:{fontSize:11,color:t.lbl3,marginTop:3}},sd2+”/”+st2)):null,h(“div”,{style:{display:“flex”,justifyContent:“flex-end”,marginTop:8}},a2?h(Av,{name:a2.name,sz:24}):null))}),col.length===0?h(“div”,{style:{padding:24,textAlign:“center”,fontSize:14,color:t.lbl4,border:“1.5px dashed “+t.sep,borderRadius:10}},“G\u00f6rev yok”):null))})))}
 
-      e(Grp, {header:"Detaylar"},
-        e(FF, {label:"\u00D6ncelik"}, e(Pk, {value:f.priority, onChange:function(v){s("priority",v)},
-          opts:Object.keys(PRIOS).map(function(k){return {v:k,l:PRIOS[k].i+" "+PRIOS[k].l}})})),
-        e(FF, {label:"Durum"}, e(Pk, {value:f.status, onChange:function(v){s("status",v)},
-          opts:Object.keys(STATS).map(function(k){return {v:k,l:STATS[k].l}})})),
-        e(FF, {label:"Kategori"}, e(Pk, {value:f.category, onChange:function(v){s("category",v)},
-          opts:CATS.map(function(c){return {v:c,l:c}})})),
-        e(FF, {label:"Atanan"}, e(Pk, {value:f.assignee, onChange:function(v){s("assignee",v)},
-          opts:[{v:"",l:"Se\u00E7ilmedi"}].concat(team.map(function(t){return {v:t.id,l:t.name}}))})),
-        e(FF, {label:"Tarih"}, e("input", {type:"date",value:f.dueDate,
-          onChange:function(ev){s("dueDate",ev.target.value)},
-          style:{border:"none",background:"none",outline:"none",fontSize:17,color:T.blue,fontFamily:"inherit"}}))),
+function STab(){return h(“div”,null,
+h(Nav,{t:t,title:“Ayarlar”,large:true}),
+h(Grp,{t:t,header:“G\u00f6r\u00fcn\u00fcm”},h(Cell,{t:t,icon:dark?”\ud83c\udf19”:”\u2600\ufe0f”,icBg:dark?”#5e5ce6”:”#ff9500”,label:“Koyu Mod”,trailing:h(“div”,{onClick:function(e){e.stopPropagation();tDk()},style:{width:51,height:31,borderRadius:16,background:dark?t.green:t.fill,padding:2,cursor:“pointer”,transition:“background .2s”}},h(“div”,{style:{width:27,height:27,borderRadius:“50%”,background:”#fff”,transform:dark?“translateX(20px)”:“translateX(0)”,transition:“transform .2s”,boxShadow:“0 1px 3px rgba(0,0,0,.2)”}}))})),
+h(Grp,{t:t,header:“Ba\u011flant\u0131”},h(Cell,{t:t,icon:fbOK?”\ud83d\udfe2”:”\ud83d\udfe0”,icBg:fbOK?t.green:t.orange,label:“Firebase”,detail:fbOK?“Ba\u011fl\u0131”:”\u00c7evrimd\u0131\u015f\u0131”})),
+h(Grp,{t:t,header:“Ekip”},team.map(function(m){return h(Cell,{key:m.id,t:t,label:m.name,detail:m.role})}),h(Cell,{t:t,label:“Ekip Y\u00f6netimi”,icon:”\ud83d\udc65”,icBg:t.blue,chevron:true,onPress:function(){sSh(“team”)}})),
+h(Grp,{t:t,header:”\u0130statistikler”},h(Cell,{t:t,icon:”\ud83d\udcca”,icBg:t.teal,label:“Toplam”,detail:””+st.total}),h(Cell,{t:t,icon:”\u2705”,icBg:t.green,label:“Tamamlanan”,detail:””+st.done}),h(Cell,{t:t,icon:”\u26a0\ufe0f”,icBg:t.red,label:“Gecikmi\u015f”,detail:””+st.ov}),h(Cell,{t:t,icon:”\ud83d\udcc8”,icBg:t.indigo,label:“Oran”,detail:”%”+st.pct})),
+h(Grp,{t:t,header:“Hakk\u0131nda”},h(Cell,{t:t,icon:”\ud83c\udfe2”,icBg:t.blue,label:“Kurum”,detail:“Halk Faktoring”}),h(Cell,{t:t,icon:”\ud83d\udcbc”,icBg:t.indigo,label:“Birim”,detail:“IT Departman\u0131”}),h(Cell,{t:t,icon:”\ud83d\udcf1”,icBg:t.green,label:“Versiyon”,detail:“2.0.0”})),h(“div”,{style:{height:100}}))}
 
-      e(Grp, {header:"Alt G\u00F6revler"},
-        (f.subtasks||[]).map(function(st) {
-          return e("div", {key:st.id, style:{display:"flex",alignItems:"center",gap:12,
-            padding:"10px 16px",borderBottom:"0.5px solid "+T.sep}},
-            e("button", {onClick:function(){s("subtasks",f.subtasks.map(function(x){
-              return x.id===st.id?Object.assign({},x,{done:!x.done}):x}))},
-              style:{width:22,height:22,borderRadius:"50%",
-                border:st.done?"none":"2px solid "+T.lbl3,
-                background:st.done?T.blue:"transparent",display:"flex",
-                alignItems:"center",justifyContent:"center",cursor:"pointer",
-                flexShrink:0,color:"#fff",fontSize:13,padding:0}},
-              st.done?"\u2713":null),
-            e("span", {style:{flex:1,fontSize:17,color:st.done?T.lbl3:T.lbl,
-              textDecoration:st.done?"line-through":"none"}}, st.text),
-            e("button", {onClick:function(){s("subtasks",f.subtasks.filter(function(x){return x.id!==st.id}))},
-              style:{background:"none",border:"none",color:T.red,fontSize:18,cursor:"pointer"}}, "\u2212"));
-        }),
-        e("div", {style:{display:"flex",alignItems:"center",gap:8,padding:"8px 16px"}},
-          e("input", {value:ns, onChange:function(ev){setNs(ev.target.value)},
-            onKeyDown:function(ev){if(ev.key==="Enter")addS()},
-            placeholder:"Alt g\u00F6rev ekle...",
-            style:{border:"none",background:"none",outline:"none",width:"100%",fontSize:17,fontFamily:"inherit"}}),
-          ns.trim() ? e("button", {onClick:addS,
-            style:{background:T.blue,color:"#fff",border:"none",borderRadius:"50%",
-              width:26,height:26,display:"flex",alignItems:"center",justifyContent:"center",
-              cursor:"pointer",fontSize:16,fontWeight:"700",flexShrink:0}}, "+") : null)),
+var tabs=[{id:“dash”,ic:”\ud83d\udcca”,l:”\u00d6zet”},{id:“tasks”,ic:”\ud83d\udccb”,l:“G\u00f6revler”},{id:“board”,ic:”\u25a6”,l:“Pano”},{id:“settings”,ic:”\u2699\ufe0f”,l:“Ayarlar”}];
 
-      ed ? e(Grp, null, e(Cell, {label:"G\u00F6revi Sil",destructive:true,
-        onPress:function(){onSave(null)}})) : null,
-      e("div", {style:{height:40}})));
-}
+return h(“div”,{style:{height:“100vh”,display:“flex”,flexDirection:“column”,background:t.bg,maxWidth:900,margin:“0 auto”}},
+h(“div”,{style:{flex:1,overflow:“auto”,WebkitOverflowScrolling:“touch”}},tab===“dash”?h(Dash):null,tab===“tasks”?h(TTab):null,tab===“board”?h(BTab):null,tab===“settings”?h(STab):null),
+h(“div”,{style:{flexShrink:0,background:t.nav,backdropFilter:“blur(20px)”,WebkitBackdropFilter:“blur(20px)”,borderTop:”.5px solid “+t.sep,display:“flex”,justifyContent:“space-around”,padding:“6px 0 calc(env(safe-area-inset-bottom,8px) + 4px)”}},tabs.map(function(td){return h(“button”,{key:td.id,onClick:function(){sTab(td.id)},style:{display:“flex”,flexDirection:“column”,alignItems:“center”,gap:1,background:“none”,border:“none”,color:tab===td.id?t.blue:t.lbl3,fontSize:10,fontWeight:tab===td.id?600:500,cursor:“pointer”,padding:“4px 16px”,fontFamily:“inherit”,minWidth:50}},h(“span”,{style:{fontSize:24,lineHeight:“1.1”}},td.ic),h(“span”,null,td.l))})),
+h(“button”,{onClick:function(){sSh(“new”)},style:{position:“fixed”,bottom:80,right:20,zIndex:400,width:56,height:56,borderRadius:“50%”,background:t.blue,color:”#fff”,border:“none”,fontSize:28,fontWeight:300,cursor:“pointer”,boxShadow:“0 4px 16px rgba(0,122,255,.4)”,display:“flex”,alignItems:“center”,justifyContent:“center”},onPointerDown:function(e){e.currentTarget.style.transform=“scale(.9)”},onPointerUp:function(e){e.currentTarget.style.transform=“none”},onPointerLeave:function(e){e.currentTarget.style.transform=“none”}},”\uff0b”),
+sh===“new”?h(TaskForm,{t:t,task:null,team:team,onSave:svTk,onDel:dlTk,onClose:function(){sSh(null)}}):null,
+sh&&sh.id&&sh.type!==“detail”?h(TaskForm,{t:t,task:sh,team:team,onSave:svTk,onDel:dlTk,onClose:function(){sSh(null)}}):null,
+sh===“team”?h(TeamSh,{t:t,team:team,onAdd:addM,onDel:delM,onClose:function(){sSh(null)}}):null,
+sh&&sh.type===“detail”?h(Detail,{t:t,task:sh.task,team:team,onEdit:function(tk){sSh(Object.assign({},tk))},onSC:cSt,onUpd:upTk,onDel:dlTk,onClose:function(){sSh(null)}}):null)}
 
-// ===== TEAM SHEET =====
-function TeamSheet(props) {
-  var team=props.team, onAdd=props.onAdd, onDel=props.onDel, onClose=props.onClose;
-  var ref=useState(""); var n=ref[0],sN=ref[1];
-  var ref2=useState(""); var r=ref2[0],sR=ref2[1];
-  function add(){if(!n.trim())return;onAdd({name:n.trim(),role:r.trim()||"Ekip \u00DCyesi"});sN("");sR("")}
-
-  return e(Sheet,{title:"Ekip Y\u00F6netimi",onClose:onClose},
-    e("div",{style:{padding:"16px 0"}},
-      e(Grp,{header:team.length+" \u00DCye"},
-        team.map(function(m){
-          return e("div",{key:m.id,style:{display:"flex",alignItems:"center",gap:12,padding:"10px 16px",borderBottom:"0.5px solid "+T.sep}},
-            e(Av,{name:m.name,sz:36}),
-            e("div",{style:{flex:1}},e("div",{style:{fontSize:17}},m.name),e("div",{style:{fontSize:13,color:T.lbl3}},m.role)),
-            e("button",{onClick:function(){onDel(m.id)},style:{background:"none",border:"none",color:T.red,fontSize:20,cursor:"pointer"}},"\u2212"))
-        })),
-      e(Grp,{header:"Yeni \u00DCye"},
-        e(FF,{label:"Ad Soyad"},e("input",{value:n,onChange:function(ev){sN(ev.target.value)},
-          placeholder:"\u0130sim",style:{border:"none",background:"none",outline:"none",fontSize:17,textAlign:"right",fontFamily:"inherit",width:"100%"}})),
-        e(FF,{label:"Rol"},e("input",{value:r,onChange:function(ev){sR(ev.target.value)},
-          onKeyDown:function(ev){if(ev.key==="Enter")add()},
-          placeholder:"\u00D6rn: Yaz\u0131l\u0131mc\u0131",style:{border:"none",background:"none",outline:"none",fontSize:17,textAlign:"right",fontFamily:"inherit",width:"100%"}})),
-        e("div",{style:{padding:16}},e("button",{onClick:add,disabled:!n.trim(),
-          style:{width:"100%",padding:12,borderRadius:10,border:"none",
-            background:n.trim()?T.blue:T.fill,color:n.trim()?"#fff":T.lbl3,
-            fontSize:17,fontWeight:"600",fontFamily:"inherit",
-            cursor:n.trim()?"pointer":"default"}},"Ekle")))));
-}
-
-// ===== TASK DETAIL =====
-function TaskDetail(props) {
-  var task=props.task,team=props.team,onEdit=props.onEdit,onSC=props.onSC,onClose=props.onClose;
-  var p=PRIOS[task.priority]||PRIOS.medium, s=STATS[task.status]||STATS.todo;
-  var a=null; team.forEach(function(t){if(t.id===task.assignee)a=t});
-  var dl=dLeft(task.dueDate);
-  var subs=task.subtasks||[];
-  var sd=subs.filter(function(x){return x.done}).length, st=subs.length;
-
-  return e(Sheet,{title:"G\u00F6rev Detay\u0131",onClose:onClose,
-    rightAct:{l:"D\u00FCzenle",fn:function(){onEdit(task)}}},
-    e("div",{style:{padding:"16px 0"}},
-      e("div",{style:{padding:"0 16px 16px"}},
-        e("h2",{style:{margin:"0 0 6px",fontSize:22,fontWeight:"700"}},task.title),
-        task.description?e("p",{style:{margin:0,fontSize:15,color:T.lbl2,lineHeight:1.5}},task.description):null),
-      e("div",{style:{padding:"0 16px 16px"}},
-        e(Seg,{opts:Object.keys(STATS).map(function(k){return{v:k,l:STATS[k].l}}),val:task.status,onChange:function(v){onSC(task.id,v)}})),
-      e(Grp,{header:"Bilgiler"},
-        e(Cell,{icon:"\u26A1",icBg:p.c,label:"\u00D6ncelik",detail:p.l}),
-        e(Cell,{icon:"\uD83D\uDCC1",icBg:T.teal,label:"Kategori",detail:task.category}),
-        a?e(Cell,{icon:"\uD83D\uDC64",icBg:T.indigo,label:"Atanan",detail:a.name}):null,
-        task.dueDate?e(Cell,{icon:"\uD83D\uDCC5",icBg:dl!==null&&dl<0?T.red:T.orange,label:"Son Tarih",detail:fmtDL(task.dueDate),
-          trailing:dl!==null&&dl<0?e(Bdg,{n:"Gecikmi\u015F"}):null}):null),
-      st>0?e(Grp,{header:"Alt G\u00F6revler \u2014 "+sd+"/"+st},
-        subs.map(function(sub){
-          return e("div",{key:sub.id,style:{display:"flex",alignItems:"center",gap:12,padding:"10px 16px",borderBottom:"0.5px solid "+T.sep}},
-            e("div",{style:{width:22,height:22,borderRadius:"50%",border:sub.done?"none":"2px solid "+T.lbl3,
-              background:sub.done?T.blue:"transparent",display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontSize:13}},sub.done?"\u2713":null),
-            e("span",{style:{fontSize:17,color:sub.done?T.lbl3:T.lbl,textDecoration:sub.done?"line-through":"none"}},sub.text))
-        })):null));
-}
-
-// ===== TASK ROW =====
-function TaskRow(props) {
-  var task=props.task,team=props.team,onPress=props.onPress;
-  var ref=useState(false); var pr=ref[0],sP=ref[1];
-  var p=PRIOS[task.priority]||PRIOS.medium, s=STATS[task.status]||STATS.todo;
-  var a=null; team.forEach(function(t){if(t.id===task.assignee)a=t});
-  var dl=dLeft(task.dueDate);
-  var subs=task.subtasks||[];
-  var sd=subs.filter(function(x){return x.done}).length, st=subs.length;
-
-  return e("div",{
-    onClick:function(){onPress(task)},
-    onPointerDown:function(){sP(true)},onPointerUp:function(){sP(false)},onPointerLeave:function(){sP(false)},
-    style:{display:"flex",alignItems:"center",gap:12,padding:"12px 16px",
-      background:pr?T.press:T.card,borderBottom:"0.5px solid "+T.sep,cursor:"pointer",transition:"background 0.1s"}},
-    e("div",{style:{width:4,height:36,borderRadius:2,background:p.c,flexShrink:0}}),
-    e("div",{style:{flex:1,minWidth:0}},
-      e("div",{style:{fontSize:17,fontWeight:"500",color:task.status==="done"?T.lbl3:T.lbl,
-        textDecoration:task.status==="done"?"line-through":"none",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}},task.title),
-      e("div",{style:{display:"flex",alignItems:"center",gap:6,flexWrap:"wrap",marginTop:2}},
-        e("span",{style:{fontSize:13,color:s.c,fontWeight:"500"}},s.i+" "+s.l),
-        e("span",{style:{fontSize:13,color:T.lbl3}},"\u00B7"),
-        e("span",{style:{fontSize:13,color:T.lbl3}},task.category),
-        task.dueDate?e(Fragment,null,
-          e("span",{style:{fontSize:13,color:T.lbl3}},"\u00B7"),
-          e("span",{style:{fontSize:13,fontWeight:"500",color:dl!==null&&dl<0?T.red:dl!==null&&dl<=2?T.orange:T.lbl3}},relD(task.dueDate))):null)),
-    e("div",{style:{display:"flex",alignItems:"center",gap:8,flexShrink:0}},
-      st>0?e(Ring,{p:sd/st,sz:22,sw:2.5}):null,
-      a?e(Av,{name:a.name,sz:28}):null,
-      e("span",{style:{color:T.lbl4,fontSize:20}},"\u203A")));
-}
-
-// ===== MAIN APP =====
-function App() {
-  var ref1=useState(function(){return lsGet("hf-t",SAMPLE)}); var tasks=ref1[0],setTasks=ref1[1];
-  var ref2=useState(function(){return lsGet("hf-m",DTEAM)}); var team=ref2[0],setTeam=ref2[1];
-  var ref3=useState("dash"); var tab=ref3[0],setTab=ref3[1];
-  var ref4=useState(null); var sheet=ref4[0],setSheet=ref4[1];
-  var ref5=useState({q:"",st:"all"}); var flt=ref5[0],setFlt=ref5[1];
-
-  // Firebase sync
-  useEffect(function(){
-    if(!fbOK) return;
-    var u1=fbSub("tasks","createdAt",function(d){if(d.length)setTasks(d)});
-    var u2=db.collection("team").orderBy("name").onSnapshot(function(s){
-      var t=[];s.forEach(function(doc){t.push(Object.assign({id:doc.id},doc.data()))});
-      if(t.length)setTeam(t);
-    });
-    return function(){u1();u2()};
-  },[]);
-
-  useEffect(function(){lsSet("hf-t",tasks)},[tasks]);
-  useEffect(function(){lsSet("hf-m",team)},[team]);
-
-  // CRUD
-  function saveTask(fd) {
-    if (fd===null) {
-      var tid=(sheet&&sheet.id)?sheet.id:((sheet&&sheet.task)?sheet.task.id:null);
-      if(!tid){setSheet(null);return}
-      if(fbOK) fbDel("tasks",tid);
-      setTasks(function(p){return p.filter(function(t){return t.id!==tid})});
-      setSheet(null);return;
-    }
-    if(fbOK){
-      var existing=false;
-      tasks.forEach(function(t){if(t.id===fd.id)existing=true});
-      if(existing){
-        fbUp("tasks",fd.id,fd);
-        setTasks(function(p){return p.map(function(t){return t.id===fd.id?Object.assign({},t,fd):t})});
-      } else {
-        fbAdd("tasks",fd).then(function(nid){
-          setTasks(function(p){return [Object.assign({},fd,{id:nid||uid()})].concat(p)});
-        });
-      }
-    } else {
-      setTasks(function(p){
-        var i=-1;p.forEach(function(t,idx){if(t.id===fd.id)i=idx});
-        if(i>=0){var n=p.slice();n[i]=fd;return n}
-        return [Object.assign({},fd,{id:uid()})].concat(p);
-      });
-    }
-    setSheet(null);
-  }
-
-  function chgSt(id,st){
-    if(fbOK) fbUp("tasks",id,{status:st});
-    setTasks(function(p){return p.map(function(t){return t.id===id?Object.assign({},t,{status:st}):t})});
-  }
-  function addMbr(m){
-    if(fbOK){fbAdd("team",m).then(function(nid){setTeam(function(p){return p.concat([Object.assign({},m,{id:nid||uid()})])})})}
-    else{setTeam(function(p){return p.concat([Object.assign({},m,{id:uid()})])})}
-  }
-  function delMbr(id){
-    if(fbOK) fbDel("team",id);
-    setTeam(function(p){return p.filter(function(m){return m.id!==id})});
-  }
-
-  var filtered=useMemo(function(){
-    return tasks.filter(function(t){
-      if(flt.st!=="all"&&t.status!==flt.st) return false;
-      if(flt.q&&t.title.toLowerCase().indexOf(flt.q.toLowerCase())===-1) return false;
-      return true;
-    }).sort(function(a,b){return (PRIOS[a.priority]?PRIOS[a.priority].s:2)-(PRIOS[b.priority]?PRIOS[b.priority].s:2)});
-  },[tasks,flt]);
-
-  var stats=useMemo(function(){
-    var d=0,ov=0,todo=0,ip=0,rev=0;
-    tasks.forEach(function(t){
-      if(t.status==="done")d++;
-      if(t.status==="todo")todo++;
-      if(t.status==="inprogress")ip++;
-      if(t.status==="review")rev++;
-      var dl=dLeft(t.dueDate);
-      if(dl!==null&&dl<0&&t.status!=="done")ov++;
-    });
-    return{total:tasks.length,todo:todo,ip:ip,rev:rev,done:d,ov:ov,pct:tasks.length?Math.round(d/tasks.length*100):0};
-  },[tasks]);
-
-  function openDetail(t){setSheet({type:"detail",task:t})}
-
-  // Dashboard
-  function Dash(){
-    return e("div",null,
-      e(NavB,{title:"HF IT G\u00F6rev Takip",large:true,right:{ic:"\uFF0B",fn:function(){setSheet("new")}}}),
-      e("div",{style:{padding:"0 16px 6px"}},
-        e("div",{style:{display:"flex",alignItems:"center",gap:6,fontSize:12,color:fbOK?T.green:T.orange}},
-          e("div",{style:{width:6,height:6,borderRadius:"50%",background:fbOK?T.green:T.orange}}),
-          fbOK?"Firebase ba\u011Fl\u0131 \u2014 senkronize":"\u00C7evrimd\u0131\u015F\u0131 \u2014 localStorage")),
-      e("div",{style:{padding:"0 16px 16px"}},
-        e("div",{style:{background:"linear-gradient(135deg,"+T.blue+","+T.indigo+")",borderRadius:14,padding:20,color:"#fff",marginBottom:12}},
-          e("div",{style:{fontSize:13,opacity:0.8,marginBottom:6}},"Tamamlanma Oran\u0131"),
-          e("div",{style:{display:"flex",alignItems:"center",gap:16}},
-            e(Ring,{p:stats.pct/100,sz:60,sw:5,cl:"#fff"}),
-            e("div",null,
-              e("div",{style:{fontSize:42,fontWeight:"700",lineHeight:1}},"%"+stats.pct),
-              e("div",{style:{fontSize:13,opacity:0.75,marginTop:2}},stats.done+"/"+stats.total+" g\u00F6rev")))),
-        e("div",{style:{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(80px,1fr))",gap:8}},
-          [{n:stats.todo,l:"Bekliyor",c:"#8e8e93",i:"\u25CB"},
-           {n:stats.ip,l:"Devam",c:T.blue,i:"\u25D0"},
-           {n:stats.rev,l:"\u0130nceleme",c:T.purple,i:"\u25D1"},
-           {n:stats.ov,l:"Gecikmi\u015F",c:T.red,i:"\u26A0"}].map(function(s){
-            return e("div",{key:s.l,style:{background:T.card,borderRadius:12,padding:"12px 8px",textAlign:"center"}},
-              e("div",{style:{fontSize:12,color:T.lbl3}},s.i+" "+s.l),
-              e("div",{style:{fontSize:26,fontWeight:"700",color:s.c,marginTop:2}},s.n))}))),
-      stats.ov>0?e(Grp,{header:"\u26A0\uFE0F Gecikmi\u015F G\u00F6revler"},
-        tasks.filter(function(t){var dl=dLeft(t.dueDate);return dl!==null&&dl<0&&t.status!=="done"})
-          .map(function(t){return e(TaskRow,{key:t.id,task:t,team:team,onPress:openDetail})})):null,
-      e(Grp,{header:"Son G\u00F6revler"},
-        tasks.length===0?e("div",{style:{padding:40,textAlign:"center",color:T.lbl3}},
-          e("div",{style:{fontSize:48,marginBottom:8}},"\uD83D\uDCCB"),
-          "Hen\u00FCz g\u00F6rev yok \u2014 \uFF0B butonuyla ekle"):
-        tasks.slice(0,6).map(function(t){return e(TaskRow,{key:t.id,task:t,team:team,onPress:openDetail})})),
-      e("div",{style:{height:100}}));
-  }
-
-  // Tasks tab
-  function TasksTab(){
-    return e("div",null,
-      e(NavB,{title:"G\u00F6revler",large:true,right:{ic:"\uFF0B",fn:function(){setSheet("new")}}}),
-      e("div",{style:{padding:"0 16px 12px"}},
-        e("div",{style:{display:"flex",alignItems:"center",gap:6,background:T.fill,borderRadius:10,padding:"7px 10px",marginBottom:10}},
-          e("span",{style:{color:T.lbl3,fontSize:15}},"\uD83D\uDD0D"),
-          e("input",{value:flt.q,onChange:function(ev){setFlt(function(f){return Object.assign({},f,{q:ev.target.value})})},
-            placeholder:"G\u00F6rev ara...",style:{border:"none",background:"none",outline:"none",fontSize:17,width:"100%",fontFamily:"inherit"}}),
-          flt.q?e("button",{onClick:function(){setFlt(function(f){return Object.assign({},f,{q:""})})},
-            style:{background:T.fill2,border:"none",borderRadius:"50%",width:18,height:18,
-              display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",color:T.lbl3,fontSize:10,flexShrink:0}},"\u2715"):null),
-        e(Seg,{opts:[{v:"all",l:"T\u00FCm\u00FC"},{v:"todo",l:"Bekliyor"},{v:"inprogress",l:"Devam"},{v:"review",l:"\u0130nceleme"},{v:"done",l:"Bitti"}],
-          val:flt.st,onChange:function(v){setFlt(function(f){return Object.assign({},f,{st:v})})}})),
-      filtered.length===0?
-        e("div",{style:{textAlign:"center",padding:60,color:T.lbl3}},e("div",{style:{fontSize:48,marginBottom:8}},"\uD83D\uDCCB"),"G\u00F6rev bulunamad\u0131"):
-        e(Grp,null,filtered.map(function(t){return e(TaskRow,{key:t.id,task:t,team:team,onPress:openDetail})})),
-      e("div",{style:{height:100}}));
-  }
-
-  // Board tab
-  function BoardTab(){
-    return e("div",null,
-      e(NavB,{title:"Kanban Pano",large:true,right:{ic:"\uFF0B",fn:function(){setSheet("new")}}}),
-      e("div",{style:{display:"flex",gap:12,padding:"0 16px",overflowX:"auto",WebkitOverflowScrolling:"touch",scrollSnapType:"x mandatory",paddingBottom:100}},
-        Object.keys(STATS).map(function(sk){
-          var sv=STATS[sk];
-          var col=tasks.filter(function(t){return t.status===sk});
-          return e("div",{key:sk,style:{minWidth:280,flex:"0 0 280px",scrollSnapAlign:"start"}},
-            e("div",{style:{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 4px 10px"}},
-              e("div",{style:{display:"flex",alignItems:"center",gap:6}},
-                e("span",{style:{color:sv.c}},sv.i),e("span",{style:{fontSize:15,fontWeight:"600"}},sv.l)),
-              e(Bdg,{n:col.length,cl:sv.c})),
-            e("div",{style:{display:"flex",flexDirection:"column",gap:8}},
-              col.map(function(t){
-                var pr=PRIOS[t.priority]||PRIOS.medium;
-                var a=null;team.forEach(function(m){if(m.id===t.assignee)a=m});
-                var subs=t.subtasks||[];var sd=subs.filter(function(x){return x.done}).length,stt=subs.length;
-                return e("div",{key:t.id,onClick:function(){openDetail(t)},
-                  style:{background:T.card,borderRadius:12,padding:14,borderLeft:"3px solid "+pr.c,cursor:"pointer",transition:"transform 0.1s"},
-                  onPointerDown:function(ev){ev.currentTarget.style.transform="scale(0.98)"},
-                  onPointerUp:function(ev){ev.currentTarget.style.transform="none"},
-                  onPointerLeave:function(ev){ev.currentTarget.style.transform="none"}},
-                  e("div",{style:{fontSize:15,fontWeight:"600",marginBottom:6}},t.title),
-                  e("div",{style:{display:"flex",gap:6,fontSize:12,flexWrap:"wrap"}},
-                    e("span",{style:{color:pr.c}},pr.i+" "+pr.l),
-                    t.dueDate?e("span",{style:{color:dLeft(t.dueDate)<0?T.red:T.lbl3}},"\uD83D\uDCC5 "+relD(t.dueDate)):null),
-                  stt>0?e("div",{style:{marginTop:8}},
-                    e("div",{style:{height:3,background:T.fill,borderRadius:2,overflow:"hidden"}},
-                      e("div",{style:{height:"100%",width:(sd/stt*100)+"%",background:T.green,borderRadius:2}})),
-                    e("div",{style:{fontSize:11,color:T.lbl3,marginTop:3}},sd+"/"+stt)):null,
-                  e("div",{style:{display:"flex",justifyContent:"flex-end",marginTop:8}},a?e(Av,{name:a.name,sz:24}):null))
-              }),
-              col.length===0?e("div",{style:{padding:24,textAlign:"center",fontSize:14,color:T.lbl4,
-                border:"1.5px dashed "+T.sep,borderRadius:10}},"G\u00F6rev yok"):null));
-        })));
-  }
-
-  // Settings tab
-  function SettingsTab(){
-    return e("div",null,
-      e(NavB,{title:"Ayarlar",large:true}),
-      e(Grp,{header:"Ba\u011Flant\u0131"},
-        e(Cell,{icon:fbOK?"\uD83D\uDFE2":"\uD83D\uDFE0",icBg:fbOK?T.green:T.orange,label:"Firebase",detail:fbOK?"Ba\u011Fl\u0131":"\u00C7evrimd\u0131\u015F\u0131"}),
-        !fbOK?e(Cell,{icon:"\u2139\uFE0F",icBg:T.teal,label:"Kurulum",sub:"FIREBASE_CONFIG bilgilerini girin"}):null),
-      e(Grp,{header:"Ekip"},
-        team.map(function(m){return e(Cell,{key:m.id,label:m.name,detail:m.role})}),
-        e(Cell,{label:"Ekip Y\u00F6netimi",icon:"\uD83D\uDC65",icBg:T.blue,chevron:true,onPress:function(){setSheet("team")}})),
-      e(Grp,{header:"\u0130statistikler"},
-        e(Cell,{icon:"\uD83D\uDCCA",icBg:T.teal,label:"Toplam",detail:""+stats.total}),
-        e(Cell,{icon:"\u2705",icBg:T.green,label:"Tamamlanan",detail:""+stats.done}),
-        e(Cell,{icon:"\u26A0\uFE0F",icBg:T.red,label:"Gecikmi\u015F",detail:""+stats.ov}),
-        e(Cell,{icon:"\uD83D\uDCC8",icBg:T.indigo,label:"Tamamlanma",detail:"%"+stats.pct})),
-      e(Grp,{header:"Hakk\u0131nda"},
-        e(Cell,{icon:"\uD83C\uDFE2",icBg:T.blue,label:"Kurum",detail:"Halk Faktoring"}),
-        e(Cell,{icon:"\uD83D\uDCBC",icBg:T.indigo,label:"Birim",detail:"IT Departman\u0131"}),
-        e(Cell,{icon:"\uD83D\uDCF1",icBg:T.green,label:"Versiyon",detail:"1.0.0"})),
-      e("div",{style:{height:100}}));
-  }
-
-  var tabDefs=[
-    {id:"dash",ic:"\uD83D\uDCCA",l:"\u00D6zet"},
-    {id:"tasks",ic:"\uD83D\uDCCB",l:"G\u00F6revler"},
-    {id:"board",ic:"\u25A6",l:"Pano"},
-    {id:"settings",ic:"\u2699\uFE0F",l:"Ayarlar"}
-  ];
-
-  return e("div",{style:{height:"100vh",display:"flex",flexDirection:"column",background:T.bg,maxWidth:900,margin:"0 auto"}},
-    // Content
-    e("div",{style:{flex:1,overflow:"auto",WebkitOverflowScrolling:"touch"}},
-      tab==="dash"?e(Dash):null,
-      tab==="tasks"?e(TasksTab):null,
-      tab==="board"?e(BoardTab):null,
-      tab==="settings"?e(SettingsTab):null),
-    // Tab Bar
-    e("div",{style:{flexShrink:0,background:T.nav,backdropFilter:"blur(20px)",WebkitBackdropFilter:"blur(20px)",
-      borderTop:"0.5px solid "+T.sep,display:"flex",justifyContent:"space-around",
-      padding:"6px 0 calc(env(safe-area-inset-bottom,8px) + 4px)"}},
-      tabDefs.map(function(t){
-        return e("button",{key:t.id,onClick:function(){setTab(t.id)},
-          style:{display:"flex",flexDirection:"column",alignItems:"center",gap:1,
-            background:"none",border:"none",color:tab===t.id?T.blue:"#8e8e93",
-            fontSize:10,fontWeight:tab===t.id?"600":"500",cursor:"pointer",
-            padding:"4px 16px",fontFamily:"inherit",minWidth:50}},
-          e("span",{style:{fontSize:24,lineHeight:"1.1"}},t.ic),
-          e("span",null,t.l))
-      })),
-    // FAB
-    e("button",{onClick:function(){setSheet("new")},
-      style:{position:"fixed",bottom:80,right:20,zIndex:400,width:56,height:56,
-        borderRadius:"50%",background:T.blue,color:"#fff",border:"none",fontSize:28,
-        fontWeight:"300",cursor:"pointer",boxShadow:"0 4px 16px rgba(0,122,255,0.4)",
-        display:"flex",alignItems:"center",justifyContent:"center",transition:"transform 0.15s"},
-      onPointerDown:function(ev){ev.currentTarget.style.transform="scale(0.9)"},
-      onPointerUp:function(ev){ev.currentTarget.style.transform="none"},
-      onPointerLeave:function(ev){ev.currentTarget.style.transform="none"}},"\uFF0B"),
-    // Sheets
-    (sheet==="new"||(sheet&&sheet.id&&!(sheet.type)))?
-      e(TaskForm,{task:sheet==="new"?null:sheet,team:team,onSave:saveTask,onClose:function(){setSheet(null)}}):null,
-    sheet==="team"?
-      e(TeamSheet,{team:team,onAdd:addMbr,onDel:delMbr,onClose:function(){setSheet(null)}}):null,
-    (sheet&&sheet.type==="detail")?
-      e(TaskDetail,{task:sheet.task,team:team,onEdit:function(t){setSheet(t)},
-        onSC:function(id,s){chgSt(id,s);setSheet(function(prev){return{type:"detail",task:Object.assign({},prev.task,{status:s})}})},
-        onClose:function(){setSheet(null)}}):null
-  );
-}
-
-// Mount
-ReactDOM.createRoot(document.getElementById("root")).render(e(App));
-console.log("HF IT G\u00F6rev Takip y\u00FCklendi");
+ReactDOM.createRoot(document.getElementById(“root”)).render(h(App));
 </script>
+
 </body>
 </html>
