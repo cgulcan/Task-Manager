@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IT TaskMaster Elite</title>
+    <title>TaskMaster Elite v5</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
@@ -14,164 +14,173 @@
             theme: {
                 extend: {
                     fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
-                    colors: { elite: { 50: '#f8fafc', 600: '#2563eb', 900: '#0f172a' } }
+                    colors: { 
+                        brand: { 50: '#f0f9ff', 600: '#0284c7', 950: '#082f49' },
+                        accent: '#6366f1'
+                    }
                 }
             }
         }
     </script>
 
     <style>
-        body { background-color: #f1f5f9; height: 100vh; overflow: hidden; }
-        .glass-panel { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.4); }
-        .kanban-column { min-height: 75vh; }
-        .task-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid #e2e8f0; }
-        .task-card:hover { transform: translateY(-4px); border-color: #2563eb; box-shadow: 0 10px 20px -5px rgba(0,0,0,0.1); }
-        .side-panel { transition: transform 0.4s ease-in-out; transform: translateX(100%); }
-        .side-panel.open { transform: translateX(0); }
-        .fc { border: none !important; }
+        body { background: radial-gradient(at top left, #f8fafc, #e2e8f0); height: 100vh; overflow: hidden; }
+        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.4); }
+        .kanban-col { min-height: 70vh; scrollbar-width: none; }
+        .task-card { 
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            border: 1px solid rgba(0,0,0,0.05); 
+        }
+        .task-card:hover { transform: translateY(-8px) rotate(1deg); box-shadow: 0 25px 30px -10px rgba(0,0,0,0.1); }
+        .side-panel { transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); transform: translateX(100%); }
+        .side-panel.active { transform: translateX(0); }
+        .fc-theme-standard td, .fc-theme-standard th { border: 1px solid #f1f5f9 !important; }
     </style>
 </head>
-<body class="flex flex-col">
+<body class="flex flex-col font-sans text-slate-900">
 
-    <header class="h-16 px-8 bg-white border-b border-slate-200 flex items-center justify-between z-40">
-        <div class="flex items-center gap-8">
-            <h1 class="text-xl font-extrabold text-elite-900 tracking-tighter">TASK<span class="text-elite-600">ELITE</span></h1>
-            <div class="flex bg-slate-100 p-1 rounded-xl">
-                <button onclick="switchView('kanban')" id="btnK" class="px-5 py-1.5 text-sm font-bold rounded-lg bg-white shadow-sm text-elite-600">Kanban</button>
-                <button onclick="switchView('calendar')" id="btnC" class="px-5 py-1.5 text-sm font-bold rounded-lg text-slate-500">Takvim</button>
-            </div>
+    <header class="h-20 px-10 flex items-center justify-between z-50">
+        <div class="flex items-center gap-10">
+            <h1 class="text-2xl font-black tracking-tighter text-brand-950">MASTER<span class="text-brand-600">ELITE</span></h1>
+            <nav class="flex bg-white/50 p-1.5 rounded-2xl shadow-inner border border-white/40">
+                <button onclick="switchView('kanban')" id="b-k" class="px-6 py-2 text-sm font-bold rounded-xl bg-white shadow-sm text-brand-600 transition-all">Kanban</button>
+                <button onclick="switchView('calendar')" id="b-c" class="px-6 py-2 text-sm font-bold rounded-xl text-slate-400 transition-all">Takvim</button>
+            </nav>
         </div>
-        <div class="flex items-center gap-4">
-            <button onclick="openModal()" class="bg-elite-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl text-sm font-bold transition-all shadow-lg shadow-blue-500/20">+ Yeni Görev</button>
-            <div class="w-10 h-10 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs">BT</div>
+        <div class="flex items-center gap-6">
+            <div class="hidden md:flex relative group">
+                <input type="text" id="qSearch" onkeyup="searchTasks()" placeholder="Hızlı ara..." class="bg-white/80 border-none rounded-2xl py-2.5 px-5 pl-12 text-sm focus:ring-2 focus:ring-brand-600 w-72 transition-all">
+                <svg class="w-5 h-5 absolute left-4 top-2.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </div>
+            <button onclick="openModal()" class="bg-brand-950 hover:bg-black text-white px-8 py-3 rounded-2xl font-bold shadow-2xl transition-all active:scale-90">+ Yeni Görev</button>
         </div>
     </header>
 
-    <main class="flex-1 relative overflow-hidden">
+    <main class="flex-1 overflow-hidden relative">
         
-        <div id="kanbanView" class="p-8 h-full overflow-x-auto flex gap-8">
-            <div class="w-80 shrink-0 flex flex-col">
-                <div class="flex items-center justify-between mb-4 px-2">
-                    <h2 class="font-bold text-slate-500 uppercase text-xs tracking-widest flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full bg-slate-300"></span> Yapılacaklar
-                    </h2>
-                    <span id="todo-count" class="bg-white text-slate-500 px-2.5 py-0.5 rounded-full text-[10px] font-black border border-slate-200 shadow-sm">0</span>
+        <div id="kanbanView" class="p-10 flex gap-8 overflow-x-auto h-full">
+            <div class="w-96 shrink-0 flex flex-col bg-slate-200/20 rounded-[40px] p-6 border border-white/40">
+                <div class="flex justify-between items-center mb-8 px-2">
+                    <h2 class="font-black text-slate-400 uppercase text-xs tracking-[0.2em]">Backlog</h2>
+                    <span id="c-todo" class="bg-white px-3 py-1 rounded-full text-[10px] font-black shadow-sm">0</span>
                 </div>
-                <div id="todo-list" data-status="todo" class="kanban-column space-y-4 pr-1"></div>
+                <div id="todo-list" data-status="todo" class="kanban-col space-y-5 overflow-y-auto"></div>
             </div>
 
-            <div class="w-80 shrink-0 flex flex-col">
-                <div class="flex items-center justify-between mb-4 px-2">
-                    <h2 class="font-bold text-blue-600 uppercase text-xs tracking-widest flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span> Devam Eden
-                    </h2>
-                    <span id="inprogress-count" class="bg-white text-blue-600 px-2.5 py-0.5 rounded-full text-[10px] font-black border border-blue-200 shadow-sm">0</span>
+            <div class="w-96 shrink-0 flex flex-col bg-brand-50/50 rounded-[40px] p-6 border border-brand-100">
+                <div class="flex justify-between items-center mb-8 px-2">
+                    <h2 class="font-black text-brand-600 uppercase text-xs tracking-[0.2em]">Aktif İşler</h2>
+                    <span id="c-inprogress" class="bg-brand-600 text-white px-3 py-1 rounded-full text-[10px] font-black shadow-lg shadow-brand-200">0</span>
                 </div>
-                <div id="inprogress-list" data-status="inprogress" class="kanban-column space-y-4 pr-1"></div>
+                <div id="inprogress-list" data-status="inprogress" class="kanban-col space-y-5 overflow-y-auto"></div>
             </div>
 
-            <div class="w-80 shrink-0 flex flex-col">
-                <div class="flex items-center justify-between mb-4 px-2">
-                    <h2 class="font-bold text-emerald-600 uppercase text-xs tracking-widest flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Tamamlandı
-                    </h2>
-                    <span id="done-count" class="bg-white text-emerald-600 px-2.5 py-0.5 rounded-full text-[10px] font-black border border-emerald-200 shadow-sm">0</span>
+            <div class="w-96 shrink-0 flex flex-col bg-emerald-50/50 rounded-[40px] p-6 border border-emerald-100">
+                <div class="flex justify-between items-center mb-8 px-2">
+                    <h2 class="font-black text-emerald-600 uppercase text-xs tracking-[0.2em]">Tamamlandı</h2>
+                    <span id="c-done" class="bg-emerald-600 text-white px-3 py-1 rounded-full text-[10px] font-black shadow-lg shadow-emerald-200">0</span>
                 </div>
-                <div id="done-list" data-status="done" class="kanban-column space-y-4 pr-1"></div>
+                <div id="done-list" data-status="done" class="kanban-col space-y-5 overflow-y-auto"></div>
             </div>
         </div>
 
-        <div id="calendarView" class="hidden p-8 h-full bg-white">
+        <div id="calendarView" class="hidden p-10 h-full bg-white">
             <div id="calendar" class="h-full"></div>
         </div>
 
-        <div id="sidePanel" class="side-panel fixed top-0 right-0 w-[480px] h-full bg-white shadow-2xl z-50 flex flex-col border-l border-slate-200">
-            <div class="p-6 border-b border-slate-100 flex justify-between items-center">
-                <span id="pID" class="text-xs font-bold text-slate-300 font-mono tracking-tighter">#ID</span>
-                <button onclick="closeSidePanel()" class="text-slate-400 hover:text-black transition-colors"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+        <div id="sidePanel" class="side-panel fixed top-0 right-0 w-[500px] h-full glass shadow-[-50px_0_100px_rgba(0,0,0,0.1)] z-[60] p-12 flex flex-col">
+            <div class="flex justify-between items-center mb-12">
+                <span id="p-id" class="text-xs font-black bg-black text-white px-3 py-1 rounded-lg">#T-000</span>
+                <button onclick="closeSidePanel()" class="hover:rotate-90 transition-all text-slate-400"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
             </div>
-            <div class="p-8 flex-1 overflow-y-auto space-y-6">
-                <input id="pTitle" class="text-2xl font-bold w-full border-none outline-none focus:ring-0 text-slate-800" placeholder="Başlık Girin">
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="p-4 bg-slate-50 rounded-2xl">
-                        <label class="text-[10px] font-black text-slate-400 uppercase mb-1 block">Durum</label>
-                        <select id="pStatus" class="w-full bg-transparent font-bold text-sm text-slate-700 outline-none">
-                            <option value="todo">Yapılacak</option>
-                            <option value="inprogress">Devam Ediyor</option>
+            <div class="space-y-10 flex-1 overflow-y-auto pr-2 custom-scrollbar">
+                <div>
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Görev Başlığı</label>
+                    <input id="p-title" class="text-3xl font-extrabold w-full bg-transparent border-none focus:ring-0 p-0 text-slate-900" placeholder="Başlık girin...">
+                </div>
+                <div class="grid grid-cols-2 gap-8">
+                    <div class="p-6 bg-white/50 rounded-3xl border border-white">
+                        <label class="text-[10px] font-black text-slate-400 uppercase block mb-3">Durum</label>
+                        <select id="p-status" class="w-full bg-transparent font-bold text-sm outline-none">
+                            <option value="todo">Backlog</option>
+                            <option value="inprogress">Aktif</option>
                             <option value="done">Tamamlandı</option>
                         </select>
                     </div>
-                    <div class="p-4 bg-slate-50 rounded-2xl">
-                        <label class="text-[10px] font-black text-slate-400 uppercase mb-1 block">Bitiş Tarihi</label>
-                        <input type="date" id="pDate" class="w-full bg-transparent font-bold text-sm text-slate-700 outline-none">
+                    <div class="p-6 bg-white/50 rounded-3xl border border-white">
+                        <label class="text-[10px] font-black text-slate-400 uppercase block mb-3">Bitiş Tarihi</label>
+                        <input type="date" id="p-date" class="w-full bg-transparent font-bold text-sm outline-none">
                     </div>
                 </div>
                 <div>
-                    <label class="text-[10px] font-black text-slate-400 uppercase mb-1 block">Görev Açıklaması</label>
-                    <textarea id="pDesc" rows="10" class="w-full bg-slate-50 rounded-2xl p-4 outline-none border border-transparent focus:border-elite-600 transition-all text-slate-600" placeholder="Detaylar..."></textarea>
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Detaylı Açıklama</label>
+                    <textarea id="p-desc" rows="8" class="w-full bg-white/50 rounded-[32px] p-8 outline-none border border-white focus:border-brand-600 transition-all text-slate-600 leading-relaxed"></textarea>
                 </div>
             </div>
-            <div class="p-6 border-t bg-slate-50 flex gap-4">
-                <button onclick="deleteTask()" class="text-red-500 font-bold px-4">SİL</button>
-                <button onclick="saveChanges()" class="flex-1 bg-slate-900 text-white py-3 rounded-xl font-bold shadow-xl active:scale-95 transition-all">DEĞİŞİKLİKLERİ KAYDET</button>
+            <div class="mt-12 flex gap-5">
+                <button onclick="deleteTask()" class="flex-1 py-4 text-red-500 font-bold hover:bg-red-50 rounded-2xl transition-all uppercase text-xs">Sil</button>
+                <button onclick="saveChanges()" class="flex-[3] py-4 bg-brand-950 text-white font-bold rounded-2xl shadow-2xl hover:bg-black transition-all">DEĞİŞİKLİKLERİ UYGULA</button>
             </div>
         </div>
     </main>
 
-    <div id="modal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-[32px] p-10 w-full max-w-md shadow-2xl">
-            <h2 class="text-2xl font-black mb-6 text-slate-800">Yeni Görev</h2>
-            <div class="space-y-4">
-                <input type="text" id="nTitle" placeholder="Başlık" class="w-full bg-slate-100 border-none p-4 rounded-xl outline-elite-600">
-                <input type="date" id="nDate" class="w-full bg-slate-100 border-none p-4 rounded-xl outline-elite-600">
-                <textarea id="nDesc" placeholder="Açıklama" class="w-full bg-slate-100 border-none p-4 rounded-xl outline-elite-600"></textarea>
-                <div class="flex gap-4 pt-4">
-                    <button onclick="closeModal()" class="flex-1 py-3 font-bold text-slate-400">İptal</button>
-                    <button onclick="addTask()" class="flex-1 py-3 bg-elite-600 text-white rounded-xl font-bold shadow-lg">Oluştur</button>
+    <div id="modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xl z-[100] flex items-center justify-center p-6">
+        <div class="bg-white rounded-[50px] p-12 w-full max-w-md shadow-2xl scale-in">
+            <h2 class="text-4xl font-black mb-10 text-slate-900 tracking-tighter">Yeni Görev</h2>
+            <div class="space-y-6">
+                <input type="text" id="n-title" placeholder="Görev Başlığı" class="w-full bg-slate-100 border-none p-5 rounded-2xl font-bold outline-brand-600">
+                <input type="date" id="n-date" class="w-full bg-slate-100 border-none p-5 rounded-2xl font-bold outline-brand-600">
+                <textarea id="n-desc" placeholder="Açıklama detayı..." class="w-full bg-slate-100 border-none p-5 rounded-2xl font-bold outline-brand-600" rows="3"></textarea>
+                <div class="flex gap-4 pt-6">
+                    <button onclick="closeModal()" class="flex-1 py-4 font-bold text-slate-400">Kapat</button>
+                    <button onclick="addTask()" class="flex-[2] py-4 bg-brand-600 text-white rounded-2xl font-black shadow-xl hover:bg-brand-700 transition-all">GÖREVİ OLUŞTUR</button>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        let tasks = JSON.parse(localStorage.getItem('tm_elite')) || [
-            { id: 'T-101', title: 'Veritabanı Bakımı', desc: 'SQL Server index yapıları optimize edilecek.', date: '2026-04-20', status: 'todo' },
-            { id: 'T-102', title: 'API Entegrasyonu', desc: 'Ödeme modülü için endpointler bağlanacak.', date: '2026-04-19', status: 'inprogress' }
+        let tasks = JSON.parse(localStorage.getItem('master_elite_v5')) || [
+            { id: 'T-741', title: 'Bulut Sunucu Geçişi', desc: 'Sistem altyapısı AWS üzerine taşınacak.', date: '2026-04-20', status: 'todo' },
+            { id: 'T-742', title: 'Güvenlik Protokolü', desc: 'SSL sertifikaları ve firewall kuralları.', date: '2026-04-18', status: 'inprogress' }
         ];
         let calendar;
         let activeID = null;
 
-        // BAŞLATMA
         document.addEventListener('DOMContentLoaded', () => {
             render();
-            initCalendar();
             initDrag();
+            initCalendar();
         });
 
         function render() {
-            const lists = { todo: 'todo-list', inprogress: 'inprogress-list', done: 'done-list' };
-            Object.values(lists).forEach(id => document.getElementById(id).innerHTML = '');
+            const listIds = { todo: 'todo-list', inprogress: 'inprogress-list', done: 'done-list' };
+            Object.values(listIds).forEach(id => document.getElementById(id).innerHTML = '');
 
             tasks.forEach(t => {
                 const card = `
-                    <div onclick="openPanel('${t.id}')" data-id="${t.id}" class="task-card bg-white p-5 rounded-2xl shadow-sm cursor-pointer group">
-                        <div class="flex justify-between items-start mb-3">
-                            <span class="text-[10px] font-bold text-slate-300 font-mono">${t.id}</span>
-                            <span class="text-[10px] font-bold text-slate-400 bg-slate-50 px-2 py-1 rounded-lg">${t.date}</span>
+                    <div onclick="openSidePanel('${t.id}')" data-id="${t.id}" class="task-card bg-white p-7 rounded-[32px] shadow-sm cursor-pointer relative group overflow-hidden">
+                        <div class="flex justify-between items-start mb-5">
+                            <span class="text-[10px] font-black text-slate-300 font-mono tracking-widest group-hover:text-brand-600 transition-colors">${t.id}</span>
+                            <span class="text-[9px] font-black bg-slate-50 border border-slate-100 px-3 py-1 rounded-full text-slate-400">${t.date}</span>
                         </div>
-                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-elite-600 transition-colors">${t.title}</h3>
-                        <p class="text-xs text-slate-400 line-clamp-2">${t.desc}</p>
+                        <h3 class="font-extrabold text-slate-800 text-lg mb-2 leading-tight">${t.title}</h3>
+                        <p class="text-xs text-slate-400 line-clamp-2 leading-relaxed">${t.desc}</p>
+                        <div class="mt-6 flex items-center gap-2">
+                            <div class="w-2 h-2 rounded-full ${t.status === 'done' ? 'bg-emerald-500' : (t.status === 'inprogress' ? 'bg-brand-600' : 'bg-slate-300')}"></div>
+                            <span class="text-[9px] font-black text-slate-300 uppercase tracking-widest">${t.status}</span>
+                        </div>
                     </div>`;
-                document.getElementById(lists[t.status]).insertAdjacentHTML('beforeend', card);
+                document.getElementById(listIds[t.status]).insertAdjacentHTML('beforeend', card);
             });
-            updateStats();
+            updateMetrics();
         }
 
-        function updateStats() {
+        function updateMetrics() {
             ['todo', 'inprogress', 'done'].forEach(s => {
-                document.getElementById(`${s}-count`).innerText = tasks.filter(t => t.status === s).length;
+                document.getElementById(`c-${s}`).innerText = tasks.filter(t => t.status === s).length;
             });
-            localStorage.setItem('tm_elite', JSON.stringify(tasks));
+            localStorage.setItem('master_elite_v5', JSON.stringify(tasks));
             if(calendar) calendar.refetchEvents();
         }
 
@@ -179,11 +188,12 @@
             ['todo-list', 'inprogress-list', 'done-list'].forEach(id => {
                 new Sortable(document.getElementById(id), {
                     group: 'tasks',
-                    animation: 250,
+                    animation: 400,
+                    ghostClass: 'opacity-20',
                     onEnd: (e) => {
                         const task = tasks.find(t => t.id === e.item.getAttribute('data-id'));
                         task.status = e.to.getAttribute('data-status');
-                        updateStats();
+                        updateMetrics();
                     }
                 });
             });
@@ -194,9 +204,9 @@
                 initialView: 'dayGridMonth',
                 locale: 'tr',
                 events: (info, success) => {
-                    success(tasks.map(t => ({ id: t.id, title: t.title, start: t.date, color: t.status === 'done' ? '#10b981' : '#3b82f6' })));
+                    success(tasks.map(t => ({ id: t.id, title: t.title, start: t.date, backgroundColor: t.status === 'done' ? '#059669' : '#0284c7' })));
                 },
-                eventClick: (info) => openPanel(info.event.id)
+                eventClick: (i) => openSidePanel(i.event.id)
             });
             calendar.render();
         }
@@ -204,46 +214,55 @@
         function switchView(v) {
             document.getElementById('kanbanView').classList.toggle('hidden', v === 'calendar');
             document.getElementById('calendarView').classList.toggle('hidden', v === 'kanban');
-            document.getElementById('btnK').className = v === 'kanban' ? 'px-5 py-1.5 text-sm font-bold rounded-lg bg-white shadow-sm text-elite-600' : 'px-5 py-1.5 text-sm font-bold rounded-lg text-slate-500';
-            document.getElementById('btnC').className = v === 'calendar' ? 'px-5 py-1.5 text-sm font-bold rounded-lg bg-white shadow-sm text-elite-600' : 'px-5 py-1.5 text-sm font-bold rounded-lg text-slate-500';
-            if(v === 'calendar') setTimeout(() => calendar.render(), 10);
+            document.getElementById('b-k').className = v === 'kanban' ? 'px-6 py-2 text-sm font-bold rounded-xl bg-white shadow-sm text-brand-600' : 'px-6 py-2 text-sm font-bold rounded-xl text-slate-400';
+            document.getElementById('b-c').className = v === 'calendar' ? 'px-6 py-2 text-sm font-bold rounded-xl bg-white shadow-sm text-brand-600' : 'px-6 py-2 text-sm font-bold rounded-xl text-slate-400';
+            if(v === 'calendar') setTimeout(() => calendar.render(), 100);
         }
 
-        function openPanel(id) {
+        function openSidePanel(id) {
             activeID = id;
             const t = tasks.find(x => x.id === id);
-            document.getElementById('pID').innerText = t.id;
-            document.getElementById('pTitle').value = t.title;
-            document.getElementById('pStatus').value = t.status;
-            document.getElementById('pDate').value = t.date;
-            document.getElementById('pDesc').value = t.desc;
-            document.getElementById('sidePanel').classList.add('open');
+            document.getElementById('p-id').innerText = '#' + t.id;
+            document.getElementById('p-title').value = t.title;
+            document.getElementById('p-status').value = t.status;
+            document.getElementById('p-date').value = t.date;
+            document.getElementById('p-desc').value = t.desc;
+            document.getElementById('sidePanel').classList.add('active');
         }
 
-        function closeSidePanel() { document.getElementById('sidePanel').classList.remove('open'); activeID = null; }
+        function closeSidePanel() { document.getElementById('sidePanel').classList.remove('active'); activeID = null; }
 
         function saveChanges() {
             const t = tasks.find(x => x.id === activeID);
-            t.title = document.getElementById('pTitle').value;
-            t.status = document.getElementById('pStatus').value;
-            t.date = document.getElementById('pDate').value;
-            t.desc = document.getElementById('pDesc').value;
+            t.title = document.getElementById('p-title').value;
+            t.status = document.getElementById('p-status').value;
+            t.date = document.getElementById('p-date').value;
+            t.desc = document.getElementById('p-desc').value;
             render(); closeSidePanel();
         }
 
         function deleteTask() {
-            if(confirm('Silinsin mi?')) { tasks = tasks.filter(t => t.id !== activeID); render(); closeSidePanel(); }
+            if(confirm('Görevi silmek istediğinize emin misiniz?')) { tasks = tasks.filter(t => t.id !== activeID); render(); closeSidePanel(); }
         }
 
         function openModal() { document.getElementById('modal').classList.remove('hidden'); }
         function closeModal() { document.getElementById('modal').classList.add('hidden'); }
 
         function addTask() {
-            const title = document.getElementById('nTitle').value;
-            const date = document.getElementById('nDate').value;
-            if(!title || !date) return;
-            tasks.push({ id: 'T-' + Math.floor(100 + Math.random()*900), title, date, desc: document.getElementById('nDesc').value, status: 'todo' });
+            const title = document.getElementById('n-title').value;
+            const date = document.getElementById('n-date').value;
+            if(!title || !date) return alert('Başlık ve Tarih zorunludur!');
+            tasks.push({ id: 'T-' + Math.floor(100 + Math.random()*899), title, date, desc: document.getElementById('n-desc').value, status: 'todo' });
             render(); closeModal();
+            document.getElementById('n-title').value = '';
+            document.getElementById('n-desc').value = '';
+        }
+
+        function searchTasks() {
+            const q = document.getElementById('qSearch').value.toLowerCase();
+            document.querySelectorAll('.task-card').forEach(c => {
+                c.style.display = c.innerText.toLowerCase().includes(q) ? 'block' : 'none';
+            });
         }
     </script>
 </body>
