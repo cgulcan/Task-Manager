@@ -1,339 +1,163 @@
 <!DOCTYPE html>
-
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no,maximum-scale=1">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="HF IT">
-<meta name="theme-color" content="#007aff">
-<title>HF IT Görev Takip</title>
-<style>
-:root{--bg:#f2f2f7;--card:#fff;--press:#e5e5ea;--sep:rgba(60,60,67,.12);--lbl:#000;--lbl2:#555;--lbl3:#8e8e93;--lbl4:#c7c7cc;--blue:#007aff;--green:#34c759;--orange:#ff9500;--red:#ff3b30;--purple:#af52de;--teal:#5ac8fa;--indigo:#5856d6;--fill:rgba(120,120,128,.2);--nav:rgba(249,249,249,.94);--sheet:#fff;--ov:rgba(0,0,0,.4);--gA:#007aff;--gB:#5856d6}
-.dark{--bg:#000;--card:#1c1c1e;--press:#2c2c2e;--sep:rgba(84,84,88,.65);--lbl:#fff;--lbl2:#ccc;--lbl3:#98989f;--lbl4:#48484a;--blue:#0a84ff;--green:#30d158;--orange:#ff9f0a;--red:#ff453a;--purple:#bf5af2;--teal:#64d2ff;--indigo:#5e5ce6;--fill:rgba(120,120,128,.36);--nav:rgba(29,29,31,.94);--sheet:#1c1c1e;--ov:rgba(0,0,0,.6);--gA:#0a84ff;--gB:#5e5ce6}
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;overflow:hidden;font-family:-apple-system,'SF Pro Display','Helvetica Neue',sans-serif;-webkit-font-smoothing:antialiased;background:var(--bg);color:var(--lbl)}
-body{display:flex;flex-direction:column;max-width:900px;margin:0 auto;user-select:none;-webkit-user-select:none}
-input,textarea,select{font-family:inherit;color:var(--lbl);background:none;border:none;outline:none}
-::-webkit-scrollbar{width:0;height:0}
-.content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
-.nav{position:sticky;top:0;z-index:100;background:var(--nav);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:.5px solid var(--sep);padding:env(safe-area-inset-top,0) 16px 0}
-.nav-row{height:44px;display:flex;align-items:center;justify-content:space-between}
-.nav h1{font-size:34px;font-weight:700;padding-bottom:8px}
-.nav-acts{display:flex;gap:12px}
-.nav-acts button{background:none;border:none;color:var(--blue);font-size:22px;cursor:pointer;padding:0}
-.tabbar{flex-shrink:0;background:var(--nav);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:.5px solid var(--sep);display:flex;justify-content:space-around;padding:6px 0 calc(env(safe-area-inset-bottom,8px)+4px)}
-.tab-btn{display:flex;flex-direction:column;align-items:center;gap:1px;background:none;border:none;color:var(--lbl3);font-size:10px;cursor:pointer;padding:4px 16px;font-family:inherit;min-width:50px}
-.tab-btn.active{color:var(--blue);font-weight:600}
-.tab-btn .ti{font-size:24px;line-height:1.1}
-.grp{margin:0 16px 20px}.grp-h{font-size:13px;color:var(--lbl3);text-transform:uppercase;padding:0 16px 6px}
-.grp-b{background:var(--card);border-radius:10px;overflow:hidden}
-.cell{display:flex;align-items:center;gap:12px;padding:11px 16px;min-height:44px;border-bottom:.5px solid var(--sep);cursor:pointer}
-.cell:active{background:var(--press)}.ci{width:29px;height:29px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;color:#fff}
-.cb{flex:1;min-width:0}.cl{font-size:17px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.cs{font-size:13px;color:var(--lbl3);margin-top:1px}
-.cd{font-size:17px;color:var(--lbl3)}.cc{color:var(--lbl4);font-size:20px}.dest .cl{color:var(--red)}
-.trow{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:.5px solid var(--sep);cursor:pointer}.trow:active{background:var(--press)}
-.seg{display:flex;background:var(--fill);border-radius:9px;padding:2px}
-.seg button{flex:1;padding:7px 4px;border-radius:8px;border:none;background:transparent;color:var(--lbl);font-size:12px;font-family:inherit;cursor:pointer;white-space:nowrap}
-.seg button.active{background:var(--card);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.1)}
-.ff{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;min-height:44px;border-bottom:.5px solid var(--sep)}
-.ff label{font-size:17px;flex-shrink:0;margin-right:12px}.ff input,.ff textarea,.ff select{font-size:17px;width:100%}
-.ff select{color:var(--blue);-webkit-appearance:none;direction:rtl;cursor:pointer;max-width:200px}.ff textarea{text-align:left;resize:none;min-height:70px;font-size:15px}
-.hero{border-radius:16px;padding:20px;color:#fff;margin-bottom:12px;background:linear-gradient(135deg,var(--gA),var(--gB))}
-.sg{display:grid;grid-template-columns:repeat(auto-fit,minmax(80px,1fr));gap:8px}
-.sc{background:var(--card);border-radius:12px;padding:12px 8px;text-align:center}
-.sc .n{font-size:26px;font-weight:700;margin-top:2px}.sc .l{font-size:12px;color:var(--lbl3)}
-.board{display:flex;gap:12px;padding:0 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;padding-bottom:100px}
-.bcol{min-width:280px;flex:0 0 280px;scroll-snap-align:start}
-.bcard{background:var(--card);border-radius:12px;padding:14px;cursor:pointer;margin-bottom:8px}.bcard:active{transform:scale(.98)}
-.fab{position:fixed;bottom:80px;right:20px;z-index:400;width:56px;height:56px;border-radius:50%;background:var(--blue);color:#fff;border:none;font-size:28px;font-weight:300;cursor:pointer;box-shadow:0 4px 16px rgba(0,122,255,.4);display:flex;align-items:center;justify-content:center}.fab:active{transform:scale(.9)}
-.sbg{position:fixed;inset:0;z-index:1000;background:var(--ov);display:flex;align-items:flex-end;justify-content:center}
-.sht{background:var(--sheet);width:100%;max-width:600px;border-radius:14px 14px 0 0;max-height:92vh;overflow:hidden;display:flex;flex-direction:column;animation:su .35s cubic-bezier(.32,.72,0,1)}
-.sht-bar{display:flex;justify-content:center;padding:8px 0 4px}.sht-bar div{width:36px;height:5px;border-radius:3px;background:var(--fill)}
-.sht-hd{display:flex;align-items:center;justify-content:space-between;padding:8px 16px 12px;border-bottom:.5px solid var(--sep)}
-.sht-hd button{background:none;border:none;color:var(--blue);font-size:17px;font-family:inherit;cursor:pointer;min-width:60px}
-.sht-hd .sv{font-weight:600;text-align:right}.sht-hd .tt{font-size:17px;font-weight:600}
-.sht-ct{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
-.badge{background:var(--red);color:#fff;border-radius:10px;font-size:12px;font-weight:600;min-width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;padding:0 6px}
-.pbar{height:6px;background:var(--fill);border-radius:3px;overflow:hidden}.pbar-f{height:100%;background:var(--green);border-radius:3px;transition:width .3s}
-.av{border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-weight:600;flex-shrink:0}
-.chk{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-size:14px;padding:0;background:transparent;color:#fff}
-.chk-off{border:2px solid var(--lbl3)}.chk-on{border:none;background:var(--blue)}
-.sub-row{display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:.5px solid var(--sep)}
-.toggle{width:51px;height:31px;border-radius:16px;padding:2px;cursor:pointer;transition:background .2s;flex-shrink:0}
-.toggle-k{width:27px;height:27px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
-.conn{display:flex;align-items:center;gap:6px;font-size:12px;padding:0 16px 6px}
-.empty{padding:40px;text-align:center;color:var(--lbl3)}
-@keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT Görev Takip Paneli - Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: { 
+                    colors: { 
+                        navy: '#1a2c5b', 
+                        darknavy: '#0f172a', 
+                        graylight: '#f8fafc',
+                        grayborder: '#e2e8f0'
+                    } 
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Sürükleme sırasındaki gölge efekti */
+        .sortable-ghost { opacity: 0.4; background-color: #f1f5f9; }
+        .sortable-drag { cursor: grabbing !important; }
+        .task-card { cursor: grab; }
+        .task-card:active { cursor: grabbing; }
+    </style>
 </head>
-<body>
-<div class="content" id="content"></div>
-<div class="tabbar" id="tabbar"></div>
-<button class="fab" data-action="new-task">&#xFF0B;</button>
-<div id="sroot"></div>
+<body class="bg-graylight font-sans text-gray-800 h-screen flex flex-col overflow-hidden">
+    
+    <header class="bg-navy text-white p-4 shadow-lg flex justify-between items-center z-10 relative">
+        <div class="flex items-center gap-6">
+            <h1 class="text-xl font-extrabold tracking-widest text-gray-100">IT GÖREV <span class="text-blue-300">PRO</span></h1>
+            
+            <div class="hidden md:block relative">
+                <input type="text" placeholder="Görev veya proje ara..." class="bg-darknavy text-sm text-white placeholder-gray-400 rounded-full pl-4 pr-10 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-400 w-64 border border-gray-600 transition-all">
+                <svg class="w-4 h-4 absolute right-3 top-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-4">
+            <button class="bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold py-1.5 px-4 rounded-md shadow transition-colors flex items-center gap-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                Yeni Görev
+            </button>
+            <div class="w-8 h-8 rounded-full bg-gray-200 text-navy font-bold flex items-center justify-center border-2 border-blue-400 shadow-sm">C</div>
+        </div>
+    </header>
 
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <main class="flex-1 overflow-x-auto p-6 bg-gray-100">
+        <div class="flex gap-6 min-w-max h-full">
+            
+            <div class="bg-gray-200/60 rounded-xl w-80 flex flex-col border border-grayborder shadow-sm">
+                <div class="p-4 border-b border-gray-300 flex justify-between items-center bg-gray-200/80 rounded-t-xl">
+                    <h2 class="font-bold text-darknavy flex items-center gap-2">
+                        <div class="w-2 h-2 rounded-full bg-gray-500"></div> YAPILACAKLAR 
+                    </h2>
+                    <span class="bg-white text-gray-700 px-2.5 py-0.5 rounded-full text-xs font-bold shadow-sm">2</span>
+                </div>
+                
+                <div id="todo-list" class="p-3 flex-1 overflow-y-auto flex flex-col gap-3 min-h-[200px]">
+                    
+                    <div class="task-card bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:-translate-y-0.5 transition-all">
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="text-[10px] font-bold bg-red-100 text-red-700 px-2 py-1 rounded uppercase tracking-wider border border-red-200">Acil</span>
+                            <span class="text-xs text-gray-400 font-mono">#105</span>
+                        </div>
+                        <h3 class="font-semibold text-gray-800 mb-2 leading-tight">SQL Alert Job Revizyonu</h3>
+                        <p class="text-sm text-gray-500 mb-4 line-clamp-2">Eksik mobil isteklerin loglanması için T-SQL scripti mesai saatlerine göre ayarlanacak.</p>
+                        <div class="flex justify-between items-center pt-2 border-t border-gray-100">
+                            <span class="text-xs font-medium text-navy bg-blue-50 px-2 py-1 rounded">Dijital Mizan</span>
+                        </div>
+                    </div>
 
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+                    <div class="task-card bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:-translate-y-0.5 transition-all">
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="text-[10px] font-bold bg-blue-50 text-blue-600 px-2 py-1 rounded uppercase tracking-wider border border-blue-100">Normal</span>
+                            <span class="text-xs text-gray-400 font-mono">#106</span>
+                        </div>
+                        <h3 class="font-semibold text-gray-800 mb-2 leading-tight">SQL Profiler Analizi</h3>
+                        <p class="text-sm text-gray-500 mb-4 line-clamp-2">Veritabanı yavaşlık sorunları için trace başlatılıp sorgular incelenecek.</p>
+                        <div class="flex justify-between items-center pt-2 border-t border-gray-100">
+                            <span class="text-xs font-medium text-navy bg-blue-50 px-2 py-1 rounded">BIS Infact</span>
+                        </div>
+                    </div>
 
-<script>
-var FC={apiKey:"",authDomain:"",projectId:"",storageBucket:"",messagingSenderId:"",appId:""};
-var db=null,fbok=false;
-try{if(FC.apiKey.length>5){firebase.initializeApp(FC);db=firebase.firestore();fbok=true}}catch(e){}
+                </div>
+            </div>
 
-var P={critical:{l:"Kritik",c:"#ff3b30",s:0},high:{l:"Yüksek",c:"#ff9500",s:1},medium:{l:"Orta",c:"#007aff",s:2},low:{l:"Düşük",c:"#34c759",s:3}};
-var S={todo:{l:"Bekliyor",c:"#8e8e93"},inprogress:{l:"Devam Ediyor",c:"#007aff"},review:{l:"İnceleme",c:"#af52de"},done:{l:"Tamamlandı",c:"#34c759"}};
-var CATS=["Sunucu","Veritabanı","Yazılım","Ağ & Güvenlik","Destek","BDDK","Dijitalleşme","Diğer"];
-function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
-function lg(k,f){try{var v=localStorage.getItem(k);return v?JSON.parse(v):f}catch(e){return f}}
-function ls(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
-function fd(d){if(!d)return"";try{return new Date(d).toLocaleDateString("tr-TR",{day:"numeric",month:"short"})}catch(e){return""}}
-function fl(d){if(!d)return"";try{return new Date(d).toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric"})}catch(e){return""}}
-function dl(d){if(!d)return null;return Math.ceil((new Date(d)-new Date())/864e5)}
-function rd(d){var x=dl(d);if(x===null)return"";if(x<-1)return Math.abs(x)+" gün gecikmiş";if(x===-1)return"Dün";if(x===0)return"Bugün";if(x===1)return"Yarın";if(x<=7)return x+" gün";return fd(d)}
-function esc(s){if(!s)return"";var d=document.createElement("div");d.textContent=s;return d.innerHTML}
-function abg(n){var h=0;for(var i=0;i<n.length;i++)h+=n.charCodeAt(i);h%=360;return"linear-gradient(135deg,hsl("+h+",50%,55%),hsl("+(h+30)+",55%,45%))"}
-function ini(n){return n.split(" ").map(function(w){return w[0]}).join("").slice(0,2)}
-function avH(n,z){z=z||32;return'<div class="av" style="width:'+z+'px;height:'+z+'px;font-size:'+(z*.38)+'px;background:'+abg(n)+'">'+esc(ini(n))+'</div>'}
-function ringH(pct,z,sw,cl,bg){z=z||24;sw=sw||3;cl=cl||"var(--blue)";bg=bg||"var(--fill)";var r=(z-sw)/2,c=2*Math.PI*r;return'<svg width="'+z+'" height="'+z+'" style="transform:rotate(-90deg)"><circle cx="'+(z/2)+'" cy="'+(z/2)+'" r="'+r+'" fill="none" stroke="'+bg+'" stroke-width="'+sw+'"/><circle cx="'+(z/2)+'" cy="'+(z/2)+'" r="'+r+'" fill="none" stroke="'+cl+'" stroke-width="'+sw+'" stroke-dasharray="'+c+'" stroke-dashoffset="'+(c*(1-pct))+'" stroke-linecap="round"/></svg>'}
+            <div class="bg-blue-50/50 rounded-xl w-80 flex flex-col border border-blue-100 shadow-sm">
+                <div class="p-4 border-b border-blue-200 flex justify-between items-center bg-blue-100/50 rounded-t-xl">
+                    <h2 class="font-bold text-blue-800 flex items-center gap-2">
+                        <div class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div> DEVAM EDENLER 
+                    </h2>
+                    <span class="bg-white text-blue-800 px-2.5 py-0.5 rounded-full text-xs font-bold shadow-sm">1</span>
+                </div>
+                
+                <div id="inprogress-list" class="p-3 flex-1 overflow-y-auto flex flex-col gap-3 min-h-[200px]">
+                    <div class="task-card bg-white p-4 rounded-lg shadow-sm border border-blue-200 hover:shadow-md hover:-translate-y-0.5 transition-all">
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="text-[10px] font-bold bg-orange-50 text-orange-600 px-2 py-1 rounded uppercase tracking-wider border border-orange-100">Öncelikli</span>
+                            <span class="text-xs text-gray-400 font-mono">#104</span>
+                        </div>
+                        <h3 class="font-semibold text-gray-800 mb-2 leading-tight">Python / VBA Veri Otomasyonu</h3>
+                        <p class="text-sm text-gray-500 mb-4 line-clamp-2">Pandas ile veri birleştirme makroları yazılıp sunum formatına çekilecek.</p>
+                        <div class="flex justify-between items-center pt-2 border-t border-gray-100">
+                            <span class="text-xs font-medium text-navy bg-blue-50 px-2 py-1 rounded">Karar Destek Sistemi</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-var tasks=lg("ht",[
-{id:"s1",title:"BDDK Aylık Rapor",description:"Regülatif raporların kontrolü",priority:"critical",status:"inprogress",category:"BDDK",assignee:"1",dueDate:"2026-04-16",createdAt:new Date().toISOString(),subtasks:[{id:"a1",text:"Veri doğrulama",done:true},{id:"a2",text:"Format kontrolü",done:false}]},
-{id:"s2",title:"SQL Yedekleme Kontrolü",description:"dbfactoring yedekleri",priority:"high",status:"todo",category:"Veritabanı",assignee:"1",dueDate:"2026-04-15",createdAt:new Date().toISOString(),subtasks:[]},
-{id:"s3",title:"Mobil App Test",description:"QR-Infact-RatingPro-PowerCurve testi",priority:"high",status:"review",category:"Yazılım",assignee:"1",dueDate:"2026-04-20",createdAt:new Date().toISOString(),subtasks:[{id:"b1",text:"QR test",done:true},{id:"b2",text:"RatingPro",done:true},{id:"b3",text:"PowerCurve",done:false}]},
-{id:"s4",title:"Hyper-V Bakım",description:"Sanal sunucu kontrolü",priority:"medium",status:"todo",category:"Sunucu",assignee:"",dueDate:"2026-04-22",createdAt:new Date().toISOString(),subtasks:[]},
-{id:"s5",title:"Dijital Mizan Rapor",description:"Prometeia kapanış",priority:"low",status:"done",category:"Dijitalleşme",assignee:"1",dueDate:"2026-04-05",createdAt:new Date().toISOString(),subtasks:[]},
-{id:"s6",title:"E-Defter Tebliği",description:"Tebliğ uyum aksiyonları",priority:"medium",status:"inprogress",category:"Dijitalleşme",assignee:"1",dueDate:"2026-05-01",createdAt:new Date().toISOString(),subtasks:[{id:"c1",text:"Analiz",done:true},{id:"c2",text:"Entegrasyon",done:false}]}
-]);
-var team=lg("hm",[{id:"1",name:"Cengiz Gülcan",role:"IT Yönetici"}]);
-var tab="dash",dark=lg("hd",false),sfilt="all",formData=null;
-function sv(){ls("ht",tasks);ls("hm",team)}
-function fm(id){for(var i=0;i<team.length;i++)if(team[i].id===id)return team[i];return null}
-function gs(){var o={total:tasks.length,todo:0,ip:0,rv:0,done:0,ov:0};tasks.forEach(function(t){if(t.status==="todo")o.todo++;if(t.status==="inprogress")o.ip++;if(t.status==="review")o.rv++;if(t.status==="done")o.done++;var d=dl(t.dueDate);if(d!==null&&d<0&&t.status!=="done")o.ov++});o.pct=o.total?Math.round(o.done/o.total*100):0;return o}
+            <div class="bg-green-50/50 rounded-xl w-80 flex flex-col border border-green-100 shadow-sm">
+                <div class="p-4 border-b border-green-200 flex justify-between items-center bg-green-100/50 rounded-t-xl">
+                    <h2 class="font-bold text-green-800 flex items-center gap-2">
+                        <div class="w-2 h-2 rounded-full bg-green-500"></div> TAMAMLANDI 
+                    </h2>
+                    <span class="bg-white text-green-800 px-2.5 py-0.5 rounded-full text-xs font-bold shadow-sm">1</span>
+                </div>
+                
+                <div id="done-list" class="p-3 flex-1 overflow-y-auto flex flex-col gap-3 min-h-[200px]">
+                    <div class="task-card bg-gray-50 p-4 rounded-lg border border-green-200 opacity-80 hover:opacity-100 transition-all">
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="text-[10px] font-bold bg-green-100 text-green-700 px-2 py-1 rounded uppercase tracking-wider border border-green-200">Bitti</span>
+                            <span class="text-xs text-gray-400 font-mono">#098</span>
+                        </div>
+                        <h3 class="font-semibold text-gray-600 mb-2 line-through leading-tight">Play Console Doğrulaması</h3>
+                        <p class="text-sm text-gray-400 mb-4 line-clamp-2">D-U-N-S numarası ile developer hesap onayı teknik olarak tamamlandı.</p>
+                        <div class="flex justify-between items-center pt-2 border-t border-gray-200">
+                            <span class="text-xs font-medium text-gray-500 bg-gray-200 px-2 py-1 rounded">Diğer</span>
+                            <div class="w-6 h-6 rounded-full bg-green-500 text-white flex items-center justify-center text-xs">✓</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-function trowH(t){var p=P[t.priority]||P.medium,s=S[t.status]||S.todo,d=dl(t.dueDate),a=fm(t.assignee),su=t.subtasks||[],sd=su.filter(function(x){return x.done}).length,st=su.length;
-var dc=d!==null&&d<0?"var(--red)":d!==null&&d<=2?"var(--orange)":"var(--lbl3)";
-var h='<div class="trow" data-action="detail" data-id="'+t.id+'">';
-h+='<div style="width:4px;height:38px;border-radius:2px;background:'+p.c+';flex-shrink:0"></div>';
-h+='<div style="flex:1;min-width:0"><div style="font-size:17px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;'+(t.status==="done"?"color:var(--lbl3);text-decoration:line-through":"")+'">'+esc(t.title)+'</div>';
-h+='<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:3px;font-size:13px"><span style="color:'+s.c+';font-weight:500">'+esc(s.l)+'</span><span style="color:var(--lbl4)">&middot;</span><span style="color:var(--lbl3)">'+esc(t.category)+'</span>';
-if(t.dueDate)h+='<span style="color:var(--lbl4)">&middot;</span><span style="color:'+dc+';font-weight:500">'+esc(rd(t.dueDate))+'</span>';
-h+='</div></div><div style="display:flex;align-items:center;gap:8px;flex-shrink:0">';
-if(st>0)h+=ringH(sd/st,22,2.5);
-if(a)h+=avH(a.name,28);
-h+='<span style="color:var(--lbl4);font-size:20px">&rsaquo;</span></div></div>';
-return h}
+        </div>
+    </main>
 
-/* ==== VIEWS ==== */
-function vDash(){var s=gs(),dmi=dark?"☀️":"🌙";
-var h='<div class="nav"><div class="nav-row"><div style="min-width:44px"></div><div class="nav-acts"><button data-action="toggle-dark">'+dmi+'</button><button data-action="new-task" style="font-size:28px">&#xFF0B;</button></div></div><h1>HF IT Görev Takip</h1></div>';
-h+='<div class="conn"><div class="conn" style="width:6px;height:6px;border-radius:50%;padding:0;background:'+(fbok?'var(--green)':'var(--orange)')+'"></div>'+(fbok?'Firebase bağlı':'Çevrimdışı mod')+'</div>';
-h+='<div style="padding:0 16px 16px"><div class="hero"><div style="font-size:13px;opacity:.8;margin-bottom:6px">Tamamlanma Oranı</div><div style="display:flex;align-items:center;gap:16px">'+ringH(s.pct/100,60,5,"#fff","rgba(255,255,255,.25)")+'<div><div style="font-size:42px;font-weight:700;line-height:1">%'+s.pct+'</div><div style="font-size:13px;opacity:.75;margin-top:2px">'+s.done+'/'+s.total+' görev</div></div></div></div>';
-h+='<div class="sg">';
-[{n:s.todo,l:"Bekliyor",c:"var(--lbl3)"},{n:s.ip,l:"Devam",c:"var(--blue)"},{n:s.rv,l:"İnceleme",c:"var(--purple)"},{n:s.ov,l:"Gecikmiş",c:"var(--red)"}].forEach(function(x){h+='<div class="sc"><div class="l">'+x.l+'</div><div class="n" style="color:'+x.c+'">'+x.n+'</div></div>'});
-h+='</div></div>';
-var ov=tasks.filter(function(t){var d=dl(t.dueDate);return d!==null&&d<0&&t.status!=="done"});
-if(ov.length){{h+='<div class="grp"><div class="grp-h">⚠️ Gecikmiş</div><div class="grp-b">';ov.forEach(function(t){h+=trowH(t)});h+='</div></div>'}}
-h+='<div class="grp"><div class="grp-h">Son Görevler</div><div class="grp-b">';
-if(!tasks.length)h+='<div class="empty">Henüz görev yok</div>';
-else tasks.slice(0,6).forEach(function(t){h+=trowH(t)});
-h+='</div></div><div style="height:100px"></div>';return h}
+    <script>
+        // Sütunları seçiyoruz
+        const todoList = document.getElementById('todo-list');
+        const inProgressList = document.getElementById('inprogress-list');
+        const doneList = document.getElementById('done-list');
 
-function vTasks(){var dmi=dark?"☀️":"🌙";
-var h='<div class="nav"><div class="nav-row"><div style="min-width:44px"></div><div class="nav-acts"><button data-action="toggle-dark">'+dmi+'</button><button data-action="new-task" style="font-size:28px">&#xFF0B;</button></div></div><h1>Görevler</h1></div>';
-h+='<div style="padding:0 16px 12px"><div style="display:flex;align-items:center;gap:6px;background:var(--fill);border-radius:10px;padding:7px 10px;margin-bottom:10px"><span style="color:var(--lbl3)">🔍</span><input id="qinp" placeholder="Görev ara..." style="width:100%;font-size:17px"></div>';
-h+='<div class="seg" id="sseg">';
-[{v:"all",l:"Tümü"},{v:"todo",l:"Bekliyor"},{v:"inprogress",l:"Devam"},{v:"review",l:"İnceleme"},{v:"done",l:"Bitti"}].forEach(function(o){
-h+='<button data-action="filter-status" data-val="'+o.v+'" class="'+(sfilt===o.v?"active":"")+'">'+o.l+'</button>'});
-h+='</div></div>';
-h+='<div class="grp"><div class="grp-b" id="tlist">';
-var ft=tasks.filter(function(t){return sfilt==="all"||t.status===sfilt}).sort(function(a,b){return(P[a.priority]?P[a.priority].s:2)-(P[b.priority]?P[b.priority].s:2)});
-if(!ft.length)h+='<div class="empty">Görev bulunamadı</div>';
-else ft.forEach(function(t){h+=trowH(t)});
-h+='</div></div><div style="height:100px"></div>';return h}
+        // Ortak Sortable ayarları
+        const sortableOptions = {
+            group: 'shared', // Kartların sütunlar arası geçiş yapabilmesini sağlar
+            animation: 150,  // Kayma animasyonu hızı
+            ghostClass: 'sortable-ghost', // Sürüklerken arkada kalan boşluğun stili
+            easing: "cubic-bezier(1, 0, 0, 1)"
+        };
 
-function vBoard(){var dmi=dark?"☀️":"🌙";
-var h='<div class="nav"><div class="nav-row"><div style="min-width:44px"></div><div class="nav-acts"><button data-action="toggle-dark">'+dmi+'</button><button data-action="new-task" style="font-size:28px">&#xFF0B;</button></div></div><h1>Kanban Pano</h1></div>';
-h+='<div class="board">';
-Object.keys(S).forEach(function(sk){var sv=S[sk],col=tasks.filter(function(t){return t.status===sk});
-h+='<div class="bcol"><div style="display:flex;align-items:center;justify-content:space-between;padding:8px 4px 10px"><span style="font-size:15px;font-weight:600">'+esc(sv.l)+'</span><span class="badge" style="background:'+sv.c+'">'+col.length+'</span></div>';
-col.forEach(function(t){var p=P[t.priority]||P.medium,a=fm(t.assignee),su=t.subtasks||[],sd=su.filter(function(x){return x.done}).length,st=su.length;
-h+='<div class="bcard" style="border-left:3px solid '+p.c+'" data-action="detail" data-id="'+t.id+'"><div style="font-size:15px;font-weight:600;margin-bottom:6px">'+esc(t.title)+'</div><div style="display:flex;gap:6px;font-size:12px"><span style="color:'+p.c+'">'+esc(p.l)+'</span>';
-if(t.dueDate){var d=dl(t.dueDate);h+='<span style="color:'+(d<0?'var(--red)':'var(--lbl3)')+'">'+esc(rd(t.dueDate))+'</span>'}
-h+='</div>';
-if(st>0)h+='<div style="margin-top:8px"><div style="height:3px;background:var(--fill);border-radius:2px"><div style="height:100%;width:'+(sd/st*100)+'%;background:var(--green);border-radius:2px"></div></div><div style="font-size:11px;color:var(--lbl3);margin-top:3px">'+sd+'/'+st+'</div></div>';
-if(a)h+='<div style="display:flex;justify-content:flex-end;margin-top:8px">'+avH(a.name,24)+'</div>';
-h+='</div>'});
-if(!col.length)h+='<div style="padding:24px;text-align:center;color:var(--lbl4);border:1.5px dashed var(--sep);border-radius:10px">Görev yok</div>';
-h+='</div>'});
-h+='</div>';return h}
-
-function vSettings(){var s=gs(),dmi=dark?"🌙":"☀️";
-var h='<div class="nav"><div class="nav-row"><div style="min-width:44px"></div><div></div></div><h1>Ayarlar</h1></div>';
-h+='<div class="grp"><div class="grp-h">Görünüm</div><div class="grp-b"><div class="cell" data-action="toggle-dark"><div class="ci" style="background:'+(dark?'#5e5ce6':'#ff9500')+'">'+dmi+'</div><div class="cb"><div class="cl">Koyu Mod</div></div><div class="toggle" style="background:'+(dark?'var(--green)':'var(--fill)')+'"><div class="toggle-k" style="transform:translateX('+(dark?'20':'0')+'px)"></div></div></div></div></div>';
-h+='<div class="grp"><div class="grp-h">Bağlantı</div><div class="grp-b"><div class="cell"><div class="ci" style="background:'+(fbok?'var(--green)':'var(--orange)')+'">'+(fbok?'🟢':'🟠')+'</div><div class="cb"><div class="cl">Firebase</div></div><span class="cd">'+(fbok?'Bağlı':'Çevrimdışı')+'</span></div></div></div>';
-h+='<div class="grp"><div class="grp-h">Ekip</div><div class="grp-b">';
-team.forEach(function(m){h+='<div class="cell"><div class="cb"><div class="cl">'+esc(m.name)+'</div></div><span class="cd">'+esc(m.role)+'</span></div>'});
-h+='<div class="cell" data-action="team-sheet"><div class="ci" style="background:var(--blue)">👥</div><div class="cb"><div class="cl">Ekip Yönetimi</div></div><span class="cc">&rsaquo;</span></div></div></div>';
-h+='<div class="grp"><div class="grp-h">İstatistikler</div><div class="grp-b"><div class="cell"><div class="cb"><div class="cl">Toplam</div></div><span class="cd">'+s.total+'</span></div><div class="cell"><div class="cb"><div class="cl">Tamamlanan</div></div><span class="cd">'+s.done+'</span></div><div class="cell"><div class="cb"><div class="cl">Gecikmiş</div></div><span class="cd">'+s.ov+'</span></div><div class="cell"><div class="cb"><div class="cl">Oran</div></div><span class="cd">%'+s.pct+'</span></div></div></div>';
-h+='<div class="grp"><div class="grp-h">Hakkında</div><div class="grp-b"><div class="cell"><div class="cb"><div class="cl">Kurum</div></div><span class="cd">Halk Faktoring</span></div><div class="cell"><div class="cb"><div class="cl">Birim</div></div><span class="cd">IT Departmanı</span></div><div class="cell"><div class="cb"><div class="cl">Versiyon</div></div><span class="cd">2.0</span></div></div></div>';
-h+='<div style="height:100px"></div>';return h}
-
-/* ==== RENDER ==== */
-function render(){
-document.body.classList.toggle("dark",dark);
-var c=document.getElementById("content");
-if(tab==="dash")c.innerHTML=vDash();
-else if(tab==="tasks")c.innerHTML=vTasks();
-else if(tab==="board")c.innerHTML=vBoard();
-else c.innerHTML=vSettings();
-var tb=document.getElementById("tabbar");
-tb.innerHTML=[{id:"dash",ic:"📊",l:"Özet"},{id:"tasks",ic:"📋",l:"Görevler"},{id:"board",ic:"▦",l:"Pano"},{id:"settings",ic:"⚙️",l:"Ayarlar"}].map(function(t){return'<button class="tab-btn'+(tab===t.id?' active':'')+'" data-action="tab" data-val="'+t.id+'"><span class="ti">'+t.ic+'</span><span>'+t.l+'</span></button>'}).join("");
-if(tab==="tasks"){var inp=document.getElementById("qinp");if(inp)inp.addEventListener("input",doFilter)}}
-
-function doFilter(){
-var q=(document.getElementById("qinp")||{}).value||"";q=q.toLowerCase();
-var el=document.getElementById("tlist");if(!el)return;
-var ft=tasks.filter(function(t){if(sfilt!=="all"&&t.status!==sfilt)return false;if(q&&t.title.toLowerCase().indexOf(q)===-1)return false;return true}).sort(function(a,b){return(P[a.priority]?P[a.priority].s:2)-(P[b.priority]?P[b.priority].s:2)});
-var h="";if(!ft.length)h='<div class="empty">Görev bulunamadı</div>';else ft.forEach(function(t){h+=trowH(t)});el.innerHTML=h}
-
-/* ==== SHEETS ==== */
-function closeSheet(){document.getElementById("sroot").innerHTML=""}
-
-function openDetail(id){
-var t=null;tasks.forEach(function(x){if(x.id===id)t=x});if(!t)return;
-var p=P[t.priority]||P.medium,a=fm(t.assignee),d=dl(t.dueDate),su=t.subtasks||[],sd=su.filter(function(x){return x.done}).length,st=su.length;
-var h='<div class="sbg" data-action="close-sheet"><div class="sht" data-stop><div class="sht-bar"><div></div></div><div class="sht-hd"><button data-action="close-sheet">İptal</button><span class="tt">Görev Detayı</span><button class="sv" data-action="edit-task" data-id="'+t.id+'">Düzenle</button></div><div class="sht-ct"><div style="padding:16px 0">';
-h+='<div style="padding:0 16px 16px"><h2 style="margin:0 0 6px;font-size:22px;font-weight:700">'+esc(t.title)+'</h2>';
-if(t.description)h+='<p style="margin:0;font-size:15px;color:var(--lbl2);line-height:1.5">'+esc(t.description)+'</p>';
-h+='</div>';
-h+='<div style="padding:0 16px 16px"><div class="seg">';
-Object.keys(S).forEach(function(k){h+='<button data-action="change-status" data-id="'+t.id+'" data-val="'+k+'" class="'+(t.status===k?'active':'')+'">'+S[k].l+'</button>'});
-h+='</div></div>';
-h+='<div class="grp"><div class="grp-h">Bilgiler</div><div class="grp-b">';
-h+='<div class="cell"><div class="ci" style="background:'+p.c+'">⚡</div><div class="cb"><div class="cl">Öncelik</div></div><span class="cd">'+esc(p.l)+'</span></div>';
-h+='<div class="cell"><div class="ci" style="background:var(--teal)">📁</div><div class="cb"><div class="cl">Kategori</div></div><span class="cd">'+esc(t.category)+'</span></div>';
-if(a)h+='<div class="cell"><div class="ci" style="background:var(--indigo)">👤</div><div class="cb"><div class="cl">Atanan</div></div><span class="cd">'+esc(a.name)+'</span></div>';
-if(t.dueDate)h+='<div class="cell"><div class="ci" style="background:'+(d!==null&&d<0?'var(--red)':'var(--orange)')+'">📅</div><div class="cb"><div class="cl">Son Tarih</div></div>'+(d!==null&&d<0?'<span class="badge">Gecikmiş</span>':'')+'<span class="cd">'+esc(fl(t.dueDate))+'</span></div>';
-h+='</div></div>';
-if(st>0){h+='<div class="grp"><div class="grp-h">Alt Görevler - '+sd+'/'+st+'</div><div class="grp-b">';
-su.forEach(function(sub){h+='<div class="sub-row"><button class="chk '+(sub.done?'chk-on':'chk-off')+'" data-action="toggle-sub" data-tid="'+t.id+'" data-sid="'+sub.id+'">'+(sub.done?'✓':'')+'</button><span style="flex:1;font-size:17px;'+(sub.done?'color:var(--lbl3);text-decoration:line-through':'')+'">'+esc(sub.text)+'</span></div>'});
-h+='<div style="padding:10px 16px"><div class="pbar"><div class="pbar-f" style="width:'+(sd/st*100)+'%"></div></div></div></div></div>'}
-h+='<div class="grp"><div class="grp-b"><div class="cell dest" data-action="delete-task" data-id="'+t.id+'"><div class="cb"><div class="cl">Görevi Sil</div></div></div></div></div>';
-h+='<div style="height:40px"></div></div></div></div></div>';
-document.getElementById("sroot").innerHTML=h}
-
-function openForm(id){
-var t=id?null:null;if(id)tasks.forEach(function(x){if(x.id===id)t=x});
-var f=t?JSON.parse(JSON.stringify(t)):{id:"",title:"",description:"",priority:"medium",status:"todo",category:CATS[0],assignee:"",dueDate:"",subtasks:[]};
-formData=f;var ed=!!t;
-var h='<div class="sbg" data-action="close-sheet"><div class="sht" data-stop><div class="sht-bar"><div></div></div><div class="sht-hd"><button data-action="close-sheet">İptal</button><span class="tt">'+(ed?"Görevi Düzenle":"Yeni Görev")+'</span><button class="sv" data-action="save-task">'+(ed?"Kaydet":"Ekle")+'</button></div><div class="sht-ct"><div style="padding:16px 0">';
-h+='<div class="grp"><div class="grp-b"><div style="padding:11px 16px;border-bottom:.5px solid var(--sep)"><input id="ft" value="'+esc(f.title)+'" placeholder="Görev başlığı" style="width:100%;font-size:17px;font-weight:500"></div><div style="padding:11px 16px"><textarea id="fd" placeholder="Açıklama..." rows="3" style="width:100%;font-size:15px;resize:none">'+esc(f.description)+'</textarea></div></div></div>';
-
-h+=’<div class="grp"><div class="grp-h">Detaylar</div><div class="grp-b">’;
-h+=’<div class="ff"><label>Öncelik</label><select id="fp">’;Object.keys(P).forEach(function(k){h+=’<option value=”’+k+’”’+(f.priority===k?’ selected’:’’)+’>’+P[k].l+’</option>’});h+=’</select></div>’;
-h+=’<div class="ff"><label>Durum</label><select id="fs">’;Object.keys(S).forEach(function(k){h+=’<option value=”’+k+’”’+(f.status===k?’ selected’:’’)+’>’+S[k].l+’</option>’});h+=’</select></div>’;
-h+=’<div class="ff"><label>Kategori</label><select id="fc">’;CATS.forEach(function(c){h+=’<option’+(f.category===c?’ selected’:’’)+’>’+esc(c)+’</option>’});h+=’</select></div>’;
-h+=’<div class="ff"><label>Atanan</label><select id="fa"><option value="">Seçilmedi</option>’;team.forEach(function(m){h+=’<option value=”’+m.id+’”’+(f.assignee===m.id?’ selected’:’’)+’>’+esc(m.name)+’</option>’});h+=’</select></div>’;
-h+=’<div class="ff"><label>Tarih</label><input type="date" id="fdt" value="'+(f.dueDate||'')+'" style="font-size:17px;color:var(--blue);text-align:right"></div>’;
-h+=’</div></div>’;
-h+=’<div class="grp"><div class="grp-h">Alt Görevler</div><div class="grp-b" id="fsubs">’;
-(f.subtasks||[]).forEach(function(st,i){h+=’<div class="sub-row"><button class="chk '+(st.done?'chk-on':'chk-off')+'" data-action="form-toggle-sub" data-idx="'+i+'">’+(st.done?‘✓’:’’)+’</button><span style="flex:1;font-size:17px;'+(st.done?'color:var(--lbl3);text-decoration:line-through':'')+'">’+esc(st.text)+’</span><button data-action="form-del-sub" data-idx="'+i+'" style="background:none;border:none;color:var(--red);font-size:20px;cursor:pointer">−</button></div>’});
-h+=’<div style="display:flex;align-items:center;gap:8px;padding:8px 16px"><input id="fns" placeholder="Alt görev ekle..." style="width:100%;font-size:17px"><button data-action="form-add-sub" style="background:var(--blue);color:#fff;border:none;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;font-weight:700;flex-shrink:0">+</button></div>’;
-h+=’</div></div>’;
-if(ed)h+=’<div class="grp"><div class="grp-b"><div class="cell dest" data-action="delete-task" data-id="'+f.id+'"><div class="cb"><div class="cl">Görevi Sil</div></div></div></div></div>’;
-h+=’<div style="height:50px"></div></div></div></div></div>’;
-document.getElementById(“sroot”).innerHTML=h}
-
-function openTeam(){
-var h=’<div class="sbg" data-action="close-sheet"><div class="sht" data-stop><div class="sht-bar"><div></div></div><div class="sht-hd"><button data-action="close-sheet">İptal</button><span class="tt">Ekip Yönetimi</span><div style="min-width:60px"></div></div><div class="sht-ct"><div style="padding:16px 0">’;
-h+=’<div class="grp"><div class="grp-h">’+team.length+’ Üye</div><div class="grp-b">’;
-team.forEach(function(m){h+=’<div class="cell">’+avH(m.name,36)+’<div class="cb"><div class="cl">’+esc(m.name)+’</div><div class="cs">’+esc(m.role)+’</div></div><button data-action="del-member" data-id="'+m.id+'" style="background:none;border:none;color:var(--red);font-size:22px;cursor:pointer">−</button></div>’});
-h+=’</div></div>’;
-h+=’<div class="grp"><div class="grp-h">Yeni Üye</div><div class="grp-b"><div class="ff"><label>Ad Soyad</label><input id="tmn" placeholder="İsim" style="text-align:right"></div><div class="ff"><label>Rol</label><input id="tmr" placeholder="Yazılımcı" style="text-align:right"></div><div style="padding:16px"><button data-action="add-member" style="width:100%;padding:12px;border-radius:10px;border:none;background:var(--blue);color:#fff;font-size:17px;font-weight:600;cursor:pointer">Ekle</button></div></div></div>’;
-h+=’</div></div></div></div>’;
-document.getElementById(“sroot”).innerHTML=h}
-
-function syncFormData(){
-if(!formData)return;
-var el;
-el=document.getElementById(“ft”);if(el)formData.title=el.value;
-el=document.getElementById(“fd”);if(el)formData.description=el.value;
-el=document.getElementById(“fp”);if(el)formData.priority=el.value;
-el=document.getElementById(“fs”);if(el)formData.status=el.value;
-el=document.getElementById(“fc”);if(el)formData.category=el.value;
-el=document.getElementById(“fa”);if(el)formData.assignee=el.value;
-el=document.getElementById(“fdt”);if(el)formData.dueDate=el.value}
-
-/* ==== EVENT DELEGATION ==== */
-document.addEventListener(“click”,function(e){
-var el=e.target.closest(”[data-action]”);
-if(!el)return;
-var act=el.getAttribute(“data-action”);
-var id=el.getAttribute(“data-id”);
-var val=el.getAttribute(“data-val”);
-
-if(el.closest(”[data-stop]”)&&act===“close-sheet”){}
-else if(el.closest(”.sbg”)&&!el.closest(”[data-stop]”)&&act!==“close-sheet”)return;
-
-switch(act){
-case”tab”:tab=val;sfilt=“all”;render();document.getElementById(“content”).scrollTop=0;break;
-case”new-task”:openForm(null);break;
-case”toggle-dark”:dark=!dark;ls(“hd”,dark);render();break;
-case”detail”:openDetail(id);break;
-case”close-sheet”:closeSheet();break;
-case”edit-task”:closeSheet();openForm(id);break;
-case”change-status”:
-tasks.forEach(function(t){if(t.id===id)t.status=val});sv();openDetail(id);render();break;
-case”toggle-sub”:
-var tid=el.getAttribute(“data-tid”),sid=el.getAttribute(“data-sid”);
-tasks.forEach(function(t){if(t.id===tid)(t.subtasks||[]).forEach(function(s){if(s.id===sid)s.done=!s.done})});sv();openDetail(tid);render();break;
-case”delete-task”:
-tasks=tasks.filter(function(t){return t.id!==id});sv();closeSheet();render();break;
-case”save-task”:
-syncFormData();var f=formData;if(!f||!f.title.trim())return;
-if(f.id){var idx=-1;tasks.forEach(function(t,i){if(t.id===f.id)idx=i});if(idx>=0)tasks[idx]=f}
-else{f.id=uid();f.createdAt=new Date().toISOString();tasks.unshift(f)}
-sv();closeSheet();formData=null;render();break;
-case”form-toggle-sub”:
-syncFormData();var fi=parseInt(el.getAttribute(“data-idx”));
-if(formData&&formData.subtasks[fi])formData.subtasks[fi].done=!formData.subtasks[fi].done;
-openForm(formData.id||null);break;
-case”form-del-sub”:
-syncFormData();var di=parseInt(el.getAttribute(“data-idx”));
-if(formData)formData.subtasks.splice(di,1);
-openForm(formData.id||null);break;
-case”form-add-sub”:
-syncFormData();var ns=document.getElementById(“fns”);
-if(ns&&ns.value.trim()){formData.subtasks.push({id:uid(),text:ns.value.trim(),done:false})}
-openForm(formData.id||null);break;
-case”filter-status”:
-sfilt=val;document.querySelectorAll(”#sseg button”).forEach(function(b){b.classList.toggle(“active”,b.getAttribute(“data-val”)===val)});doFilter();break;
-case”team-sheet”:openTeam();break;
-case”add-member”:
-var mn=document.getElementById(“tmn”),mr=document.getElementById(“tmr”);
-if(mn&&mn.value.trim()){team.push({id:uid(),name:mn.value.trim(),role:(mr?mr.value.trim():””)||“Ekip Üyesi”});sv();openTeam();render()}break;
-case”del-member”:
-team=team.filter(function(m){return m.id!==id});sv();openTeam();render();break;
-}});
-
-// Stop propagation for sheet content
-document.addEventListener(“click”,function(e){
-var stop=e.target.closest(”[data-stop]”);
-var sbg=e.target.closest(”.sbg”);
-if(sbg&&!stop&&!e.target.closest(”[data-action]”)){closeSheet()}
-},true);
-
-// Firebase sync
-if(fbok){
-db.collection(“tasks”).orderBy(“createdAt”,“desc”).onSnapshot(function(snap){var r=[];snap.forEach(function(d){var x=d.data();if(x.createdAt&&x.createdAt.toDate)x.createdAt=x.createdAt.toDate().toISOString();r.push(Object.assign({id:d.id},x))});if(r.length){tasks=r;sv();render()}});
-db.collection(“team”).orderBy(“name”).onSnapshot(function(snap){var r=[];snap.forEach(function(d){r.push(Object.assign({id:d.id},d.data()))});if(r.length){team=r;sv();render()}})
-}
-
-render();
-</script>
-
+        // Sütunlara sürükle-bırak özelliğini ekliyoruz
+        new Sortable(todoList, sortableOptions);
+        new Sortable(inProgressList, sortableOptions);
+        new Sortable(doneList, sortableOptions);
+    </script>
 </body>
 </html>
