@@ -1,29 +1,243 @@
-taskForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const submitBtn = e.target.querySelector('button[type="submit"]');
-    const originalText = submitBtn.innerText;
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT Görev Takip Paneli - Pro Canlı</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     
-    // Butonu pasif yap ve yazı ekle
-    submitBtn.disabled = true;
-    submitBtn.innerText = "Kaydediliyor...";
+    <script>
+        tailwind.config = {
+            theme: { 
+                extend: { 
+                    colors: { 
+                        navy: '#1a2c5b', 
+                        darknavy: '#0f172a', 
+                        graylight: '#f8fafc' 
+                    } 
+                } 
+            }
+        }
+    </script>
+    <style>
+        .sortable-ghost { opacity: 0.4; background-color: #f1f5f9; border: 2px dashed #cbd5e1; }
+        .task-card { cursor: grab; }
+        .task-card:active { cursor: grabbing; }
+        .modal-hidden { display: none; }
+    </style>
+</head>
+<body class="bg-graylight font-sans text-gray-800 h-screen flex flex-col overflow-hidden relative">
+    
+    <header class="bg-navy text-white p-4 shadow-lg flex justify-between items-center z-10">
+        <h1 class="text-xl font-extrabold tracking-widest text-gray-100">IT GÖREV <span class="text-blue-300">PRO</span></h1>
+        <div class="flex items-center gap-4">
+            <button id="open-modal-btn" class="bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold py-1.5 px-4 rounded-md shadow flex items-center gap-1 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                Yeni Görev
+            </button>
+            <div class="w-8 h-8 rounded-full bg-gray-200 text-navy font-bold flex items-center justify-center shadow-sm">C</div>
+        </div>
+    </header>
 
-    try {
-        await addDoc(collection(db, "tasks"), {
-            title: document.getElementById('task-title').value,
-            desc: document.getElementById('task-desc').value,
-            project: document.getElementById('task-project').value,
-            priority: document.getElementById('task-priority').value,
-            status: "todo",
-            createdAt: new Date().getTime()
+    <main class="flex-1 overflow-x-auto p-6 bg-gray-100 flex gap-6 min-w-max h-full">
+        <div class="bg-gray-200/60 rounded-xl w-80 flex flex-col border border-gray-300 shadow-sm">
+            <div class="p-3 border-b border-gray-300 bg-gray-200/80 rounded-t-xl font-bold text-darknavy flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full bg-gray-500"></div> YAPILACAKLAR
+            </div>
+            <div id="todo" class="kanban-column p-3 flex-1 overflow-y-auto flex flex-col gap-3 min-h-[200px]" data-status="todo"></div>
+        </div>
+
+        <div class="bg-blue-50/50 rounded-xl w-80 flex flex-col border border-blue-200 shadow-sm">
+            <div class="p-3 border-b border-blue-200 bg-blue-100/50 rounded-t-xl font-bold text-blue-800 flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div> DEVAM EDENLER
+            </div>
+            <div id="inprogress" class="kanban-column p-3 flex-1 overflow-y-auto flex flex-col gap-3 min-h-[200px]" data-status="inprogress"></div>
+        </div>
+
+        <div class="bg-green-50/50 rounded-xl w-80 flex flex-col border border-green-200 shadow-sm">
+            <div class="p-3 border-b border-green-200 bg-green-100/50 rounded-t-xl font-bold text-green-800 flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full bg-green-500"></div> TAMAMLANDI
+            </div>
+            <div id="done" class="kanban-column p-3 flex-1 overflow-y-auto flex flex-col gap-3 min-h-[200px]" data-status="done"></div>
+        </div>
+    </main>
+
+    <div id="task-modal" class="modal-hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-xl shadow-2xl w-96 transform transition-all">
+            <h2 class="text-xl font-bold mb-4 text-navy border-b pb-2">Yeni Görev Tanımla</h2>
+            <form id="task-form" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Başlık</label>
+                    <input type="text" id="task-title" required class="mt-1 w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-navy">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Açıklama (İsteğe Bağlı)</label>
+                    <textarea id="task-desc" rows="2" class="mt-1 w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-navy"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">İlgili Proje</label>
+                    <select id="task-project" class="mt-1 w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-navy">
+                        <option value="BIS Infact">BIS Infact</option>
+                        <option value="Dijital Mizan">Dijital Mizan</option>
+                        <option value="RatingPro">RatingPro</option>
+                        <option value="Karar Destek Sistemi">Karar Destek Sistemi</option>
+                        <option value="Diğer / Altyapı">Diğer / Altyapı</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Öncelik</label>
+                    <select id="task-priority" class="mt-1 w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-navy">
+                        <option value="Normal">Normal</option>
+                        <option value="Acil">Acil</option>
+                    </select>
+                </div>
+                <div class="flex gap-3 pt-4">
+                    <button type="button" id="close-modal-btn" class="w-1/2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 rounded transition-colors">İptal</button>
+                    <button type="submit" id="submit-task-btn" class="w-1/2 bg-navy hover:bg-blue-800 text-white font-bold py-2 rounded transition-colors">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+        // =========================================================================
+        // DİKKAT: BURAYA FIREBASE CONSOLE'DAN ALDIĞINIZ BİLGİLERİ YAPIŞTIRIN!
+        // =========================================================================
+        const firebaseConfig = {
+            apiKey: "API_ANAHTARINIZI_BURAYA_YAZIN",
+            authDomain: "PROJENIZ.firebaseapp.com",
+            projectId: "PROJENIZIN_IDSI",
+            storageBucket: "PROJENIZ.appspot.com",
+            messagingSenderId: "SENDER_ID",
+            appId: "APP_ID"
+        };
+
+        // Firebase'i Başlat
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Arayüz Elementleri
+        const columns = {
+            'todo': document.getElementById('todo'),
+            'inprogress': document.getElementById('inprogress'),
+            'done': document.getElementById('done')
+        };
+        const modal = document.getElementById('task-modal');
+        const taskForm = document.getElementById('task-form');
+        const submitBtn = document.getElementById('submit-task-btn');
+
+        // Modal Kontrolleri
+        document.getElementById('open-modal-btn').addEventListener('click', () => {
+            modal.classList.remove('modal-hidden');
         });
-        modal.classList.add('modal-hidden');
-        taskForm.reset();
-    } catch (error) {
-        console.error("Hata:", error);
-        alert("Bağlantı hatası: " + error.message);
-    } finally {
-        // İşlem bitince butonu düzelt
-        submitBtn.disabled = false;
-        submitBtn.innerText = originalText;
-    }
-});
+        document.getElementById('close-modal-btn').addEventListener('click', () => {
+            modal.classList.add('modal-hidden');
+            taskForm.reset();
+        });
+
+        // 1. Yeni Görev Ekleme ve Kaydet Butonu Animasyonu
+        taskForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Butonu bekleme moduna al
+            const originalText = submitBtn.innerText;
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Kaydediliyor...";
+            submitBtn.classList.add('opacity-70', 'cursor-not-allowed');
+
+            try {
+                await addDoc(collection(db, "tasks"), {
+                    title: document.getElementById('task-title').value,
+                    desc: document.getElementById('task-desc').value,
+                    project: document.getElementById('task-project').value,
+                    priority: document.getElementById('task-priority').value,
+                    status: "todo", // Yeni görevler her zaman Yapılacaklar'a düşer
+                    createdAt: new Date().getTime()
+                });
+                
+                modal.classList.add('modal-hidden');
+                taskForm.reset();
+            } catch (error) {
+                console.error("Firebase Hatası: ", error);
+                alert("Görev kaydedilemedi. Firebase yapılandırmanızı ve veritabanı kurallarınızı kontrol edin.");
+            } finally {
+                // Butonu eski haline getir
+                submitBtn.disabled = false;
+                submitBtn.innerText = originalText;
+                submitBtn.classList.remove('opacity-70', 'cursor-not-allowed');
+            }
+        });
+
+        // 2. Veritabanını Canlı Dinleme ve Kartları Ekrana Çizme
+        const q = query(collection(db, "tasks"), orderBy("createdAt", "desc"));
+        onSnapshot(q, (snapshot) => {
+            // Ekranda birikmeyi önlemek için sütunları temizle
+            Object.values(columns).forEach(col => col.innerHTML = '');
+
+            snapshot.forEach((docSnap) => {
+                const task = docSnap.data();
+                const taskId = docSnap.id;
+                
+                // Önceliğe göre renk kodları
+                const badgeClass = task.priority === 'Acil' 
+                    ? 'bg-red-100 text-red-700 border-red-200' 
+                    : 'bg-blue-50 text-blue-600 border-blue-100';
+
+                // Tamamlanan görevler için üzeri çizili stil
+                const titleStyle = task.status === 'done' ? 'line-through text-gray-500' : 'text-gray-800';
+
+                // Kartın HTML yapısı
+                const cardHTML = `
+                    <div class="task-card bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-all" data-id="${taskId}">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-[10px] font-bold px-2 py-1 rounded uppercase border ${badgeClass}">${task.priority}</span>
+                        </div>
+                        <h3 class="font-semibold ${titleStyle} mb-1 leading-tight">${task.title}</h3>
+                        <p class="text-sm text-gray-500 mb-3 line-clamp-2">${task.desc}</p>
+                        <div class="flex justify-between items-center pt-2 border-t border-gray-100">
+                            <span class="text-xs font-medium text-navy bg-gray-100 px-2 py-1 rounded">${task.project}</span>
+                            ${task.status === 'done' ? '<div class="w-5 h-5 rounded-full bg-green-500 text-white flex items-center justify-center text-xs font-bold shadow-sm">✓</div>' : ''}
+                        </div>
+                    </div>
+                `;
+
+                // Görevin veritabanındaki status bilgisine göre doğru sütuna yerleştir
+                if (columns[task.status]) {
+                    columns[task.status].innerHTML += cardHTML;
+                }
+            });
+        });
+
+        // 3. Sürükle-Bırak Motoru (SortableJS) ve Durum Güncellemesi
+        Object.values(columns).forEach(column => {
+            new Sortable(column, {
+                group: 'shared', // Kartların sütunlar arası geçebilmesini sağlar
+                animation: 150,
+                ghostClass: 'sortable-ghost',
+                onEnd: async function (evt) {
+                    const itemEl = evt.item;  
+                    const toList = evt.to;    
+                    
+                    const taskId = itemEl.getAttribute('data-id');
+                    const newStatus = toList.getAttribute('data-status');
+
+                    // Kartın sütunu değiştiyse Firestore'u güncelle
+                    if (taskId && newStatus) {
+                        try {
+                            await updateDoc(doc(db, "tasks", taskId), { 
+                                status: newStatus 
+                            });
+                        } catch (error) {
+                            console.error("Durum güncellenirken hata oluştu: ", error);
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
