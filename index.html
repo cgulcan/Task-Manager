@@ -28,105 +28,285 @@ input,textarea,select{font-family:inherit}
 <script>
 "use strict";
 var ce=React.createElement,uS=React.useState,uE=React.useEffect,uM=React.useMemo,Fr=React.Fragment;
-var FB={apiKey:"",authDomain:"",projectId:"",storageBucket:"",messagingSenderId:"",appId:""};
+
+/* FIREBASE - bilgileri girin */
+var FB={apiKey:””,authDomain:””,projectId:””,storageBucket:””,messagingSenderId:””,appId:””};
 var db=null,fbOK=false;
-try{if(FB.apiKey&&FB.apiKey.length>5){firebase.initializeApp(FB);db=firebase.firestore();fbOK=true}}catch(e){}
-function fbSub(c,o,cb){if(!fbOK)return function(){};return db.collection(c).orderBy(o,"desc").onSnapshot(function(s){var r=[];s.forEach(function(d){var x=d.data();if(x.createdAt&&x.createdAt.toDate)x.createdAt=x.createdAt.toDate().toISOString();r.push(Object.assign({id:d.id},x))});cb(r)})}
+try{if(FB.apiKey&&FB.apiKey.length>5){firebase.initializeApp(FB);db=firebase.firestore();fbOK=true}}catch(e){console.warn(e)}
+function fbSub(c,o,cb){if(!fbOK)return function(){};return db.collection(c).orderBy(o,“desc”).onSnapshot(function(s){var r=[];s.forEach(function(d){var x=d.data();if(x.createdAt&&x.createdAt.toDate)x.createdAt=x.createdAt.toDate().toISOString();r.push(Object.assign({id:d.id},x))});cb(r)})}
 function fbAdd(c,d){if(!fbOK)return Promise.resolve(null);var x=Object.assign({},d);delete x.id;x.createdAt=firebase.firestore.FieldValue.serverTimestamp();return db.collection(c).add(x).then(function(r){return r.id})}
 function fbUp(c,i,d){if(!fbOK)return Promise.resolve();var x=Object.assign({},d);delete x.id;return db.collection(c).doc(i).update(x)}
 function fbDl(c,i){if(!fbOK)return Promise.resolve();return db.collection(c).doc(i).delete()}
 
-var LT={bg:”#f2f2f7”,card:”#fff”,press:”#e5e5ea”,sep:“rgba(60,60,67,.12)”,lbl:”#000”,lbl2:”#3c3c43”,lbl3:”#8e8e93”,lbl4:”#c7c7cc”,blue:”#007aff”,green:”#34c759”,orange:”#ff9500”,red:”#ff3b30”,purple:”#af52de”,teal:”#5ac8fa”,indigo:”#5856d6”,fill:“rgba(120,120,128,.2)”,fill2:“rgba(120,120,128,.16)”,nav:“rgba(249,249,249,.94)”,sheet:”#fff”,ov:“rgba(0,0,0,.4)”,gA:”#007aff”,gB:”#5856d6”};
-var DK={bg:”#000”,card:”#1c1c1e”,press:”#2c2c2e”,sep:“rgba(84,84,88,.65)”,lbl:”#fff”,lbl2:”#ebebf5”,lbl3:”#ebebf599”,lbl4:”#ebebf54d”,blue:”#0a84ff”,green:”#30d158”,orange:”#ff9f0a”,red:”#ff453a”,purple:”#bf5af2”,teal:”#64d2ff”,indigo:”#5e5ce6”,fill:“rgba(120,120,128,.36)”,fill2:“rgba(120,120,128,.32)”,nav:“rgba(29,29,31,.94)”,sheet:”#1c1c1e”,ov:“rgba(0,0,0,.6)”,gA:”#0a84ff”,gB:”#5e5ce6”};
-var PR={critical:{l:“Kritik”,c:”#ff3b30”,s:0},high:{l:“Yüksek”,c:”#ff9500”,s:1},medium:{l:“Orta”,c:”#007aff”,s:2},low:{l:“Düşük”,c:”#34c759”,s:3}};
-var SS={todo:{l:“Bekliyor”,c:”#8e8e93”},inprogress:{l:“Devam Ediyor”,c:”#007aff”},review:{l:“İnceleme”,c:”#af52de”},done:{l:“Tamamlandı”,c:”#34c759”}};
-var CATS=[“Sunucu”,“Veritabanı”,“Yazılım”,“Ağ & Güvenlik”,“Destek”,“BDDK”,“Dijitalleşme”,“Diğer”];
+/* THEMES */
+var LT={bg:”#f2f2f7”,card:”#fff”,press:”#e5e5ea”,sep:“rgba(60,60,67,.12)”,lbl:”#000”,lbl2:”#555”,lbl3:”#8e8e93”,lbl4:”#c7c7cc”,blue:”#007aff”,green:”#34c759”,orange:”#ff9500”,red:”#ff3b30”,purple:”#af52de”,teal:”#5ac8fa”,indigo:”#5856d6”,fill:“rgba(120,120,128,.2)”,fill2:“rgba(120,120,128,.16)”,nav:“rgba(249,249,249,.94)”,sheet:”#fff”,ov:“rgba(0,0,0,.4)”,gA:”#007aff”,gB:”#5856d6”};
+var DK={bg:”#000”,card:”#1c1c1e”,press:”#2c2c2e”,sep:“rgba(84,84,88,.65)”,lbl:”#fff”,lbl2:”#ddd”,lbl3:”#98989f”,lbl4:”#48484a”,blue:”#0a84ff”,green:”#30d158”,orange:”#ff9f0a”,red:”#ff453a”,purple:”#bf5af2”,teal:”#64d2ff”,indigo:”#5e5ce6”,fill:“rgba(120,120,128,.36)”,fill2:“rgba(120,120,128,.32)”,nav:“rgba(29,29,31,.94)”,sheet:”#1c1c1e”,ov:“rgba(0,0,0,.6)”,gA:”#0a84ff”,gB:”#5e5ce6”};
+
+var PR={critical:{l:“Kritik”,c:”#ff3b30”,s:0},high:{l:“Y\u00fcksek”,c:”#ff9500”,s:1},medium:{l:“Orta”,c:”#007aff”,s:2},low:{l:“D\u00fc\u015f\u00fck”,c:”#34c759”,s:3}};
+var SS={todo:{l:“Bekliyor”,c:”#8e8e93”},inprogress:{l:“Devam Ediyor”,c:”#007aff”},review:{l:”\u0130nceleme”,c:”#af52de”},done:{l:“Tamamland\u0131”,c:”#34c759”}};
+var CATS=[“Sunucu”,“Veritaban\u0131”,“Yaz\u0131l\u0131m”,“A\u011f & G\u00fcvenlik”,“Destek”,“BDDK”,“Dijitalle\u015fme”,“Di\u011fer”];
+
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
 function fmtD(d){if(!d)return””;try{return new Date(d).toLocaleDateString(“tr-TR”,{day:“numeric”,month:“short”})}catch(e){return””}}
 function fmtDL(d){if(!d)return””;try{return new Date(d).toLocaleDateString(“tr-TR”,{day:“numeric”,month:“long”,year:“numeric”})}catch(e){return””}}
-function dL(d){if(!d)return null;return Math.ceil((new Date(d)-new Date())/864e5)}
-function relD(d){var x=dL(d);if(x===null)return””;if(x<-1)return Math.abs(x)+” gün gecikmiş”;if(x===-1)return”Dün”;if(x===0)return”Bugün”;if(x===1)return”Yarın”;if(x<=7)return x+” gün”;return fmtD(d)}
+function daysL(d){if(!d)return null;return Math.ceil((new Date(d)-new Date())/864e5)}
+function relD(d){var x=daysL(d);if(x===null)return””;if(x<-1)return Math.abs(x)+” g\u00fcn gecikmi\u015f”;if(x===-1)return”D\u00fcn”;if(x===0)return”Bug\u00fcn”;if(x===1)return”Yar\u0131n”;if(x<=7)return x+” g\u00fcn”;return fmtD(d)}
 function lG(k,f){try{var v=localStorage.getItem(k);return v?JSON.parse(v):f}catch(e){return f}}
-function lS(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function lSt(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 
-var SAM=[
-{id:“s1”,title:“BDDK Aylık Rapor”,description:“Regülatif raporların kontrolü ve yüklenmesi”,priority:“critical”,status:“inprogress”,category:“BDDK”,assignee:“1”,dueDate:“2026-04-16”,createdAt:new Date().toISOString(),subtasks:[{id:“a1”,text:“Veri doğrulama”,done:true},{id:“a2”,text:“Format kontrolü”,done:false}]},
-{id:“s2”,title:“SQL Yedekleme Kontrolü”,description:“dbfactoring yedekleri”,priority:“high”,status:“todo”,category:“Veritabanı”,assignee:“1”,dueDate:“2026-04-15”,createdAt:new Date().toISOString(),subtasks:[]},
-{id:“s3”,title:“Mobil App Test”,description:“QR > Infact > RatingPro > PowerCurve testi”,priority:“high”,status:“review”,category:“Yazılım”,assignee:“1”,dueDate:“2026-04-20”,createdAt:new Date().toISOString(),subtasks:[{id:“b1”,text:“QR test”,done:true},{id:“b2”,text:“RatingPro”,done:true},{id:“b3”,text:“PowerCurve”,done:false}]},
-{id:“s4”,title:“Hyper-V Bakım”,description:“Sanal sunucu kontrolü”,priority:“medium”,status:“todo”,category:“Sunucu”,assignee:””,dueDate:“2026-04-22”,createdAt:new Date().toISOString(),subtasks:[]},
-{id:“s5”,title:“Dijital Mizan Rapor”,description:“Prometeia kapanış”,priority:“low”,status:“done”,category:“Dijitalleşme”,assignee:“1”,dueDate:“2026-04-05”,createdAt:new Date().toISOString(),subtasks:[]},
-{id:“s6”,title:“E-Defter Tebliği”,description:“Tebliğ uyum aksiyonları”,priority:“medium”,status:“inprogress”,category:“Dijitalleşme”,assignee:“1”,dueDate:“2026-05-01”,createdAt:new Date().toISOString(),subtasks:[{id:“c1”,text:“Analiz”,done:true},{id:“c2”,text:“Entegrasyon”,done:false}]}
+var SAMP=[
+{id:“s1”,title:“BDDK Ayl\u0131k Rapor”,description:“Reg\u00fclatif raporlar\u0131n kontrol\u00fc”,priority:“critical”,status:“inprogress”,category:“BDDK”,assignee:“1”,dueDate:“2026-04-16”,createdAt:new Date().toISOString(),subtasks:[{id:“a1”,text:“Veri do\u011frulama”,done:true},{id:“a2”,text:“Format kontrol\u00fc”,done:false}]},
+{id:“s2”,title:“SQL Yedekleme Kontrol\u00fc”,description:“dbfactoring yedekleri”,priority:“high”,status:“todo”,category:“Veritaban\u0131”,assignee:“1”,dueDate:“2026-04-15”,createdAt:new Date().toISOString(),subtasks:[]},
+{id:“s3”,title:“Mobil App Test”,description:“QR-Infact-RatingPro-PowerCurve testi”,priority:“high”,status:“review”,category:“Yaz\u0131l\u0131m”,assignee:“1”,dueDate:“2026-04-20”,createdAt:new Date().toISOString(),subtasks:[{id:“b1”,text:“QR test”,done:true},{id:“b2”,text:“RatingPro”,done:true},{id:“b3”,text:“PowerCurve”,done:false}]},
+{id:“s4”,title:“Hyper-V Bak\u0131m”,description:“Sanal sunucu kontrol\u00fc”,priority:“medium”,status:“todo”,category:“Sunucu”,assignee:””,dueDate:“2026-04-22”,createdAt:new Date().toISOString(),subtasks:[]},
+{id:“s5”,title:“Dijital Mizan Rapor”,description:“Prometeia kapan\u0131\u015f”,priority:“low”,status:“done”,category:“Dijitalle\u015fme”,assignee:“1”,dueDate:“2026-04-05”,createdAt:new Date().toISOString(),subtasks:[]},
+{id:“s6”,title:“E-Defter Tebli\u011fi”,description:“Tebli\u011f uyum”,priority:“medium”,status:“inprogress”,category:“Dijitalle\u015fme”,assignee:“1”,dueDate:“2026-05-01”,createdAt:new Date().toISOString(),subtasks:[{id:“c1”,text:“Analiz”,done:true},{id:“c2”,text:“Entegrasyon”,done:false}]}
 ];
-var DTM=[{id:“1”,name:“Cengiz Gülcan”,role:“IT Yönetici”}];
+var DTEAM=[{id:“1”,name:“Cengiz G\u00fclcan”,role:“IT Y\u00f6netici”}];
 
+/* === UI COMPONENTS === */
 function Ring(p){var pr=p.p||0,sz=p.sz||24,sw=p.sw||3,cl=p.cl||”#007aff”,bg=p.bg||“rgba(120,120,128,.2)”;var r=(sz-sw)/2,c=2*Math.PI*r;return ce(“svg”,{width:sz,height:sz,style:{transform:“rotate(-90deg)”}},ce(“circle”,{cx:sz/2,cy:sz/2,r:r,fill:“none”,stroke:bg,strokeWidth:sw}),ce(“circle”,{cx:sz/2,cy:sz/2,r:r,fill:“none”,stroke:cl,strokeWidth:sw,strokeDasharray:c,strokeDashoffset:c*(1-pr),strokeLinecap:“round”,style:{transition:“stroke-dashoffset .5s”}}))}
-function Av(p){var nm=p.name||”?”,sz=p.sz||32,ini=nm.split(” “).map(function(n){return n[0]}).join(””).slice(0,2),hu=0;for(var i=0;i<nm.length;i++)hu+=nm.charCodeAt(i);hu%=360;return ce(“div”,{style:{width:sz,height:sz,borderRadius:“50%”,background:“linear-gradient(135deg,hsl(”+hu+”,50%,55%),hsl(”+(hu+30)+”,55%,45%))”,display:“flex”,alignItems:“center”,justifyContent:“center”,color:”#fff”,fontSize:sz*.38,fontWeight:600,flexShrink:0}},ini)}
+
+function Av(p){var nm=p.name||”?”,sz=p.sz||32;var ini=nm.split(” “).map(function(n){return n[0]}).join(””).slice(0,2);var hu=0;for(var i=0;i<nm.length;i++)hu+=nm.charCodeAt(i);hu%=360;return ce(“div”,{style:{width:sz,height:sz,borderRadius:“50%”,background:“linear-gradient(135deg,hsl(”+hu+”,50%,55%),hsl(”+(hu+30)+”,55%,45%))”,display:“flex”,alignItems:“center”,justifyContent:“center”,color:”#fff”,fontSize:sz*.38,fontWeight:600,flexShrink:0}},ini)}
+
 function Bdg(p){if(!p.n)return null;return ce(“span”,{style:{background:p.cl||”#ff3b30”,color:”#fff”,borderRadius:10,fontSize:12,fontWeight:600,minWidth:20,height:20,display:“inline-flex”,alignItems:“center”,justifyContent:“center”,padding:“0 6px”}},p.n)}
-function Chk(p){return ce(“button”,{onClick:p.onClick,style:{width:24,height:24,borderRadius:“50%”,border:p.done?“none”:“2px solid “+p.t.lbl3,background:p.done?p.t.blue:“transparent”,display:“flex”,alignItems:“center”,justifyContent:“center”,cursor:“pointer”,flexShrink:0,color:”#fff”,fontSize:14,padding:0}},p.done?”\u2713”:null)}
-function Seg(p){var t=p.t;return ce(“div”,{style:{display:“flex”,background:t.fill,borderRadius:9,padding:2}},p.opts.map(function(o){var a=p.val===o.v;return ce(“button”,{key:o.v,onClick:function(){p.onChange(o.v)},style:{flex:1,padding:“7px 4px”,borderRadius:8,border:“none”,background:a?t.card:“transparent”,color:t.lbl,fontSize:12,fontWeight:a?600:400,fontFamily:“inherit”,cursor:“pointer”,boxShadow:a?“0 1px 4px rgba(0,0,0,.12)”:“none”,whiteSpace:“nowrap”}},o.l)}))}
+
+function Seg(p){var t=p.t;return ce(“div”,{style:{display:“flex”,background:t.fill,borderRadius:9,padding:2}},p.opts.map(function(o){var ac=p.val===o.v;return ce(“button”,{key:o.v,onClick:function(){p.onChange(o.v)},style:{flex:1,padding:“7px 4px”,borderRadius:8,border:“none”,background:ac?t.card:“transparent”,color:t.lbl,fontSize:12,fontWeight:ac?600:400,fontFamily:“inherit”,cursor:“pointer”,boxShadow:ac?“0 1px 3px rgba(0,0,0,.1)”:“none”,whiteSpace:“nowrap”}},o.l)}))}
+
 function NBar(p){var t=p.t;return ce(“div”,{style:{position:“sticky”,top:0,zIndex:100,background:t.nav,backdropFilter:“blur(20px)”,WebkitBackdropFilter:“blur(20px)”,borderBottom:”.5px solid “+t.sep,padding:“env(safe-area-inset-top,0) 16px 0”}},ce(“div”,{style:{height:44,display:“flex”,alignItems:“center”,justifyContent:“space-between”}},ce(“div”,{style:{minWidth:44}}),!p.large?ce(“span”,{style:{fontSize:17,fontWeight:600,color:t.lbl}},p.title):null,ce(“div”,{style:{minWidth:60,textAlign:“right”,display:“flex”,justifyContent:“flex-end”,gap:12}},p.acts?p.acts.map(function(a,i){return ce(“button”,{key:i,onClick:a.fn,style:{background:“none”,border:“none”,color:t.blue,fontSize:a.sz||22,cursor:“pointer”,padding:0}},a.ic)}):null)),p.large?ce(“div”,{style:{padding:“0 0 8px”}},ce(“h1”,{style:{margin:0,fontSize:34,fontWeight:700,color:t.lbl}},p.title)):null)}
+
 function Grp(p){var t=p.t;return ce(“div”,{style:{margin:“0 16px 20px”}},p.header?ce(“div”,{style:{fontSize:13,color:t.lbl3,textTransform:“uppercase”,padding:“0 16px 6px”}},p.header):null,ce(“div”,{style:{background:t.card,borderRadius:10,overflow:“hidden”}},p.children))}
-function Cel(p){var t=p.t,r=uS(false),pr=r[0],sP=r[1];return ce(“div”,{onClick:p.onPress,onPointerDown:function(){sP(true)},onPointerUp:function(){sP(false)},onPointerLeave:function(){sP(false)},style:{display:“flex”,alignItems:“center”,gap:12,padding:“11px 16px”,minHeight:44,background:pr&&p.onPress?t.press:t.card,cursor:p.onPress?“pointer”:“default”,borderBottom:”.5px solid “+t.sep}},p.icon?ce(“div”,{style:{width:29,height:29,borderRadius:6,background:p.icBg||t.blue,display:“flex”,alignItems:“center”,justifyContent:“center”,fontSize:15,flexShrink:0,color:”#fff”}},p.icon):null,ce(“div”,{style:{flex:1,minWidth:0}},ce(“div”,{style:{fontSize:17,color:p.dest?t.red:t.lbl,overflow:“hidden”,textOverflow:“ellipsis”,whiteSpace:“nowrap”}},p.label),p.sub?ce(“div”,{style:{fontSize:13,color:t.lbl3,marginTop:1}},p.sub):null),p.trail||null,p.detail?ce(“span”,{style:{fontSize:17,color:t.lbl3}},p.detail):null,p.chev?ce(“span”,{style:{color:t.lbl4,fontSize:20}},”\u203A”):null)}
-function Sht(p){var t=p.t;return ce(“div”,{style:{position:“fixed”,inset:0,zIndex:1e3,background:t.ov,display:“flex”,alignItems:“flex-end”,justifyContent:“center”,animation:“fadeIn .2s”},onClick:p.onClose},ce(“div”,{onClick:function(e){e.stopPropagation()},style:{background:t.sheet,width:“100%”,maxWidth:600,borderRadius:“14px 14px 0 0”,maxHeight:“92vh”,overflow:“hidden”,display:“flex”,flexDirection:“column”,animation:“slideUp .35s cubic-bezier(.32,.72,0,1)”}},ce(“div”,{style:{display:“flex”,justifyContent:“center”,padding:“8px 0 4px”}},ce(“div”,{style:{width:36,height:5,borderRadius:3,background:t.fill}})),ce(“div”,{style:{display:“flex”,alignItems:“center”,justifyContent:“space-between”,padding:“8px 16px 12px”,borderBottom:”.5px solid “+t.sep}},ce(“button”,{onClick:p.onClose,style:{background:“none”,border:“none”,color:t.blue,fontSize:17,fontFamily:“inherit”,cursor:“pointer”,minWidth:60}},“İptal”),ce(“span”,{style:{fontSize:17,fontWeight:600,color:t.lbl}},p.title),ce(“div”,{style:{minWidth:60,textAlign:“right”}},p.rA?ce(“button”,{onClick:p.rA.fn,disabled:p.rA.dis,style:{background:“none”,border:“none”,color:p.rA.dis?t.lbl4:t.blue,fontSize:17,fontWeight:600,fontFamily:“inherit”,cursor:p.rA.dis?“default”:“pointer”}},p.rA.l):null)),ce(“div”,{style:{flex:1,overflow:“auto”,WebkitOverflowScrolling:“touch”}},p.children)))}
-function FF(p){var t=p.t;return ce(“div”,{style:{display:“flex”,alignItems:“center”,justifyContent:“space-between”,padding:“11px 16px”,minHeight:44,borderBottom:”.5px solid “+t.sep,background:t.card}},ce(“span”,{style:{fontSize:17,flexShrink:0,marginRight:12,color:t.lbl}},p.label),ce(“div”,{style:{flex:1,display:“flex”,justifyContent:“flex-end”}},p.children))}
-function Pk(p){var t=p.t;return ce(“select”,{value:p.value,onChange:function(e){p.onChange(e.target.value)},style:{border:“none”,background:“none”,outline:“none”,fontSize:17,color:t.blue,fontFamily:“inherit”,direction:“rtl”,cursor:“pointer”,WebkitAppearance:“none”,appearance:“none”,maxWidth:200}},p.opts.map(function(o){return ce(“option”,{key:o.v,value:o.v},o.l)}))}
 
-function TForm(p){var t=p.t,ed=!!p.task;var r=uS(p.task?JSON.parse(JSON.stringify(p.task)):{title:””,description:””,priority:“medium”,status:“todo”,category:CATS[0],assignee:””,dueDate:””,createdAt:new Date().toISOString(),subtasks:[]}),f=r[0],sF=r[1];var r2=uS(””),ns=r2[0],sN=r2[1];
-function s(k,v){sF(function(o){var n=Object.assign({},o);n[k]=v;return n})}
-function addS(){if(!ns.trim())return;s(“subtasks”,(f.subtasks||[]).concat([{id:uid(),text:ns.trim(),done:false}]));sN(””)}
-return ce(Sht,{t:t,title:ed?“Görevi Düzenle”:“Yeni Görev”,onClose:p.onClose,rA:{l:ed?“Kaydet”:“Ekle”,fn:function(){if(f.title.trim())p.onSave(f)},dis:!f.title.trim()}},
+function Cel(p){var t=p.t;var r=uS(false);var pr=r[0];var sP=r[1];return ce(“div”,{onClick:p.onPress,onPointerDown:function(){sP(true)},onPointerUp:function(){sP(false)},onPointerLeave:function(){sP(false)},style:{display:“flex”,alignItems:“center”,gap:12,padding:“11px 16px”,minHeight:44,background:pr&&p.onPress?t.press:t.card,cursor:p.onPress?“pointer”:“default”,borderBottom:”.5px solid “+t.sep}},p.icon?ce(“div”,{style:{width:29,height:29,borderRadius:6,background:p.icBg||t.blue,display:“flex”,alignItems:“center”,justifyContent:“center”,fontSize:15,flexShrink:0,color:”#fff”}},p.icon):null,ce(“div”,{style:{flex:1,minWidth:0}},ce(“div”,{style:{fontSize:17,color:p.dest?t.red:t.lbl,overflow:“hidden”,textOverflow:“ellipsis”,whiteSpace:“nowrap”}},p.label),p.sub?ce(“div”,{style:{fontSize:13,color:t.lbl3,marginTop:1}},p.sub):null),p.trail||null,p.detail?ce(“span”,{style:{fontSize:17,color:t.lbl3}},p.detail):null,p.chev?ce(“span”,{style:{color:t.lbl4,fontSize:20}},”\u203A”):null)}
+
+function Sht(p){var t=p.t;return ce(“div”,{style:{position:“fixed”,inset:0,zIndex:1e3,background:t.ov,display:“flex”,alignItems:“flex-end”,justifyContent:“center”,animation:“fadeIn .2s”},onClick:p.onClose},ce(“div”,{onClick:function(ev){ev.stopPropagation()},style:{background:t.sheet,width:“100%”,maxWidth:600,borderRadius:“14px 14px 0 0”,maxHeight:“92vh”,overflow:“hidden”,display:“flex”,flexDirection:“column”,animation:“slideUp .35s cubic-bezier(.32,.72,0,1)”}},ce(“div”,{style:{display:“flex”,justifyContent:“center”,padding:“8px 0 4px”}},ce(“div”,{style:{width:36,height:5,borderRadius:3,background:t.fill}})),ce(“div”,{style:{display:“flex”,alignItems:“center”,justifyContent:“space-between”,padding:“8px 16px 12px”,borderBottom:”.5px solid “+t.sep}},ce(“button”,{onClick:p.onClose,style:{background:“none”,border:“none”,color:t.blue,fontSize:17,fontFamily:“inherit”,cursor:“pointer”,minWidth:60}},”\u0130ptal”),ce(“span”,{style:{fontSize:17,fontWeight:600,color:t.lbl}},p.title),ce(“div”,{style:{minWidth:60,textAlign:“right”}},p.rA?ce(“button”,{onClick:p.rA.fn,disabled:p.rA.dis,style:{background:“none”,border:“none”,color:p.rA.dis?t.lbl4:t.blue,fontSize:17,fontWeight:600,fontFamily:“inherit”,cursor:p.rA.dis?“default”:“pointer”}},p.rA.l):null)),ce(“div”,{style:{flex:1,overflow:“auto”,WebkitOverflowScrolling:“touch”}},p.children)))}
+
+function FField(p){var t=p.t;return ce(“div”,{style:{display:“flex”,alignItems:“center”,justifyContent:“space-between”,padding:“11px 16px”,minHeight:44,borderBottom:”.5px solid “+t.sep,background:t.card}},ce(“span”,{style:{fontSize:17,flexShrink:0,marginRight:12,color:t.lbl}},p.label),ce(“div”,{style:{flex:1,display:“flex”,justifyContent:“flex-end”}},p.children))}
+
+function Picker(p){var t=p.t;return ce(“select”,{value:p.value,onChange:function(ev){p.onChange(ev.target.value)},style:{border:“none”,background:“none”,outline:“none”,fontSize:17,color:t.blue,fontFamily:“inherit”,direction:“rtl”,cursor:“pointer”,WebkitAppearance:“none”,maxWidth:200}},p.opts.map(function(o){return ce(“option”,{key:o.v,value:o.v},o.l)}))}
+
+/* === TASK FORM === */
+function TaskForm(p){
+var t=p.t,ed=!!p.task;
+var r=uS(p.task?JSON.parse(JSON.stringify(p.task)):{title:””,description:””,priority:“medium”,status:“todo”,category:CATS[0],assignee:””,dueDate:””,createdAt:new Date().toISOString(),subtasks:[]});
+var f=r[0],sF=r[1];
+var r2=uS(””);var ns=r2[0],sN=r2[1];
+function s(k,v){sF(function(old){var n=Object.assign({},old);n[k]=v;return n})}
+function addSub(){if(!ns.trim())return;s(“subtasks”,(f.subtasks||[]).concat([{id:uid(),text:ns.trim(),done:false}]));sN(””)}
+
+return ce(Sht,{t:t,title:ed?“G\u00f6revi D\u00fczenle”:“Yeni G\u00f6rev”,onClose:p.onClose,rA:{l:ed?“Kaydet”:“Ekle”,fn:function(){if(f.title.trim())p.onSave(f)},dis:!f.title.trim()}},
 ce(“div”,{style:{padding:“16px 0”}},
-ce(Grp,{t:t},ce(“div”,{style:{padding:“11px 16px”,borderBottom:”.5px solid “+t.sep}},ce(“input”,{value:f.title,onChange:function(e){s(“title”,e.target.value)},placeholder:“Görev başlığı”,style:{border:“none”,background:“none”,outline:“none”,width:“100%”,fontSize:17,fontFamily:“inherit”,fontWeight:500,color:t.lbl}})),ce(“div”,{style:{padding:“11px 16px”}},ce(“textarea”,{value:f.description||””,onChange:function(e){s(“description”,e.target.value)},placeholder:“Açıklama…”,rows:3,style:{border:“none”,background:“none”,outline:“none”,width:“100%”,fontSize:15,fontFamily:“inherit”,resize:“none”,color:t.lbl}}))),
-ce(Grp,{t:t,header:“Detaylar”},ce(FF,{t:t,label:“Öncelik”},ce(Pk,{t:t,value:f.priority,onChange:function(v){s(“priority”,v)},opts:Object.keys(PR).map(function(k){return{v:k,l:PR[k].l}})})),ce(FF,{t:t,label:“Durum”},ce(Pk,{t:t,value:f.status,onChange:function(v){s(“status”,v)},opts:Object.keys(SS).map(function(k){return{v:k,l:SS[k].l}})})),ce(FF,{t:t,label:“Kategori”},ce(Pk,{t:t,value:f.category,onChange:function(v){s(“category”,v)},opts:CATS.map(function(c){return{v:c,l:c}})})),ce(FF,{t:t,label:“Atanan”},ce(Pk,{t:t,value:f.assignee,onChange:function(v){s(“assignee”,v)},opts:[{v:””,l:“Seçilmedi”}].concat(p.team.map(function(m){return{v:m.id,l:m.name}}))})),ce(FF,{t:t,label:“Tarih”},ce(“input”,{type:“date”,value:f.dueDate||””,onChange:function(e){s(“dueDate”,e.target.value)},style:{border:“none”,background:“none”,outline:“none”,fontSize:17,color:t.blue,fontFamily:“inherit”}}))),
-ce(Grp,{t:t,header:“Alt Görevler”},(f.subtasks||[]).map(function(st){return ce(“div”,{key:st.id,style:{display:“flex”,alignItems:“center”,gap:12,padding:“10px 16px”,borderBottom:”.5px solid “+t.sep}},ce(Chk,{t:t,done:st.done,onClick:function(){s(“subtasks”,f.subtasks.map(function(x){return x.id===st.id?Object.assign({},x,{done:!x.done}):x}))}}),ce(“span”,{style:{flex:1,fontSize:17,color:st.done?t.lbl3:t.lbl,textDecoration:st.done?“line-through”:“none”}},st.text),ce(“button”,{onClick:function(){s(“subtasks”,f.subtasks.filter(function(x){return x.id!==st.id}))},style:{background:“none”,border:“none”,color:t.red,fontSize:20,cursor:“pointer”}},”\u2212”))}),ce(“div”,{style:{display:“flex”,alignItems:“center”,gap:8,padding:“8px 16px”}},ce(“input”,{value:ns,onChange:function(e){sN(e.target.value)},onKeyDown:function(e){if(e.key===“Enter”)addS()},placeholder:“Alt görev ekle…”,style:{border:“none”,background:“none”,outline:“none”,width:“100%”,fontSize:17,fontFamily:“inherit”,color:t.lbl}}),ns.trim()?ce(“button”,{onClick:addS,style:{background:t.blue,color:”#fff”,border:“none”,borderRadius:“50%”,width:28,height:28,display:“flex”,alignItems:“center”,justifyContent:“center”,cursor:“pointer”,fontSize:18,fontWeight:700,flexShrink:0}},”+”):null)),
-ed?ce(Grp,{t:t},ce(Cel,{t:t,label:“Görevi Sil”,dest:true,onPress:function(){p.onDel(p.task.id)}})):null,ce(“div”,{style:{height:50}})))}
+ce(Grp,{t:t},
+ce(“div”,{style:{padding:“11px 16px”,borderBottom:”.5px solid “+t.sep}},ce(“input”,{value:f.title,onChange:function(ev){s(“title”,ev.target.value)},placeholder:“G\u00f6rev ba\u015fl\u0131\u011f\u0131”,style:{border:“none”,background:“none”,outline:“none”,width:“100%”,fontSize:17,fontFamily:“inherit”,fontWeight:500,color:t.lbl}})),
+ce(“div”,{style:{padding:“11px 16px”}},ce(“textarea”,{value:f.description||””,onChange:function(ev){s(“description”,ev.target.value)},placeholder:“A\u00e7\u0131klama…”,rows:3,style:{border:“none”,background:“none”,outline:“none”,width:“100%”,fontSize:15,fontFamily:“inherit”,resize:“none”,color:t.lbl}}))),
+ce(Grp,{t:t,header:“Detaylar”},
+ce(FField,{t:t,label:”\u00d6ncelik”},ce(Picker,{t:t,value:f.priority,onChange:function(v){s(“priority”,v)},opts:Object.keys(PR).map(function(k){return{v:k,l:PR[k].l}})})),
+ce(FField,{t:t,label:“Durum”},ce(Picker,{t:t,value:f.status,onChange:function(v){s(“status”,v)},opts:Object.keys(SS).map(function(k){return{v:k,l:SS[k].l}})})),
+ce(FField,{t:t,label:“Kategori”},ce(Picker,{t:t,value:f.category,onChange:function(v){s(“category”,v)},opts:CATS.map(function(c){return{v:c,l:c}})})),
+ce(FField,{t:t,label:“Atanan”},ce(Picker,{t:t,value:f.assignee,onChange:function(v){s(“assignee”,v)},opts:[{v:””,l:“Se\u00e7ilmedi”}].concat(p.team.map(function(m){return{v:m.id,l:m.name}}))})),
+ce(FField,{t:t,label:“Tarih”},ce(“input”,{type:“date”,value:f.dueDate||””,onChange:function(ev){s(“dueDate”,ev.target.value)},style:{border:“none”,background:“none”,outline:“none”,fontSize:17,color:t.blue,fontFamily:“inherit”}}))),
+ce(Grp,{t:t,header:“Alt G\u00f6revler”},
+(f.subtasks||[]).map(function(st){
+return ce(“div”,{key:st.id,style:{display:“flex”,alignItems:“center”,gap:12,padding:“10px 16px”,borderBottom:”.5px solid “+t.sep}},
+ce(“button”,{onClick:function(){s(“subtasks”,f.subtasks.map(function(x){return x.id===st.id?Object.assign({},x,{done:!x.done}):x}))},style:{width:24,height:24,borderRadius:“50%”,border:st.done?“none”:“2px solid “+t.lbl3,background:st.done?t.blue:“transparent”,display:“flex”,alignItems:“center”,justifyContent:“center”,cursor:“pointer”,flexShrink:0,color:”#fff”,fontSize:14,padding:0}},st.done?”\u2713”:null),
+ce(“span”,{style:{flex:1,fontSize:17,color:st.done?t.lbl3:t.lbl,textDecoration:st.done?“line-through”:“none”}},st.text),
+ce(“button”,{onClick:function(){s(“subtasks”,f.subtasks.filter(function(x){return x.id!==st.id}))},style:{background:“none”,border:“none”,color:t.red,fontSize:20,cursor:“pointer”}},”\u2212”))}),
+ce(“div”,{style:{display:“flex”,alignItems:“center”,gap:8,padding:“8px 16px”}},
+ce(“input”,{value:ns,onChange:function(ev){sN(ev.target.value)},onKeyDown:function(ev){if(ev.key===“Enter”)addSub()},placeholder:“Alt g\u00f6rev ekle…”,style:{border:“none”,background:“none”,outline:“none”,width:“100%”,fontSize:17,fontFamily:“inherit”,color:t.lbl}}),
+ns.trim()?ce(“button”,{onClick:addSub,style:{background:t.blue,color:”#fff”,border:“none”,borderRadius:“50%”,width:28,height:28,display:“flex”,alignItems:“center”,justifyContent:“center”,cursor:“pointer”,fontSize:18,fontWeight:700,flexShrink:0}},”+”):null)),
+ed?ce(Grp,{t:t},ce(Cel,{t:t,label:“G\u00f6revi Sil”,dest:true,onPress:function(){p.onDel(p.task.id)}})):null,
+ce(“div”,{style:{height:50}})))}
 
-function TeamSh(p){var t=p.t,r=uS(””),n=r[0],sN=r[1],r2=uS(””),rl=r2[0],sR=r2[1];function add(){if(!n.trim())return;p.onAdd({name:n.trim(),role:rl.trim()||“Ekip Üyesi”});sN(””);sR(””)}
-return ce(Sht,{t:t,title:“Ekip Yönetimi”,onClose:p.onClose},ce(“div”,{style:{padding:“16px 0”}},ce(Grp,{t:t,header:p.team.length+” Üye”},p.team.map(function(m){return ce(“div”,{key:m.id,style:{display:“flex”,alignItems:“center”,gap:12,padding:“10px 16px”,borderBottom:”.5px solid “+t.sep}},ce(Av,{name:m.name,sz:36}),ce(“div”,{style:{flex:1}},ce(“div”,{style:{fontSize:17,color:t.lbl}},m.name),ce(“div”,{style:{fontSize:13,color:t.lbl3}},m.role)),ce(“button”,{onClick:function(){p.onDel(m.id)},style:{background:“none”,border:“none”,color:t.red,fontSize:22,cursor:“pointer”}},”\u2212”))})),ce(Grp,{t:t,header:“Yeni Üye”},ce(FF,{t:t,label:“Ad Soyad”},ce(“input”,{value:n,onChange:function(e){sN(e.target.value)},placeholder:“İsim”,style:{border:“none”,background:“none”,outline:“none”,fontSize:17,textAlign:“right”,fontFamily:“inherit”,width:“100%”,color:t.lbl}})),ce(FF,{t:t,label:“Rol”},ce(“input”,{value:rl,onChange:function(e){sR(e.target.value)},onKeyDown:function(e){if(e.key===“Enter”)add()},placeholder:“Yazılımcı”,style:{border:“none”,background:“none”,outline:“none”,fontSize:17,textAlign:“right”,fontFamily:“inherit”,width:“100%”,color:t.lbl}})),ce(“div”,{style:{padding:16}},ce(“button”,{onClick:add,disabled:!n.trim(),style:{width:“100%”,padding:12,borderRadius:10,border:“none”,background:n.trim()?t.blue:t.fill,color:n.trim()?”#fff”:t.lbl3,fontSize:17,fontWeight:600,fontFamily:“inherit”,cursor:n.trim()?“pointer”:“default”}},“Ekle”)))))}
+/* === TEAM SHEET === */
+function TeamSheet(p){
+var t=p.t;var r=uS(””);var n=r[0],sN=r[1];var r2=uS(””);var rl=r2[0],sR=r2[1];
+function add(){if(!n.trim())return;p.onAdd({name:n.trim(),role:rl.trim()||“Ekip \u00dcyesi”});sN(””);sR(””)}
+return ce(Sht,{t:t,title:“Ekip Y\u00f6netimi”,onClose:p.onClose},
+ce(“div”,{style:{padding:“16px 0”}},
+ce(Grp,{t:t,header:p.team.length+” \u00dcye”},p.team.map(function(m){return ce(“div”,{key:m.id,style:{display:“flex”,alignItems:“center”,gap:12,padding:“10px 16px”,borderBottom:”.5px solid “+t.sep}},ce(Av,{name:m.name,sz:36}),ce(“div”,{style:{flex:1}},ce(“div”,{style:{fontSize:17,color:t.lbl}},m.name),ce(“div”,{style:{fontSize:13,color:t.lbl3}},m.role)),ce(“button”,{onClick:function(){p.onDel(m.id)},style:{background:“none”,border:“none”,color:t.red,fontSize:22,cursor:“pointer”}},”\u2212”))})),
+ce(Grp,{t:t,header:“Yeni \u00dcye”},
+ce(FField,{t:t,label:“Ad Soyad”},ce(“input”,{value:n,onChange:function(ev){sN(ev.target.value)},placeholder:”\u0130sim girin”,style:{border:“none”,background:“none”,outline:“none”,fontSize:17,textAlign:“right”,fontFamily:“inherit”,width:“100%”,color:t.lbl}})),
+ce(FField,{t:t,label:“Rol”},ce(“input”,{value:rl,onChange:function(ev){sR(ev.target.value)},onKeyDown:function(ev){if(ev.key===“Enter”)add()},placeholder:“Yaz\u0131l\u0131mc\u0131”,style:{border:“none”,background:“none”,outline:“none”,fontSize:17,textAlign:“right”,fontFamily:“inherit”,width:“100%”,color:t.lbl}})),
+ce(“div”,{style:{padding:16}},ce(“button”,{onClick:add,disabled:!n.trim(),style:{width:“100%”,padding:12,borderRadius:10,border:“none”,background:n.trim()?t.blue:t.fill,color:n.trim()?”#fff”:t.lbl3,fontSize:17,fontWeight:600,fontFamily:“inherit”,cursor:n.trim()?“pointer”:“default”}},“Ekle”)))))}
 
-function Detail(p){var t=p.t,tk=p.task,tm=p.team,pr=PR[tk.priority]||PR.medium,ss=SS[tk.status]||SS.todo;var a=null;tm.forEach(function(m){if(m.id===tk.assignee)a=m});var dl=dL(tk.dueDate),subs=tk.subtasks||[],sd=subs.filter(function(x){return x.done}).length,st=subs.length;
-function togSub(sid){var ns=subs.map(function(x){return x.id===sid?Object.assign({},x,{done:!x.done}):x});p.onUpd(Object.assign({},tk,{subtasks:ns}))}
-return ce(Sht,{t:t,title:“Görev Detayı”,onClose:p.onClose,rA:{l:“Düzenle”,fn:function(){p.onEdit(tk)}}},ce(“div”,{style:{padding:“16px 0”}},ce(“div”,{style:{padding:“0 16px 16px”}},ce(“h2”,{style:{margin:“0 0 6px”,fontSize:22,fontWeight:700,color:t.lbl}},tk.title),tk.description?ce(“p”,{style:{margin:0,fontSize:15,color:t.lbl2,lineHeight:1.5}},tk.description):null),ce(“div”,{style:{padding:“0 16px 16px”}},ce(Seg,{t:t,opts:Object.keys(SS).map(function(k){return{v:k,l:SS[k].l}}),val:tk.status,onChange:function(v){p.onSC(tk.id,v)}})),ce(Grp,{t:t,header:“Bilgiler”},ce(Cel,{t:t,icon:”\u26A1”,icBg:pr.c,label:“Öncelik”,detail:pr.l}),ce(Cel,{t:t,icon:”\uD83D\uDCC1”,icBg:t.teal,label:“Kategori”,detail:tk.category}),a?ce(Cel,{t:t,icon:”\uD83D\uDC64”,icBg:t.indigo,label:“Atanan”,detail:a.name}):null,tk.dueDate?ce(Cel,{t:t,icon:”\uD83D\uDCC5”,icBg:dl!==null&&dl<0?t.red:t.orange,label:“Son Tarih”,detail:fmtDL(tk.dueDate),trail:dl!==null&&dl<0?ce(Bdg,{n:“Gecikmiş”}):null}):null),st>0?ce(Grp,{t:t,header:“Alt Görevler - “+sd+”/”+st},subs.map(function(sub){return ce(“div”,{key:sub.id,style:{display:“flex”,alignItems:“center”,gap:12,padding:“10px 16px”,borderBottom:”.5px solid “+t.sep}},ce(Chk,{t:t,done:sub.done,onClick:function(){togSub(sub.id)}}),ce(“span”,{style:{fontSize:17,color:sub.done?t.lbl3:t.lbl,textDecoration:sub.done?“line-through”:“none”}},sub.text))}),ce(“div”,{style:{padding:“10px 16px”}},ce(“div”,{style:{height:6,background:t.fill,borderRadius:3,overflow:“hidden”}},ce(“div”,{style:{height:“100%”,width:(st>0?sd/st*100:0)+”%”,background:t.green,borderRadius:3,transition:“width .3s”}})))):null,ce(Grp,{t:t},ce(Cel,{t:t,label:“Görevi Sil”,dest:true,onPress:function(){p.onDel(tk.id)}})),ce(“div”,{style:{height:40}})))}
+/* === TASK DETAIL === */
+function TaskDetail(p){
+var t=p.t,tk=p.task,tm=p.team;
+var pr=PR[tk.priority]||PR.medium;
+var a=null;tm.forEach(function(m){if(m.id===tk.assignee)a=m});
+var dl=daysL(tk.dueDate);
+var subs=tk.subtasks||[];
+var sd=subs.filter(function(x){return x.done}).length;
+var stLen=subs.length;
 
-function TRow(p){var t=p.t,tk=p.task,tm=p.team,r=uS(false),pr2=r[0],sP=r[1];var pr=PR[tk.priority]||PR.medium,ss=SS[tk.status]||SS.todo;var a=null;tm.forEach(function(m){if(m.id===tk.assignee)a=m});var dl=dL(tk.dueDate),subs=tk.subtasks||[],sd=subs.filter(function(x){return x.done}).length,st=subs.length;
-return ce(“div”,{onClick:function(){p.onPress(tk)},onPointerDown:function(){sP(true)},onPointerUp:function(){sP(false)},onPointerLeave:function(){sP(false)},style:{display:“flex”,alignItems:“center”,gap:12,padding:“12px 16px”,background:pr2?t.press:t.card,borderBottom:”.5px solid “+t.sep,cursor:“pointer”,transition:“background .1s”}},ce(“div”,{style:{width:4,height:38,borderRadius:2,background:pr.c,flexShrink:0}}),ce(“div”,{style:{flex:1,minWidth:0}},ce(“div”,{style:{fontSize:17,fontWeight:500,color:tk.status===“done”?t.lbl3:t.lbl,textDecoration:tk.status===“done”?“line-through”:“none”,overflow:“hidden”,textOverflow:“ellipsis”,whiteSpace:“nowrap”}},tk.title),ce(“div”,{style:{display:“flex”,alignItems:“center”,gap:6,flexWrap:“wrap”,marginTop:3}},ce(“span”,{style:{fontSize:13,color:ss.c,fontWeight:500}},ss.l),ce(“span”,{style:{fontSize:13,color:t.lbl4}},”\u00B7”),ce(“span”,{style:{fontSize:13,color:t.lbl3}},tk.category),tk.dueDate?ce(Fr,null,ce(“span”,{style:{fontSize:13,color:t.lbl4}},”\u00B7”),ce(“span”,{style:{fontSize:13,fontWeight:500,color:dl!==null&&dl<0?t.red:dl!==null&&dl<=2?t.orange:t.lbl3}},relD(tk.dueDate))):null)),ce(“div”,{style:{display:“flex”,alignItems:“center”,gap:8,flexShrink:0}},st>0?ce(Ring,{p:sd/st,sz:22,sw:2.5,cl:t.blue,bg:t.fill}):null,a?ce(Av,{name:a.name,sz:28}):null,ce(“span”,{style:{color:t.lbl4,fontSize:20}},”\u203A”)))}
+function togSub(sid){
+var ns=subs.map(function(x){return x.id===sid?Object.assign({},x,{done:!x.done}):x});
+p.onUpd(Object.assign({},tk,{subtasks:ns}));
+}
 
+return ce(Sht,{t:t,title:“G\u00f6rev Detay\u0131”,onClose:p.onClose,rA:{l:“D\u00fczenle”,fn:function(){p.onEdit(tk)}}},
+ce(“div”,{style:{padding:“16px 0”}},
+ce(“div”,{style:{padding:“0 16px 16px”}},
+ce(“h2”,{style:{margin:“0 0 6px”,fontSize:22,fontWeight:700,color:t.lbl}},tk.title),
+tk.description?ce(“p”,{style:{margin:0,fontSize:15,color:t.lbl2,lineHeight:1.5}},tk.description):null),
+ce(“div”,{style:{padding:“0 16px 16px”}},
+ce(Seg,{t:t,opts:Object.keys(SS).map(function(k){return{v:k,l:SS[k].l}}),val:tk.status,onChange:function(v){p.onSC(tk.id,v)}})),
+ce(Grp,{t:t,header:“Bilgiler”},
+ce(Cel,{t:t,icon:”\u26A1”,icBg:pr.c,label:”\u00d6ncelik”,detail:pr.l}),
+ce(Cel,{t:t,icon:”\uD83D\uDCC1”,icBg:t.teal,label:“Kategori”,detail:tk.category}),
+a?ce(Cel,{t:t,icon:”\uD83D\uDC64”,icBg:t.indigo,label:“Atanan”,detail:a.name}):null,
+tk.dueDate?ce(Cel,{t:t,icon:”\uD83D\uDCC5”,icBg:dl!==null&&dl<0?t.red:t.orange,label:“Son Tarih”,detail:fmtDL(tk.dueDate),trail:dl!==null&&dl<0?ce(Bdg,{n:“Gecikmi\u015f”}):null}):null),
+stLen>0?ce(Grp,{t:t,header:“Alt G\u00f6revler - “+sd+”/”+stLen},
+subs.map(function(sub){
+return ce(“div”,{key:sub.id,style:{display:“flex”,alignItems:“center”,gap:12,padding:“10px 16px”,borderBottom:”.5px solid “+t.sep}},
+ce(“button”,{onClick:function(){togSub(sub.id)},style:{width:24,height:24,borderRadius:“50%”,border:sub.done?“none”:“2px solid “+t.lbl3,background:sub.done?t.blue:“transparent”,display:“flex”,alignItems:“center”,justifyContent:“center”,cursor:“pointer”,flexShrink:0,color:”#fff”,fontSize:14,padding:0}},sub.done?”\u2713”:null),
+ce(“span”,{style:{fontSize:17,color:sub.done?t.lbl3:t.lbl,textDecoration:sub.done?“line-through”:“none”}},sub.text))}),
+ce(“div”,{style:{padding:“10px 16px”}},ce(“div”,{style:{height:6,background:t.fill,borderRadius:3,overflow:“hidden”}},ce(“div”,{style:{height:“100%”,width:(stLen>0?sd/stLen*100:0)+”%”,background:t.green,borderRadius:3,transition:“width .3s”}})))):null,
+ce(Grp,{t:t},ce(Cel,{t:t,label:“G\u00f6revi Sil”,dest:true,onPress:function(){p.onDel(tk.id)}})),
+ce(“div”,{style:{height:40}})))}
+
+/* === TASK ROW === */
+function TaskRow(p){
+var t=p.t,tk=p.task,tm=p.team;
+var r=uS(false);var pressed=r[0],sP=r[1];
+var pr=PR[tk.priority]||PR.medium;
+var ss=SS[tk.status]||SS.todo;
+var a=null;tm.forEach(function(m){if(m.id===tk.assignee)a=m});
+var dl=daysL(tk.dueDate);
+var subs=tk.subtasks||[];
+var sd=subs.filter(function(x){return x.done}).length;
+var stLen=subs.length;
+
+return ce(“div”,{onClick:function(){p.onPress(tk)},onPointerDown:function(){sP(true)},onPointerUp:function(){sP(false)},onPointerLeave:function(){sP(false)},
+style:{display:“flex”,alignItems:“center”,gap:12,padding:“12px 16px”,background:pressed?t.press:t.card,borderBottom:”.5px solid “+t.sep,cursor:“pointer”,transition:“background .1s”}},
+ce(“div”,{style:{width:4,height:38,borderRadius:2,background:pr.c,flexShrink:0}}),
+ce(“div”,{style:{flex:1,minWidth:0}},
+ce(“div”,{style:{fontSize:17,fontWeight:500,color:tk.status===“done”?t.lbl3:t.lbl,textDecoration:tk.status===“done”?“line-through”:“none”,overflow:“hidden”,textOverflow:“ellipsis”,whiteSpace:“nowrap”}},tk.title),
+ce(“div”,{style:{display:“flex”,alignItems:“center”,gap:6,flexWrap:“wrap”,marginTop:3}},
+ce(“span”,{style:{fontSize:13,color:ss.c,fontWeight:500}},ss.l),
+ce(“span”,{style:{fontSize:13,color:t.lbl4}},”\u00B7”),
+ce(“span”,{style:{fontSize:13,color:t.lbl3}},tk.category),
+tk.dueDate?ce(Fr,null,ce(“span”,{style:{fontSize:13,color:t.lbl4}},”\u00B7”),ce(“span”,{style:{fontSize:13,fontWeight:500,color:dl!==null&&dl<0?t.red:dl!==null&&dl<=2?t.orange:t.lbl3}},relD(tk.dueDate))):null)),
+ce(“div”,{style:{display:“flex”,alignItems:“center”,gap:8,flexShrink:0}},
+stLen>0?ce(Ring,{p:sd/stLen,sz:22,sw:2.5,cl:t.blue,bg:t.fill}):null,
+a?ce(Av,{name:a.name,sz:28}):null,
+ce(“span”,{style:{color:t.lbl4,fontSize:20}},”\u203A”)))}
+
+/* ======== MAIN APP ======== */
 function App(){
-var r1=uS(function(){return lG(“hf-dk”,false)}),dark=r1[0],sDk=r1[1];var t=dark?DK:LT;
-var r2=uS(function(){return lG(“hf-t”,SAM)}),tasks=r2[0],sT=r2[1];
-var r3=uS(function(){return lG(“hf-m”,DTM)}),team=r3[0],sTm=r3[1];
-var r4=uS(“dash”),tab=r4[0],sTab=r4[1];
-var r5=uS(null),sh=r5[0],sSh=r5[1];
-var r6=uS({q:””,st:“all”}),fl=r6[0],sFl=r6[1];
-function tDk(){sDk(function(d){lS(“hf-dk”,!d);return!d})}
-uE(function(){if(!fbOK)return;var u1=fbSub(“tasks”,“createdAt”,function(d){if(d.length)sT(d)});var u2=db.collection(“team”).orderBy(“name”).onSnapshot(function(s){var r=[];s.forEach(function(d){r.push(Object.assign({id:d.id},d.data()))});if(r.length)sTm(r)});return function(){u1();u2()}},[]);
-uE(function(){lS(“hf-t”,tasks)},[tasks]);
-uE(function(){lS(“hf-m”,team)},[team]);
+var r1=uS(function(){return lG(“hf-dk”,false)});var dark=r1[0],sDk=r1[1];
+var t=dark?DK:LT;
+var r2=uS(function(){return lG(“hf-t”,SAMP)});var tasks=r2[0],sT=r2[1];
+var r3=uS(function(){return lG(“hf-m”,DTEAM)});var team=r3[0],sTm=r3[1];
+var r4=uS(“dash”);var tab=r4[0],sTab=r4[1];
+var r5=uS(null);var sh=r5[0],sSh=r5[1];
+var r6=uS({q:””,st:“all”});var fl=r6[0],sFl=r6[1];
+
+function tDk(){sDk(function(d){lSt(“hf-dk”,!d);return!d})}
+
+uE(function(){if(!fbOK)return;var u1=fbSub(“tasks”,“createdAt”,function(d){if(d.length)sT(d)});var u2=db.collection(“team”).orderBy(“name”).onSnapshot(function(sn){var r=[];sn.forEach(function(d){r.push(Object.assign({id:d.id},d.data()))});if(r.length)sTm(r)});return function(){u1();u2()}},[]);
+uE(function(){lSt(“hf-t”,tasks)},[tasks]);
+uE(function(){lSt(“hf-m”,team)},[team]);
 uE(function(){document.body.style.background=t.bg;document.body.style.color=t.lbl},[dark]);
 
-function svTk(fd){if(fbOK){var ex=false;tasks.forEach(function(x){if(x.id===fd.id)ex=true});if(ex){fbUp(“tasks”,fd.id,fd);sT(function(p){return p.map(function(x){return x.id===fd.id?Object.assign({},x,fd):x})})}else{fbAdd(“tasks”,fd).then(function(nid){sT(function(p){return[Object.assign({},fd,{id:nid||uid()})].concat(p)})})}}else{sT(function(p){var i=-1;p.forEach(function(x,idx){if(x.id===fd.id)i=idx});if(i>=0){var n=p.slice();n[i]=fd;return n}return[Object.assign({},fd,{id:uid()})].concat(p)})}sSh(null)}
-function dlTk(id){if(fbOK)fbDl(“tasks”,id);sT(function(p){return p.filter(function(x){return x.id!==id})});sSh(null)}
-function cSt(id,st){if(fbOK)fbUp(“tasks”,id,{status:st});sT(function(p){return p.map(function(x){return x.id===id?Object.assign({},x,{status:st}):x})});sSh(function(prev){if(prev&&prev.type===“detail”&&prev.task.id===id)return{type:“detail”,task:Object.assign({},prev.task,{status:st})};return prev})}
-function upTk(ud){if(fbOK)fbUp(“tasks”,ud.id,ud);sT(function(p){return p.map(function(x){return x.id===ud.id?ud:x})});sSh(function(prev){if(prev&&prev.type===“detail”)return{type:“detail”,task:ud};return prev})}
-function addM(m){if(fbOK){fbAdd(“team”,m).then(function(nid){sTm(function(p){return p.concat([Object.assign({},m,{id:nid||uid()})])})})}else{sTm(function(p){return p.concat([Object.assign({},m,{id:uid()})])})}}
-function delM(id){if(fbOK)fbDl(“team”,id);sTm(function(p){return p.filter(function(x){return x.id!==id})})}
+function svTask(fd){
+if(fbOK){var ex=false;tasks.forEach(function(x){if(x.id===fd.id)ex=true});
+if(ex){fbUp(“tasks”,fd.id,fd);sT(function(p){return p.map(function(x){return x.id===fd.id?Object.assign({},x,fd):x})})}
+else{fbAdd(“tasks”,fd).then(function(nid){sT(function(p){return[Object.assign({},fd,{id:nid||uid()})].concat(p)})})}}
+else{sT(function(p){var i=-1;p.forEach(function(x,idx){if(x.id===fd.id)i=idx});if(i>=0){var n=p.slice();n[i]=fd;return n}return[Object.assign({},fd,{id:uid()})].concat(p)})}
+sSh(null)}
+
+function delTask(id){if(fbOK)fbDl(“tasks”,id);sT(function(p){return p.filter(function(x){return x.id!==id})});sSh(null)}
+
+function chgStatus(id,newSt){
+if(fbOK)fbUp(“tasks”,id,{status:newSt});
+sT(function(p){return p.map(function(x){return x.id===id?Object.assign({},x,{status:newSt}):x})});
+sSh(function(prev){if(prev&&prev.type===“detail”&&prev.task.id===id)return{type:“detail”,task:Object.assign({},prev.task,{status:newSt})};return prev})}
+
+function updTask(ud){
+if(fbOK)fbUp(“tasks”,ud.id,ud);
+sT(function(p){return p.map(function(x){return x.id===ud.id?ud:x})});
+sSh(function(prev){if(prev&&prev.type===“detail”)return{type:“detail”,task:ud};return prev})}
+
+function addMem(m){if(fbOK){fbAdd(“team”,m).then(function(nid){sTm(function(p){return p.concat([Object.assign({},m,{id:nid||uid()})])})})}else{sTm(function(p){return p.concat([Object.assign({},m,{id:uid()})])})}}
+function delMem(id){if(fbOK)fbDl(“team”,id);sTm(function(p){return p.filter(function(x){return x.id!==id})})}
+
 var filt=uM(function(){return tasks.filter(function(x){if(fl.st!==“all”&&x.status!==fl.st)return false;if(fl.q&&x.title.toLowerCase().indexOf(fl.q.toLowerCase())===-1)return false;return true}).sort(function(a,b){return(PR[a.priority]?PR[a.priority].s:2)-(PR[b.priority]?PR[b.priority].s:2)})},[tasks,fl]);
-var stats=uM(function(){var d=0,ov=0,todo=0,ip=0,rv=0;tasks.forEach(function(x){if(x.status===“done”)d++;if(x.status===“todo”)todo++;if(x.status===“inprogress”)ip++;if(x.status===“review”)rv++;var dl2=dL(x.dueDate);if(dl2!==null&&dl2<0&&x.status!==“done”)ov++});return{total:tasks.length,todo:todo,ip:ip,rv:rv,done:d,ov:ov,pct:tasks.length?Math.round(d/tasks.length*100):0}},[tasks]);
-function opD(tk){sSh({type:“detail”,task:tk})}
+
+var stats=uM(function(){var dn=0,ov=0,todo=0,ip=0,rv=0;tasks.forEach(function(x){if(x.status===“done”)dn++;if(x.status===“todo”)todo++;if(x.status===“inprogress”)ip++;if(x.status===“review”)rv++;var dl2=daysL(x.dueDate);if(dl2!==null&&dl2<0&&x.status!==“done”)ov++});return{total:tasks.length,todo:todo,ip:ip,rv:rv,done:dn,ov:ov,pct:tasks.length?Math.round(dn/tasks.length*100):0}},[tasks]);
+
+function opDetail(tk){sSh({type:“detail”,task:tk})}
 var dmIc=dark?”\u2600\uFE0F”:”\uD83C\uDF19”;
 
-function Dash(){return ce(“div”,null,ce(NBar,{t:t,title:“HF IT Görev Takip”,large:true,acts:[{ic:dmIc,fn:tDk,sz:24},{ic:”\uFF0B”,fn:function(){sSh(“new”)},sz:28}]}),ce(“div”,{style:{padding:“0 16px 6px”}},ce(“div”,{style:{display:“flex”,alignItems:“center”,gap:6,fontSize:12,color:fbOK?t.green:t.orange}},ce(“div”,{style:{width:6,height:6,borderRadius:“50%”,background:fbOK?t.green:t.orange}}),fbOK?“Firebase bağlı”:“Çevrimdışı”)),ce(“div”,{style:{padding:“0 16px 16px”}},ce(“div”,{style:{background:“linear-gradient(135deg,”+t.gA+”,”+t.gB+”)”,borderRadius:16,padding:20,color:”#fff”,marginBottom:12}},ce(“div”,{style:{fontSize:13,opacity:.8,marginBottom:6}},“Tamamlanma Oranı”),ce(“div”,{style:{display:“flex”,alignItems:“center”,gap:16}},ce(Ring,{p:stats.pct/100,sz:60,sw:5,cl:”#fff”,bg:“rgba(255,255,255,.25)”}),ce(“div”,null,ce(“div”,{style:{fontSize:42,fontWeight:700,lineHeight:1}},”%”+stats.pct),ce(“div”,{style:{fontSize:13,opacity:.75,marginTop:2}},stats.done+”/”+stats.total+” görev”)))),ce(“div”,{style:{display:“grid”,gridTemplateColumns:“repeat(auto-fit,minmax(80px,1fr))”,gap:8}},[{n:stats.todo,l:“Bekliyor”,c:t.lbl3},{n:stats.ip,l:“Devam”,c:t.blue},{n:stats.rv,l:“İnceleme”,c:t.purple},{n:stats.ov,l:“Gecikmiş”,c:t.red}].map(function(s){return ce(“div”,{key:s.l,style:{background:t.card,borderRadius:12,padding:“12px 8px”,textAlign:“center”}},ce(“div”,{style:{fontSize:12,color:t.lbl3}},s.l),ce(“div”,{style:{fontSize:26,fontWeight:700,color:s.c,marginTop:2}},s.n))}))),stats.ov>0?ce(Grp,{t:t,header:“Gecikmiş”},tasks.filter(function(x){var dl2=dL(x.dueDate);return dl2!==null&&dl2<0&&x.status!==“done”}).map(function(x){return ce(TRow,{key:x.id,t:t,task:x,team:team,onPress:opD})})):null,ce(Grp,{t:t,header:“Son Görevler”},tasks.length===0?ce(“div”,{style:{padding:40,textAlign:“center”,color:t.lbl3}},“Henüz görev yok”):tasks.slice(0,6).map(function(x){return ce(TRow,{key:x.id,t:t,task:x,team:team,onPress:opD})})),ce(“div”,{style:{height:100}}))}
+/* — Dashboard — */
+function DashView(){return ce(“div”,null,
+ce(NBar,{t:t,title:“HF IT G\u00f6rev Takip”,large:true,acts:[{ic:dmIc,fn:tDk,sz:24},{ic:”\uFF0B”,fn:function(){sSh(“new”)},sz:28}]}),
+ce(“div”,{style:{padding:“0 16px 6px”}},ce(“div”,{style:{display:“flex”,alignItems:“center”,gap:6,fontSize:12,color:fbOK?t.green:t.orange}},ce(“div”,{style:{width:6,height:6,borderRadius:“50%”,background:fbOK?t.green:t.orange}}),fbOK?“Firebase ba\u011fl\u0131”:”\u00c7evrimd\u0131\u015f\u0131”)),
+ce(“div”,{style:{padding:“0 16px 16px”}},
+ce(“div”,{style:{background:“linear-gradient(135deg,”+t.gA+”,”+t.gB+”)”,borderRadius:16,padding:20,color:”#fff”,marginBottom:12}},ce(“div”,{style:{fontSize:13,opacity:.8,marginBottom:6}},“Tamamlanma Oran\u0131”),ce(“div”,{style:{display:“flex”,alignItems:“center”,gap:16}},ce(Ring,{p:stats.pct/100,sz:60,sw:5,cl:”#fff”,bg:“rgba(255,255,255,.25)”}),ce(“div”,null,ce(“div”,{style:{fontSize:42,fontWeight:700,lineHeight:1}},”%”+stats.pct),ce(“div”,{style:{fontSize:13,opacity:.75,marginTop:2}},stats.done+”/”+stats.total+” g\u00f6rev”)))),
+ce(“div”,{style:{display:“grid”,gridTemplateColumns:“repeat(auto-fit,minmax(80px,1fr))”,gap:8}},[{n:stats.todo,l:“Bekliyor”,c:t.lbl3},{n:stats.ip,l:“Devam”,c:t.blue},{n:stats.rv,l:”\u0130nceleme”,c:t.purple},{n:stats.ov,l:“Gecikmi\u015f”,c:t.red}].map(function(s){return ce(“div”,{key:s.l,style:{background:t.card,borderRadius:12,padding:“12px 8px”,textAlign:“center”}},ce(“div”,{style:{fontSize:12,color:t.lbl3}},s.l),ce(“div”,{style:{fontSize:26,fontWeight:700,color:s.c,marginTop:2}},s.n))}))),
+stats.ov>0?ce(Grp,{t:t,header:“Gecikmi\u015f”},tasks.filter(function(x){var dl2=daysL(x.dueDate);return dl2!==null&&dl2<0&&x.status!==“done”}).map(function(x){return ce(TaskRow,{key:x.id,t:t,task:x,team:team,onPress:opDetail})})):null,
+ce(Grp,{t:t,header:“Son G\u00f6revler”},tasks.length===0?ce(“div”,{style:{padding:40,textAlign:“center”,color:t.lbl3}},“Hen\u00fcz g\u00f6rev yok”):tasks.slice(0,6).map(function(x){return ce(TaskRow,{key:x.id,t:t,task:x,team:team,onPress:opDetail})})),
+ce(“div”,{style:{height:100}}))}
 
-function TTab(){return ce(“div”,null,ce(NBar,{t:t,title:“Görevler”,large:true,acts:[{ic:dmIc,fn:tDk,sz:24},{ic:”\uFF0B”,fn:function(){sSh(“new”)},sz:28}]}),ce(“div”,{style:{padding:“0 16px 12px”}},ce(“div”,{style:{display:“flex”,alignItems:“center”,gap:6,background:t.fill,borderRadius:10,padding:“7px 10px”,marginBottom:10}},ce(“span”,{style:{color:t.lbl3}},”\uD83D\uDD0D”),ce(“input”,{value:fl.q,onChange:function(e){sFl(function(f){return Object.assign({},f,{q:e.target.value})})},placeholder:“Görev ara…”,style:{border:“none”,background:“none”,outline:“none”,fontSize:17,width:“100%”,fontFamily:“inherit”,color:t.lbl}}),fl.q?ce(“button”,{onClick:function(){sFl(function(f){return Object.assign({},f,{q:””})})},style:{background:t.fill2,border:“none”,borderRadius:“50%”,width:20,height:20,display:“flex”,alignItems:“center”,justifyContent:“center”,cursor:“pointer”,color:t.lbl3,fontSize:11,flexShrink:0}},”\u2715”):null),ce(Seg,{t:t,opts:[{v:“all”,l:“Tümü”},{v:“todo”,l:“Bekliyor”},{v:“inprogress”,l:“Devam”},{v:“review”,l:“İnceleme”},{v:“done”,l:“Bitti”}],val:fl.st,onChange:function(v){sFl(function(f){return Object.assign({},f,{st:v})})}})),filt.length===0?ce(“div”,{style:{textAlign:“center”,padding:60,color:t.lbl3}},“Görev bulunamadı”):ce(Grp,{t:t},filt.map(function(x){return ce(TRow,{key:x.id,t:t,task:x,team:team,onPress:opD})})),ce(“div”,{style:{height:100}}))}
+/* — Tasks — */
+function TasksView(){return ce(“div”,null,
+ce(NBar,{t:t,title:“G\u00f6revler”,large:true,acts:[{ic:dmIc,fn:tDk,sz:24},{ic:”\uFF0B”,fn:function(){sSh(“new”)},sz:28}]}),
+ce(“div”,{style:{padding:“0 16px 12px”}},
+ce(“div”,{style:{display:“flex”,alignItems:“center”,gap:6,background:t.fill,borderRadius:10,padding:“7px 10px”,marginBottom:10}},ce(“span”,{style:{color:t.lbl3}},”\uD83D\uDD0D”),ce(“input”,{value:fl.q,onChange:function(ev){sFl(function(f){return Object.assign({},f,{q:ev.target.value})})},placeholder:“G\u00f6rev ara…”,style:{border:“none”,background:“none”,outline:“none”,fontSize:17,width:“100%”,fontFamily:“inherit”,color:t.lbl}}),fl.q?ce(“button”,{onClick:function(){sFl(function(f){return Object.assign({},f,{q:””})})},style:{background:t.fill2,border:“none”,borderRadius:“50%”,width:20,height:20,display:“flex”,alignItems:“center”,justifyContent:“center”,cursor:“pointer”,color:t.lbl3,fontSize:11,flexShrink:0}},”\u2715”):null),
+ce(Seg,{t:t,opts:[{v:“all”,l:“T\u00fcm\u00fc”},{v:“todo”,l:“Bekliyor”},{v:“inprogress”,l:“Devam”},{v:“review”,l:”\u0130nceleme”},{v:“done”,l:“Bitti”}],val:fl.st,onChange:function(v){sFl(function(f){return Object.assign({},f,{st:v})})}})),
+filt.length===0?ce(“div”,{style:{textAlign:“center”,padding:60,color:t.lbl3}},“G\u00f6rev bulunamad\u0131”):ce(Grp,{t:t},filt.map(function(x){return ce(TaskRow,{key:x.id,t:t,task:x,team:team,onPress:opDetail})})),
+ce(“div”,{style:{height:100}}))}
 
-function BTab(){return ce(“div”,null,ce(NBar,{t:t,title:“Kanban Pano”,large:true,acts:[{ic:dmIc,fn:tDk,sz:24},{ic:”\uFF0B”,fn:function(){sSh(“new”)},sz:28}]}),ce(“div”,{style:{display:“flex”,gap:12,padding:“0 16px”,overflowX:“auto”,WebkitOverflowScrolling:“touch”,scrollSnapType:“x mandatory”,paddingBottom:100}},Object.keys(SS).map(function(sk){var sv=SS[sk],col=tasks.filter(function(x){return x.status===sk});return ce(“div”,{key:sk,style:{minWidth:280,flex:“0 0 280px”,scrollSnapAlign:“start”}},ce(“div”,{style:{display:“flex”,alignItems:“center”,justifyContent:“space-between”,padding:“8px 4px 10px”}},ce(“span”,{style:{fontSize:15,fontWeight:600,color:t.lbl}},sv.l),ce(Bdg,{n:col.length,cl:sv.c})),ce(“div”,{style:{display:“flex”,flexDirection:“column”,gap:8}},col.map(function(x){var p2=PR[x.priority]||PR.medium,a2=null;team.forEach(function(m){if(m.id===x.assignee)a2=m});var su=x.subtasks||[],sd2=su.filter(function(s){return s.done}).length,st2=su.length;return ce(“div”,{key:x.id,onClick:function(){opD(x)},style:{background:t.card,borderRadius:12,padding:14,borderLeft:“3px solid “+p2.c,cursor:“pointer”}},ce(“div”,{style:{fontSize:15,fontWeight:600,marginBottom:6,color:t.lbl}},x.title),ce(“div”,{style:{display:“flex”,gap:6,fontSize:12}},ce(“span”,{style:{color:p2.c}},p2.l),x.dueDate?ce(“span”,{style:{color:dL(x.dueDate)<0?t.red:t.lbl3}},relD(x.dueDate)):null),st2>0?ce(“div”,{style:{marginTop:8}},ce(“div”,{style:{height:3,background:t.fill,borderRadius:2}},ce(“div”,{style:{height:“100%”,width:(sd2/st2*100)+”%”,background:t.green,borderRadius:2}})),ce(“div”,{style:{fontSize:11,color:t.lbl3,marginTop:3}},sd2+”/”+st2)):null,ce(“div”,{style:{display:“flex”,justifyContent:“flex-end”,marginTop:8}},a2?ce(Av,{name:a2.name,sz:24}):null))}),col.length===0?ce(“div”,{style:{padding:24,textAlign:“center”,color:t.lbl4,border:“1.5px dashed “+t.sep,borderRadius:10}},“Görev yok”):null))})))}
+/* — Board — */
+function BoardView(){return ce(“div”,null,
+ce(NBar,{t:t,title:“Kanban Pano”,large:true,acts:[{ic:dmIc,fn:tDk,sz:24},{ic:”\uFF0B”,fn:function(){sSh(“new”)},sz:28}]}),
+ce(“div”,{style:{display:“flex”,gap:12,padding:“0 16px”,overflowX:“auto”,WebkitOverflowScrolling:“touch”,scrollSnapType:“x mandatory”,paddingBottom:100}},
+Object.keys(SS).map(function(sk){var sv=SS[sk];var col=tasks.filter(function(x){return x.status===sk});
+return ce(“div”,{key:sk,style:{minWidth:280,flex:“0 0 280px”,scrollSnapAlign:“start”}},
+ce(“div”,{style:{display:“flex”,alignItems:“center”,justifyContent:“space-between”,padding:“8px 4px 10px”}},ce(“span”,{style:{fontSize:15,fontWeight:600,color:t.lbl}},sv.l),ce(Bdg,{n:col.length,cl:sv.c})),
+ce(“div”,{style:{display:“flex”,flexDirection:“column”,gap:8}},
+col.map(function(x){var p2=PR[x.priority]||PR.medium;var a2=null;team.forEach(function(m){if(m.id===x.assignee)a2=m});var su=x.subtasks||[];var sd2=su.filter(function(s2){return s2.done}).length;var st2=su.length;
+return ce(“div”,{key:x.id,onClick:function(){opDetail(x)},style:{background:t.card,borderRadius:12,padding:14,borderLeft:“3px solid “+p2.c,cursor:“pointer”}},
+ce(“div”,{style:{fontSize:15,fontWeight:600,marginBottom:6,color:t.lbl}},x.title),
+ce(“div”,{style:{display:“flex”,gap:6,fontSize:12}},ce(“span”,{style:{color:p2.c}},p2.l),x.dueDate?ce(“span”,{style:{color:daysL(x.dueDate)<0?t.red:t.lbl3}},relD(x.dueDate)):null),
+st2>0?ce(“div”,{style:{marginTop:8}},ce(“div”,{style:{height:3,background:t.fill,borderRadius:2}},ce(“div”,{style:{height:“100%”,width:(sd2/st2*100)+”%”,background:t.green,borderRadius:2}})),ce(“div”,{style:{fontSize:11,color:t.lbl3,marginTop:3}},sd2+”/”+st2)):null,
+ce(“div”,{style:{display:“flex”,justifyContent:“flex-end”,marginTop:8}},a2?ce(Av,{name:a2.name,sz:24}):null))}),
+col.length===0?ce(“div”,{style:{padding:24,textAlign:“center”,color:t.lbl4,border:“1.5px dashed “+t.sep,borderRadius:10}},“G\u00f6rev yok”):null))})))}
 
-function STab(){return ce(“div”,null,ce(NBar,{t:t,title:“Ayarlar”,large:true}),ce(Grp,{t:t,header:“Görünüm”},ce(Cel,{t:t,icon:dark?”\uD83C\uDF19”:”\u2600\uFE0F”,icBg:dark?”#5e5ce6”:”#ff9500”,label:“Koyu Mod”,trail:ce(“div”,{onClick:function(e){e.stopPropagation();tDk()},style:{width:51,height:31,borderRadius:16,background:dark?t.green:t.fill,padding:2,cursor:“pointer”,transition:“background .2s”}},ce(“div”,{style:{width:27,height:27,borderRadius:“50%”,background:”#fff”,transform:dark?“translateX(20px)”:“translateX(0)”,transition:“transform .2s”,boxShadow:“0 1px 3px rgba(0,0,0,.2)”}}))})),ce(Grp,{t:t,header:“Bağlantı”},ce(Cel,{t:t,icon:fbOK?”\uD83D\uDFE2”:”\uD83D\uDFE0”,icBg:fbOK?t.green:t.orange,label:“Firebase”,detail:fbOK?“Bağlı”:“Çevrimdışı”})),ce(Grp,{t:t,header:“Ekip”},team.map(function(m){return ce(Cel,{key:m.id,t:t,label:m.name,detail:m.role})}),ce(Cel,{t:t,label:“Ekip Yönetimi”,icon:”\uD83D\uDC65”,icBg:t.blue,chev:true,onPress:function(){sSh(“team”)}})),ce(Grp,{t:t,header:“İstatistikler”},ce(Cel,{t:t,label:“Toplam”,detail:””+stats.total}),ce(Cel,{t:t,label:“Tamamlanan”,detail:””+stats.done}),ce(Cel,{t:t,label:“Gecikmiş”,detail:””+stats.ov}),ce(Cel,{t:t,label:“Oran”,detail:”%”+stats.pct})),ce(Grp,{t:t,header:“Hakkında”},ce(Cel,{t:t,label:“Kurum”,detail:“Halk Faktoring”}),ce(Cel,{t:t,label:“Birim”,detail:“IT Departmanı”}),ce(Cel,{t:t,label:“Versiyon”,detail:“2.0.0”})),ce(“div”,{style:{height:100}}))}
+/* — Settings — */
+function SettingsView(){return ce(“div”,null,
+ce(NBar,{t:t,title:“Ayarlar”,large:true}),
+ce(Grp,{t:t,header:“G\u00f6r\u00fcn\u00fcm”},ce(Cel,{t:t,icon:dark?”\uD83C\uDF19”:”\u2600\uFE0F”,icBg:dark?”#5e5ce6”:”#ff9500”,label:“Koyu Mod”,trail:ce(“div”,{onClick:function(ev){ev.stopPropagation();tDk()},style:{width:51,height:31,borderRadius:16,background:dark?t.green:t.fill,padding:2,cursor:“pointer”,transition:“background .2s”}},ce(“div”,{style:{width:27,height:27,borderRadius:“50%”,background:”#fff”,transform:dark?“translateX(20px)”:“translateX(0)”,transition:“transform .2s”,boxShadow:“0 1px 3px rgba(0,0,0,.2)”}}))})),
+ce(Grp,{t:t,header:“Ba\u011flant\u0131”},ce(Cel,{t:t,icon:fbOK?”\uD83D\uDFE2”:”\uD83D\uDFE0”,icBg:fbOK?t.green:t.orange,label:“Firebase”,detail:fbOK?“Ba\u011fl\u0131”:”\u00c7evrimd\u0131\u015f\u0131”})),
+ce(Grp,{t:t,header:“Ekip”},team.map(function(m){return ce(Cel,{key:m.id,t:t,label:m.name,detail:m.role})}),ce(Cel,{t:t,label:“Ekip Y\u00f6netimi”,icon:”\uD83D\uDC65”,icBg:t.blue,chev:true,onPress:function(){sSh(“team”)}})),
+ce(Grp,{t:t,header:”\u0130statistikler”},ce(Cel,{t:t,label:“Toplam”,detail:””+stats.total}),ce(Cel,{t:t,label:“Tamamlanan”,detail:””+stats.done}),ce(Cel,{t:t,label:“Gecikmi\u015f”,detail:””+stats.ov}),ce(Cel,{t:t,label:“Oran”,detail:”%”+stats.pct})),
+ce(Grp,{t:t,header:“Hakk\u0131nda”},ce(Cel,{t:t,label:“Kurum”,detail:“Halk Faktoring”}),ce(Cel,{t:t,label:“Birim”,detail:“IT Departman\u0131”}),ce(Cel,{t:t,label:“Versiyon”,detail:“2.0.0”})),
+ce(“div”,{style:{height:100}}))}
 
-var tabs=[{id:“dash”,ic:”\uD83D\uDCCA”,l:“Özet”},{id:“tasks”,ic:”\uD83D\uDCCB”,l:“Görevler”},{id:“board”,ic:”\u25A6”,l:“Pano”},{id:“settings”,ic:”\u2699\uFE0F”,l:“Ayarlar”}];
-return ce(“div”,{style:{height:“100vh”,display:“flex”,flexDirection:“column”,background:t.bg,maxWidth:900,margin:“0 auto”}},ce(“div”,{style:{flex:1,overflow:“auto”,WebkitOverflowScrolling:“touch”}},tab===“dash”?ce(Dash):null,tab===“tasks”?ce(TTab):null,tab===“board”?ce(BTab):null,tab===“settings”?ce(STab):null),ce(“div”,{style:{flexShrink:0,background:t.nav,backdropFilter:“blur(20px)”,WebkitBackdropFilter:“blur(20px)”,borderTop:”.5px solid “+t.sep,display:“flex”,justifyContent:“space-around”,padding:“6px 0 calc(env(safe-area-inset-bottom,8px) + 4px)”}},tabs.map(function(td){return ce(“button”,{key:td.id,onClick:function(){sTab(td.id)},style:{display:“flex”,flexDirection:“column”,alignItems:“center”,gap:1,background:“none”,border:“none”,color:tab===td.id?t.blue:t.lbl3,fontSize:10,fontWeight:tab===td.id?600:500,cursor:“pointer”,padding:“4px 16px”,fontFamily:“inherit”,minWidth:50}},ce(“span”,{style:{fontSize:24,lineHeight:“1.1”}},td.ic),ce(“span”,null,td.l))})),ce(“button”,{onClick:function(){sSh(“new”)},style:{position:“fixed”,bottom:80,right:20,zIndex:400,width:56,height:56,borderRadius:“50%”,background:t.blue,color:”#fff”,border:“none”,fontSize:28,fontWeight:300,cursor:“pointer”,boxShadow:“0 4px 16px rgba(0,122,255,.4)”,display:“flex”,alignItems:“center”,justifyContent:“center”},onPointerDown:function(e){e.currentTarget.style.transform=“scale(.9)”},onPointerUp:function(e){e.currentTarget.style.transform=“none”},onPointerLeave:function(e){e.currentTarget.style.transform=“none”}},”\uFF0B”),sh===“new”?ce(TForm,{t:t,task:null,team:team,onSave:svTk,onDel:dlTk,onClose:function(){sSh(null)}}):null,sh&&sh.id&&sh.type!==“detail”?ce(TForm,{t:t,task:sh,team:team,onSave:svTk,onDel:dlTk,onClose:function(){sSh(null)}}):null,sh===“team”?ce(TeamSh,{t:t,team:team,onAdd:addM,onDel:delM,onClose:function(){sSh(null)}}):null,sh&&sh.type===“detail”?ce(Detail,{t:t,task:sh.task,team:team,onEdit:function(tk){sSh(Object.assign({},tk))},onSC:cSt,onUpd:upTk,onDel:dlTk,onClose:function(){sSh(null)}}):null)}
+/* — Tab definitions — */
+var tabDefs=[{id:“dash”,ic:”\uD83D\uDCCA”,l:”\u00d6zet”},{id:“tasks”,ic:”\uD83D\uDCCB”,l:“G\u00f6revler”},{id:“board”,ic:”\u25A6”,l:“Pano”},{id:“settings”,ic:”\u2699\uFE0F”,l:“Ayarlar”}];
+
+/* — Render — */
+return ce(“div”,{style:{height:“100vh”,display:“flex”,flexDirection:“column”,background:t.bg,maxWidth:900,margin:“0 auto”}},
+ce(“div”,{style:{flex:1,overflow:“auto”,WebkitOverflowScrolling:“touch”}},
+tab===“dash”?ce(DashView):null,
+tab===“tasks”?ce(TasksView):null,
+tab===“board”?ce(BoardView):null,
+tab===“settings”?ce(SettingsView):null),
+/* Tab Bar */
+ce(“div”,{style:{flexShrink:0,background:t.nav,backdropFilter:“blur(20px)”,WebkitBackdropFilter:“blur(20px)”,borderTop:”.5px solid “+t.sep,display:“flex”,justifyContent:“space-around”,padding:“6px 0 calc(env(safe-area-inset-bottom,8px) + 4px)”}},
+tabDefs.map(function(td){return ce(“button”,{key:td.id,onClick:function(){sTab(td.id)},style:{display:“flex”,flexDirection:“column”,alignItems:“center”,gap:1,background:“none”,border:“none”,color:tab===td.id?t.blue:t.lbl3,fontSize:10,fontWeight:tab===td.id?600:500,cursor:“pointer”,padding:“4px 16px”,fontFamily:“inherit”,minWidth:50}},ce(“span”,{style:{fontSize:24,lineHeight:“1.1”}},td.ic),ce(“span”,null,td.l))})),
+/* FAB */
+ce(“button”,{onClick:function(){sSh(“new”)},style:{position:“fixed”,bottom:80,right:20,zIndex:400,width:56,height:56,borderRadius:“50%”,background:t.blue,color:”#fff”,border:“none”,fontSize:28,fontWeight:300,cursor:“pointer”,boxShadow:“0 4px 16px rgba(0,122,255,.4)”,display:“flex”,alignItems:“center”,justifyContent:“center”},onPointerDown:function(ev){ev.currentTarget.style.transform=“scale(.9)”},onPointerUp:function(ev){ev.currentTarget.style.transform=“none”},onPointerLeave:function(ev){ev.currentTarget.style.transform=“none”}},”\uFF0B”),
+/* Sheets */
+sh===“new”?ce(TaskForm,{t:t,task:null,team:team,onSave:svTask,onDel:delTask,onClose:function(){sSh(null)}}):null,
+(sh&&sh.id&&sh.type!==“detail”)?ce(TaskForm,{t:t,task:sh,team:team,onSave:svTask,onDel:delTask,onClose:function(){sSh(null)}}):null,
+sh===“team”?ce(TeamSheet,{t:t,team:team,onAdd:addMem,onDel:delMem,onClose:function(){sSh(null)}}):null,
+(sh&&sh.type===“detail”)?ce(TaskDetail,{t:t,task:sh.task,team:team,onEdit:function(tk){sSh(Object.assign({},tk))},onSC:chgStatus,onUpd:updTask,onDel:delTask,onClose:function(){sSh(null)}}):null)}
 
 ReactDOM.createRoot(document.getElementById(“root”)).render(ce(App));
+console.log(“HF IT v2.0 loaded”);
 </script>
 
 </body>
