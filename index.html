@@ -130,13 +130,25 @@
         const taskForm = document.getElementById('task-form');
         const submitBtn = document.getElementById('submit-task-btn');
 
-        // Modal Kontrolleri
+        // --- GÜNCELLENEN MODAL KONTROLLERİ ---
+        
+        // Modal Açma
         document.getElementById('open-modal-btn').addEventListener('click', () => {
             modal.classList.remove('modal-hidden');
         });
+
+        // Modal Kapatma (İptal Butonu)
         document.getElementById('close-modal-btn').addEventListener('click', () => {
             modal.classList.add('modal-hidden');
             taskForm.reset();
+        });
+
+        // Modal Kapatma (Siyah Arka Plana Tıklayınca)
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.add('modal-hidden');
+                taskForm.reset();
+            }
         });
 
         // 1. Yeni Görev Ekleme ve Kaydet Butonu Animasyonu
@@ -159,13 +171,14 @@
                     createdAt: new Date().getTime()
                 });
                 
+                // Başarılı olursa formu temizle ve kapat
                 modal.classList.add('modal-hidden');
                 taskForm.reset();
             } catch (error) {
                 console.error("Firebase Hatası: ", error);
-                alert("Görev kaydedilemedi. Firebase yapılandırmanızı ve veritabanı kurallarınızı kontrol edin.");
+                alert("Görev kaydedilemedi. Firebase ayarlarınızı ve CORS/Yerel dosya izinlerini kontrol edin.");
             } finally {
-                // Butonu eski haline getir
+                // Butonu her halükarda eski haline getir
                 submitBtn.disabled = false;
                 submitBtn.innerText = originalText;
                 submitBtn.classList.remove('opacity-70', 'cursor-not-allowed');
