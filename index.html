@@ -3,161 +3,200 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IT Görev Takip Paneli - Pro</title>
+    <title>IT Görev Takip Paneli - Canlı</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
-    
     <script>
         tailwind.config = {
-            theme: {
-                extend: { 
-                    colors: { 
-                        navy: '#1a2c5b', 
-                        darknavy: '#0f172a', 
-                        graylight: '#f8fafc',
-                        grayborder: '#e2e8f0'
-                    } 
-                }
-            }
+            theme: { extend: { colors: { navy: '#1a2c5b', darknavy: '#0f172a', graylight: '#f8fafc' } } }
         }
     </script>
     <style>
-        /* Sürükleme sırasındaki gölge efekti */
-        .sortable-ghost { opacity: 0.4; background-color: #f1f5f9; }
-        .sortable-drag { cursor: grabbing !important; }
+        .sortable-ghost { opacity: 0.4; background-color: #f1f5f9; border: 2px dashed #cbd5e1; }
         .task-card { cursor: grab; }
         .task-card:active { cursor: grabbing; }
+        /* Modal gizleme/gösterme sınıfı */
+        .modal-hidden { display: none; }
     </style>
 </head>
-<body class="bg-graylight font-sans text-gray-800 h-screen flex flex-col overflow-hidden">
+<body class="bg-graylight font-sans text-gray-800 h-screen flex flex-col overflow-hidden relative">
     
-    <header class="bg-navy text-white p-4 shadow-lg flex justify-between items-center z-10 relative">
-        <div class="flex items-center gap-6">
-            <h1 class="text-xl font-extrabold tracking-widest text-gray-100">IT GÖREV <span class="text-blue-300">PRO</span></h1>
-            
-            <div class="hidden md:block relative">
-                <input type="text" placeholder="Görev veya proje ara..." class="bg-darknavy text-sm text-white placeholder-gray-400 rounded-full pl-4 pr-10 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-400 w-64 border border-gray-600 transition-all">
-                <svg class="w-4 h-4 absolute right-3 top-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-            </div>
-        </div>
-        
+    <header class="bg-navy text-white p-4 shadow-lg flex justify-between items-center z-10">
+        <h1 class="text-xl font-extrabold tracking-widest text-gray-100">IT GÖREV <span class="text-blue-300">PRO</span></h1>
         <div class="flex items-center gap-4">
-            <button class="bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold py-1.5 px-4 rounded-md shadow transition-colors flex items-center gap-1">
+            <button id="open-modal-btn" class="bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold py-1.5 px-4 rounded-md shadow flex items-center gap-1 transition-colors">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                 Yeni Görev
             </button>
-            <div class="w-8 h-8 rounded-full bg-gray-200 text-navy font-bold flex items-center justify-center border-2 border-blue-400 shadow-sm">C</div>
+            <div class="w-8 h-8 rounded-full bg-gray-200 text-navy font-bold flex items-center justify-center shadow-sm">C</div>
         </div>
     </header>
 
-    <main class="flex-1 overflow-x-auto p-6 bg-gray-100">
-        <div class="flex gap-6 min-w-max h-full">
-            
-            <div class="bg-gray-200/60 rounded-xl w-80 flex flex-col border border-grayborder shadow-sm">
-                <div class="p-4 border-b border-gray-300 flex justify-between items-center bg-gray-200/80 rounded-t-xl">
-                    <h2 class="font-bold text-darknavy flex items-center gap-2">
-                        <div class="w-2 h-2 rounded-full bg-gray-500"></div> YAPILACAKLAR 
-                    </h2>
-                    <span class="bg-white text-gray-700 px-2.5 py-0.5 rounded-full text-xs font-bold shadow-sm">2</span>
-                </div>
-                
-                <div id="todo-list" class="p-3 flex-1 overflow-y-auto flex flex-col gap-3 min-h-[200px]">
-                    
-                    <div class="task-card bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:-translate-y-0.5 transition-all">
-                        <div class="flex justify-between items-start mb-3">
-                            <span class="text-[10px] font-bold bg-red-100 text-red-700 px-2 py-1 rounded uppercase tracking-wider border border-red-200">Acil</span>
-                            <span class="text-xs text-gray-400 font-mono">#105</span>
-                        </div>
-                        <h3 class="font-semibold text-gray-800 mb-2 leading-tight">SQL Alert Job Revizyonu</h3>
-                        <p class="text-sm text-gray-500 mb-4 line-clamp-2">Eksik mobil isteklerin loglanması için T-SQL scripti mesai saatlerine göre ayarlanacak.</p>
-                        <div class="flex justify-between items-center pt-2 border-t border-gray-100">
-                            <span class="text-xs font-medium text-navy bg-blue-50 px-2 py-1 rounded">Dijital Mizan</span>
-                        </div>
-                    </div>
+    <main class="flex-1 overflow-x-auto p-6 bg-gray-100 flex gap-6 min-w-max h-full">
+        <div class="bg-gray-200/60 rounded-xl w-80 flex flex-col border border-gray-300">
+            <div class="p-3 border-b border-gray-300 bg-gray-200/80 rounded-t-xl font-bold text-darknavy">YAPILACAKLAR</div>
+            <div id="todo" class="kanban-column p-3 flex-1 overflow-y-auto flex flex-col gap-3 min-h-[200px]" data-status="todo"></div>
+        </div>
 
-                    <div class="task-card bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:-translate-y-0.5 transition-all">
-                        <div class="flex justify-between items-start mb-3">
-                            <span class="text-[10px] font-bold bg-blue-50 text-blue-600 px-2 py-1 rounded uppercase tracking-wider border border-blue-100">Normal</span>
-                            <span class="text-xs text-gray-400 font-mono">#106</span>
-                        </div>
-                        <h3 class="font-semibold text-gray-800 mb-2 leading-tight">SQL Profiler Analizi</h3>
-                        <p class="text-sm text-gray-500 mb-4 line-clamp-2">Veritabanı yavaşlık sorunları için trace başlatılıp sorgular incelenecek.</p>
-                        <div class="flex justify-between items-center pt-2 border-t border-gray-100">
-                            <span class="text-xs font-medium text-navy bg-blue-50 px-2 py-1 rounded">BIS Infact</span>
-                        </div>
-                    </div>
+        <div class="bg-blue-50/50 rounded-xl w-80 flex flex-col border border-blue-200">
+            <div class="p-3 border-b border-blue-200 bg-blue-100/50 rounded-t-xl font-bold text-blue-800">DEVAM EDENLER</div>
+            <div id="inprogress" class="kanban-column p-3 flex-1 overflow-y-auto flex flex-col gap-3 min-h-[200px]" data-status="inprogress"></div>
+        </div>
 
-                </div>
-            </div>
-
-            <div class="bg-blue-50/50 rounded-xl w-80 flex flex-col border border-blue-100 shadow-sm">
-                <div class="p-4 border-b border-blue-200 flex justify-between items-center bg-blue-100/50 rounded-t-xl">
-                    <h2 class="font-bold text-blue-800 flex items-center gap-2">
-                        <div class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div> DEVAM EDENLER 
-                    </h2>
-                    <span class="bg-white text-blue-800 px-2.5 py-0.5 rounded-full text-xs font-bold shadow-sm">1</span>
-                </div>
-                
-                <div id="inprogress-list" class="p-3 flex-1 overflow-y-auto flex flex-col gap-3 min-h-[200px]">
-                    <div class="task-card bg-white p-4 rounded-lg shadow-sm border border-blue-200 hover:shadow-md hover:-translate-y-0.5 transition-all">
-                        <div class="flex justify-between items-start mb-3">
-                            <span class="text-[10px] font-bold bg-orange-50 text-orange-600 px-2 py-1 rounded uppercase tracking-wider border border-orange-100">Öncelikli</span>
-                            <span class="text-xs text-gray-400 font-mono">#104</span>
-                        </div>
-                        <h3 class="font-semibold text-gray-800 mb-2 leading-tight">Python / VBA Veri Otomasyonu</h3>
-                        <p class="text-sm text-gray-500 mb-4 line-clamp-2">Pandas ile veri birleştirme makroları yazılıp sunum formatına çekilecek.</p>
-                        <div class="flex justify-between items-center pt-2 border-t border-gray-100">
-                            <span class="text-xs font-medium text-navy bg-blue-50 px-2 py-1 rounded">Karar Destek Sistemi</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-green-50/50 rounded-xl w-80 flex flex-col border border-green-100 shadow-sm">
-                <div class="p-4 border-b border-green-200 flex justify-between items-center bg-green-100/50 rounded-t-xl">
-                    <h2 class="font-bold text-green-800 flex items-center gap-2">
-                        <div class="w-2 h-2 rounded-full bg-green-500"></div> TAMAMLANDI 
-                    </h2>
-                    <span class="bg-white text-green-800 px-2.5 py-0.5 rounded-full text-xs font-bold shadow-sm">1</span>
-                </div>
-                
-                <div id="done-list" class="p-3 flex-1 overflow-y-auto flex flex-col gap-3 min-h-[200px]">
-                    <div class="task-card bg-gray-50 p-4 rounded-lg border border-green-200 opacity-80 hover:opacity-100 transition-all">
-                        <div class="flex justify-between items-start mb-3">
-                            <span class="text-[10px] font-bold bg-green-100 text-green-700 px-2 py-1 rounded uppercase tracking-wider border border-green-200">Bitti</span>
-                            <span class="text-xs text-gray-400 font-mono">#098</span>
-                        </div>
-                        <h3 class="font-semibold text-gray-600 mb-2 line-through leading-tight">Play Console Doğrulaması</h3>
-                        <p class="text-sm text-gray-400 mb-4 line-clamp-2">D-U-N-S numarası ile developer hesap onayı teknik olarak tamamlandı.</p>
-                        <div class="flex justify-between items-center pt-2 border-t border-gray-200">
-                            <span class="text-xs font-medium text-gray-500 bg-gray-200 px-2 py-1 rounded">Diğer</span>
-                            <div class="w-6 h-6 rounded-full bg-green-500 text-white flex items-center justify-center text-xs">✓</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+        <div class="bg-green-50/50 rounded-xl w-80 flex flex-col border border-green-200">
+            <div class="p-3 border-b border-green-200 bg-green-100/50 rounded-t-xl font-bold text-green-800">TAMAMLANDI</div>
+            <div id="done" class="kanban-column p-3 flex-1 overflow-y-auto flex flex-col gap-3 min-h-[200px]" data-status="done"></div>
         </div>
     </main>
 
-    <script>
-        // Sütunları seçiyoruz
-        const todoList = document.getElementById('todo-list');
-        const inProgressList = document.getElementById('inprogress-list');
-        const doneList = document.getElementById('done-list');
+    <div id="task-modal" class="modal-hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-lg shadow-xl w-96">
+            <h2 class="text-xl font-bold mb-4 text-navy">Yeni Görev Tanımla</h2>
+            <form id="task-form" class="space-y-3">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Başlık</label>
+                    <input type="text" id="task-title" required class="mt-1 w-full p-2 border rounded focus:ring-2 focus:ring-navy">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Açıklama (İsteğe Bağlı)</label>
+                    <textarea id="task-desc" rows="2" class="mt-1 w-full p-2 border rounded focus:ring-2 focus:ring-navy"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">İlgili Proje</label>
+                    <select id="task-project" class="mt-1 w-full p-2 border rounded">
+                        <option value="BIS Infact">BIS Infact</option>
+                        <option value="Dijital Mizan">Dijital Mizan</option>
+                        <option value="RatingPro">RatingPro</option>
+                        <option value="Karar Destek Sistemi">Karar Destek Sistemi</option>
+                        <option value="Diğer / Altyapı">Diğer / Altyapı</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Öncelik</label>
+                    <select id="task-priority" class="mt-1 w-full p-2 border rounded">
+                        <option value="Normal">Normal</option>
+                        <option value="Acil">Acil</option>
+                    </select>
+                </div>
+                <div class="flex gap-2 pt-2">
+                    <button type="button" id="close-modal-btn" class="w-1/2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 rounded">İptal</button>
+                    <button type="submit" class="w-1/2 bg-navy hover:bg-blue-800 text-white font-bold py-2 rounded">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-        // Ortak Sortable ayarları
-        const sortableOptions = {
-            group: 'shared', // Kartların sütunlar arası geçiş yapabilmesini sağlar
-            animation: 150,  // Kayma animasyonu hızı
-            ghostClass: 'sortable-ghost', // Sürüklerken arkada kalan boşluğun stili
-            easing: "cubic-bezier(1, 0, 0, 1)"
+    <script type="module">
+        // 1. Firebase Modüllerini İçe Aktar
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+        // ==========================================
+        // BURAYA KENDİ FIREBASE BİLGİLERİNİZİ YAPIŞTIRIN
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "API_ANAHTARI",
+            authDomain: "PROJE.firebaseapp.com",
+            projectId: "PROJE_ID",
+            storageBucket: "PROJE.appspot.com",
+            messagingSenderId: "SENDER_ID",
+            appId: "APP_ID"
         };
 
-        // Sütunlara sürükle-bırak özelliğini ekliyoruz
-        new Sortable(todoList, sortableOptions);
-        new Sortable(inProgressList, sortableOptions);
-        new Sortable(doneList, sortableOptions);
+        // Firebase Başlatma
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // DOM Elementleri
+        const columns = {
+            'todo': document.getElementById('todo'),
+            'inprogress': document.getElementById('inprogress'),
+            'done': document.getElementById('done')
+        };
+        const modal = document.getElementById('task-modal');
+        const taskForm = document.getElementById('task-form');
+
+        // Modal Aç/Kapat Mantığı
+        document.getElementById('open-modal-btn').addEventListener('click', () => modal.classList.remove('modal-hidden'));
+        document.getElementById('close-modal-btn').addEventListener('click', () => { modal.classList.add('modal-hidden'); taskForm.reset(); });
+
+        // 2. Yeni Görev Ekleme (Create)
+        taskForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const title = document.getElementById('task-title').value;
+            const desc = document.getElementById('task-desc').value;
+            const project = document.getElementById('task-project').value;
+            const priority = document.getElementById('task-priority').value;
+
+            try {
+                await addDoc(collection(db, "tasks"), {
+                    title: title, desc: desc, project: project, priority: priority,
+                    status: "todo", // Varsayılan olarak Yapılacaklar'a düşer
+                    createdAt: new Date().getTime()
+                });
+                modal.classList.add('modal-hidden');
+                taskForm.reset();
+            } catch (error) { console.error("Hata:", error); alert("Veritabanına bağlanılamadı!"); }
+        });
+
+        // 3. Verileri Gerçek Zamanlı Okuma (Read)
+        const q = query(collection(db, "tasks"), orderBy("createdAt", "desc"));
+        onSnapshot(q, (snapshot) => {
+            // Sütunları temizle
+            Object.values(columns).forEach(col => col.innerHTML = '');
+
+            snapshot.forEach((doc) => {
+                const task = doc.data();
+                const taskId = doc.id;
+                
+                // Önceliğe göre rozet rengi
+                const badgeClass = task.priority === 'Acil' ? 'bg-red-100 text-red-700 border-red-200' : 'bg-blue-50 text-blue-600 border-blue-100';
+
+                // Kart HTML'i oluştur
+                const cardHTML = `
+                    <div class="task-card bg-white p-4 rounded-lg shadow-sm border border-gray-200" data-id="${taskId}">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-[10px] font-bold px-2 py-1 rounded uppercase border ${badgeClass}">${task.priority}</span>
+                        </div>
+                        <h3 class="font-semibold text-gray-800 mb-1">${task.title}</h3>
+                        <p class="text-sm text-gray-500 mb-3 line-clamp-2">${task.desc}</p>
+                        <div class="flex justify-between items-center pt-2 border-t border-gray-100">
+                            <span class="text-xs font-medium text-navy bg-blue-50 px-2 py-1 rounded">${task.project}</span>
+                        </div>
+                    </div>
+                `;
+
+                // Görevin statüsüne (todo, inprogress, done) göre ilgili sütuna ekle
+                if (columns[task.status]) {
+                    columns[task.status].innerHTML += cardHTML;
+                }
+            });
+        });
+
+        // 4. Sürükle-Bırak İşlemi ve Veritabanı Güncelleme (Update)
+        Object.values(columns).forEach(column => {
+            new Sortable(column, {
+                group: 'shared',
+                animation: 150,
+                ghostClass: 'sortable-ghost',
+                onEnd: async function (evt) {
+                    const itemEl = evt.item;  // Sürüklenen kart
+                    const toList = evt.to;    // Bırakılan sütun
+                    
+                    const taskId = itemEl.getAttribute('data-id');
+                    const newStatus = toList.getAttribute('data-status'); // 'todo', 'inprogress' veya 'done'
+
+                    // Firebase'de sadece bu görevin 'status' alanını güncelle
+                    if (taskId && newStatus) {
+                        try {
+                            await updateDoc(doc(db, "tasks", taskId), { status: newStatus });
+                        } catch (error) {
+                            console.error("Güncelleme hatası: ", error);
+                        }
+                    }
+                }
+            });
+        });
     </script>
 </body>
 </html>
