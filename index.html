@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IT TaskMaster Pro</title>
+    <title>IT TaskMaster Elite</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
 
@@ -13,293 +13,237 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
-                    colors: { primary: '#2563eb', dark: '#0f172a', surface: '#f8fafc' }
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+                    colors: { elite: { 50: '#f8fafc', 600: '#2563eb', 900: '#0f172a' } }
                 }
             }
         }
     </script>
 
     <style>
-        body { background-color: #f1f5f9; }
-        .kanban-column { min-height: calc(100vh - 200px); }
-        .sortable-ghost { opacity: 0.3; transform: scale(0.95); }
-        .fc-event { cursor: pointer; padding: 2px 5px; border-radius: 4px; border: none; }
-        .custom-scrollbar::-webkit-scrollbar { width: 5px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        /* Yan Panel Animasyonu */
-        #sidePanel { transition: transform 0.3s ease-in-out; }
-        .panel-hidden { transform: translateX(100%); }
+        body { background-color: #f1f5f9; height: 100vh; overflow: hidden; }
+        .glass-panel { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.4); }
+        .kanban-column { min-height: 75vh; }
+        .task-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid #e2e8f0; }
+        .task-card:hover { transform: translateY(-4px); border-color: #2563eb; box-shadow: 0 10px 20px -5px rgba(0,0,0,0.1); }
+        .side-panel { transition: transform 0.4s ease-in-out; transform: translateX(100%); }
+        .side-panel.open { transform: translateX(0); }
+        .fc { border: none !important; }
     </style>
 </head>
-<body class="text-slate-900 overflow-hidden">
+<body class="flex flex-col">
 
-    <nav class="bg-white border-b border-slate-200 px-6 py-3 flex justify-between items-center z-30 relative">
+    <header class="h-16 px-8 bg-white border-b border-slate-200 flex items-center justify-between z-40">
         <div class="flex items-center gap-8">
-            <h1 class="text-xl font-black text-primary tracking-tighter">TASK<span class="text-dark">MASTER</span></h1>
-            <div class="flex bg-slate-100 p-1 rounded-lg">
-                <button onclick="switchView('kanban')" id="btnKanban" class="px-4 py-1.5 text-sm font-semibold rounded-md bg-white shadow-sm text-primary">Kanban</button>
-                <button onclick="switchView('calendar')" id="btnCalendar" class="px-4 py-1.5 text-sm font-semibold rounded-md text-slate-500">Takvim</button>
+            <h1 class="text-xl font-extrabold text-elite-900 tracking-tighter">TASK<span class="text-elite-600">ELITE</span></h1>
+            <div class="flex bg-slate-100 p-1 rounded-xl">
+                <button onclick="switchView('kanban')" id="btnK" class="px-5 py-1.5 text-sm font-bold rounded-lg bg-white shadow-sm text-elite-600">Kanban</button>
+                <button onclick="switchView('calendar')" id="btnC" class="px-5 py-1.5 text-sm font-bold rounded-lg text-slate-500">Takvim</button>
             </div>
         </div>
         <div class="flex items-center gap-4">
-            <button onclick="openNewTaskModal()" class="bg-primary hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                Yeni Görev
-            </button>
-            <div class="w-9 h-9 rounded-full bg-slate-200 border border-slate-300 flex items-center justify-center font-bold text-xs">BT</div>
+            <button onclick="openModal()" class="bg-elite-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl text-sm font-bold transition-all shadow-lg shadow-blue-500/20">+ Yeni Görev</button>
+            <div class="w-10 h-10 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs">BT</div>
         </div>
-    </nav>
+    </header>
 
-    <main class="h-[calc(100vh-65px)] overflow-hidden relative">
+    <main class="flex-1 relative overflow-hidden">
         
-        <div id="kanbanView" class="p-6 flex gap-6 overflow-x-auto h-full custom-scrollbar">
+        <div id="kanbanView" class="p-8 h-full overflow-x-auto flex gap-8">
             <div class="w-80 shrink-0 flex flex-col">
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="font-bold flex items-center gap-2 text-slate-600 uppercase text-xs tracking-wider">
-                        <span class="w-2 h-2 rounded-full bg-slate-400"></span> Yapılacaklar
+                <div class="flex items-center justify-between mb-4 px-2">
+                    <h2 class="font-bold text-slate-500 uppercase text-xs tracking-widest flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-slate-300"></span> Yapılacaklar
                     </h2>
-                    <span class="todo-count bg-slate-200 text-slate-600 px-2 py-0.5 rounded text-[10px] font-bold">0</span>
+                    <span id="todo-count" class="bg-white text-slate-500 px-2.5 py-0.5 rounded-full text-[10px] font-black border border-slate-200 shadow-sm">0</span>
                 </div>
-                <div id="todo-list" data-status="todo" class="kanban-column space-y-3"></div>
+                <div id="todo-list" data-status="todo" class="kanban-column space-y-4 pr-1"></div>
             </div>
 
             <div class="w-80 shrink-0 flex flex-col">
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="font-bold flex items-center gap-2 text-blue-600 uppercase text-xs tracking-wider">
-                        <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span> Devam Edenler
+                <div class="flex items-center justify-between mb-4 px-2">
+                    <h2 class="font-bold text-blue-600 uppercase text-xs tracking-widest flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span> Devam Eden
                     </h2>
-                    <span class="inprogress-count bg-blue-100 text-blue-600 px-2 py-0.5 rounded text-[10px] font-bold">0</span>
+                    <span id="inprogress-count" class="bg-white text-blue-600 px-2.5 py-0.5 rounded-full text-[10px] font-black border border-blue-200 shadow-sm">0</span>
                 </div>
-                <div id="inprogress-list" data-status="inprogress" class="kanban-column space-y-3"></div>
+                <div id="inprogress-list" data-status="inprogress" class="kanban-column space-y-4 pr-1"></div>
             </div>
 
             <div class="w-80 shrink-0 flex flex-col">
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="font-bold flex items-center gap-2 text-emerald-600 uppercase text-xs tracking-wider">
+                <div class="flex items-center justify-between mb-4 px-2">
+                    <h2 class="font-bold text-emerald-600 uppercase text-xs tracking-widest flex items-center gap-2">
                         <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Tamamlandı
                     </h2>
-                    <span class="done-count bg-emerald-100 text-emerald-600 px-2 py-0.5 rounded text-[10px] font-bold">0</span>
+                    <span id="done-count" class="bg-white text-emerald-600 px-2.5 py-0.5 rounded-full text-[10px] font-black border border-emerald-200 shadow-sm">0</span>
                 </div>
-                <div id="done-list" data-status="done" class="kanban-column space-y-3"></div>
+                <div id="done-list" data-status="done" class="kanban-column space-y-4 pr-1"></div>
             </div>
         </div>
 
-        <div id="calendarView" class="hidden p-6 h-full bg-white">
+        <div id="calendarView" class="hidden p-8 h-full bg-white">
             <div id="calendar" class="h-full"></div>
         </div>
 
-        <div id="sidePanel" class="fixed top-0 right-0 w-[450px] h-full bg-white shadow-2xl z-50 panel-hidden border-l border-slate-200 flex flex-col">
+        <div id="sidePanel" class="side-panel fixed top-0 right-0 w-[480px] h-full bg-white shadow-2xl z-50 flex flex-col border-l border-slate-200">
             <div class="p-6 border-b border-slate-100 flex justify-between items-center">
-                <span id="panelTaskID" class="text-xs font-mono text-slate-400 font-bold">#000</span>
-                <button onclick="closeSidePanel()" class="text-slate-400 hover:text-dark">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
+                <span id="pID" class="text-xs font-bold text-slate-300 font-mono tracking-tighter">#ID</span>
+                <button onclick="closeSidePanel()" class="text-slate-400 hover:text-black transition-colors"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
             </div>
             <div class="p-8 flex-1 overflow-y-auto space-y-6">
-                <input id="panelTitle" class="text-2xl font-bold w-full border-none outline-none focus:ring-0 text-slate-800" placeholder="Görev Başlığı">
-                
-                <div class="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                        <label class="block text-slate-400 mb-1 font-semibold uppercase text-[10px]">Durum</label>
-                        <select id="panelStatus" class="w-full bg-slate-50 border border-slate-200 rounded-md p-2">
+                <input id="pTitle" class="text-2xl font-bold w-full border-none outline-none focus:ring-0 text-slate-800" placeholder="Başlık Girin">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="p-4 bg-slate-50 rounded-2xl">
+                        <label class="text-[10px] font-black text-slate-400 uppercase mb-1 block">Durum</label>
+                        <select id="pStatus" class="w-full bg-transparent font-bold text-sm text-slate-700 outline-none">
                             <option value="todo">Yapılacak</option>
                             <option value="inprogress">Devam Ediyor</option>
                             <option value="done">Tamamlandı</option>
                         </select>
                     </div>
-                    <div>
-                        <label class="block text-slate-400 mb-1 font-semibold uppercase text-[10px]">Bitiş Tarihi</label>
-                        <input type="date" id="panelDate" class="w-full bg-slate-50 border border-slate-200 rounded-md p-2">
+                    <div class="p-4 bg-slate-50 rounded-2xl">
+                        <label class="text-[10px] font-black text-slate-400 uppercase mb-1 block">Bitiş Tarihi</label>
+                        <input type="date" id="pDate" class="w-full bg-transparent font-bold text-sm text-slate-700 outline-none">
                     </div>
                 </div>
-
                 <div>
-                    <label class="block text-slate-400 mb-1 font-semibold uppercase text-[10px]">Açıklama</label>
-                    <textarea id="panelDesc" rows="6" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 outline-none focus:border-primary transition-all text-slate-600" placeholder="Görev detaylarını buraya yazın..."></textarea>
+                    <label class="text-[10px] font-black text-slate-400 uppercase mb-1 block">Görev Açıklaması</label>
+                    <textarea id="pDesc" rows="10" class="w-full bg-slate-50 rounded-2xl p-4 outline-none border border-transparent focus:border-elite-600 transition-all text-slate-600" placeholder="Detaylar..."></textarea>
                 </div>
             </div>
-            <div class="p-6 border-t border-slate-100 bg-slate-50 flex justify-between">
-                <button onclick="deleteCurrentTask()" class="text-red-500 font-bold text-sm hover:underline">Görevi Sil</button>
-                <button onclick="savePanelChanges()" class="bg-dark text-white px-6 py-2 rounded-lg font-bold text-sm shadow-lg">Değişiklikleri Kaydet</button>
+            <div class="p-6 border-t bg-slate-50 flex gap-4">
+                <button onclick="deleteTask()" class="text-red-500 font-bold px-4">SİL</button>
+                <button onclick="saveChanges()" class="flex-1 bg-slate-900 text-white py-3 rounded-xl font-bold shadow-xl active:scale-95 transition-all">DEĞİŞİKLİKLERİ KAYDET</button>
             </div>
         </div>
-
     </main>
 
-    <div id="modalNewTask" class="hidden fixed inset-0 bg-dark/60 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl p-8 w-full max-w-md shadow-2xl animate-in zoom-in duration-200">
-            <h2 class="text-xl font-black mb-6">Yeni Görev Tanımla</h2>
+    <div id="modal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-[32px] p-10 w-full max-w-md shadow-2xl">
+            <h2 class="text-2xl font-black mb-6 text-slate-800">Yeni Görev</h2>
             <div class="space-y-4">
-                <input type="text" id="newTitle" placeholder="Görev Başlığı" class="w-full border p-3 rounded-xl outline-primary">
-                <input type="date" id="newDate" class="w-full border p-3 rounded-xl outline-primary">
-                <textarea id="newDesc" placeholder="Detaylar..." class="w-full border p-3 rounded-xl outline-primary"></textarea>
-                <div class="flex gap-2 pt-2">
-                    <button onclick="closeNewTaskModal()" class="flex-1 py-3 font-bold text-slate-400">Vazgeç</button>
-                    <button onclick="createNewTask()" class="flex-1 py-3 bg-primary text-white rounded-xl font-bold shadow-lg">Ekle</button>
+                <input type="text" id="nTitle" placeholder="Başlık" class="w-full bg-slate-100 border-none p-4 rounded-xl outline-elite-600">
+                <input type="date" id="nDate" class="w-full bg-slate-100 border-none p-4 rounded-xl outline-elite-600">
+                <textarea id="nDesc" placeholder="Açıklama" class="w-full bg-slate-100 border-none p-4 rounded-xl outline-elite-600"></textarea>
+                <div class="flex gap-4 pt-4">
+                    <button onclick="closeModal()" class="flex-1 py-3 font-bold text-slate-400">İptal</button>
+                    <button onclick="addTask()" class="flex-1 py-3 bg-elite-600 text-white rounded-xl font-bold shadow-lg">Oluştur</button>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // VERİ YÖNETİMİ
-        let tasks = JSON.parse(localStorage.getItem('tm_pro_v4')) || [
-            { id: 'T-852', title: 'Veritabanı Optimizasyonu', desc: 'Index yapıları kontrol edilecek.', date: '2026-04-20', status: 'todo' },
-            { id: 'T-853', title: 'API Güvenlik Testi', desc: 'JWT token süreleri revize edilecek.', date: '2026-04-18', status: 'inprogress' }
+        let tasks = JSON.parse(localStorage.getItem('tm_elite')) || [
+            { id: 'T-101', title: 'Veritabanı Bakımı', desc: 'SQL Server index yapıları optimize edilecek.', date: '2026-04-20', status: 'todo' },
+            { id: 'T-102', title: 'API Entegrasyonu', desc: 'Ödeme modülü için endpointler bağlanacak.', date: '2026-04-19', status: 'inprogress' }
         ];
-
         let calendar;
-        let activeTaskId = null;
+        let activeID = null;
 
-        // BAŞLANGIÇ
+        // BAŞLATMA
         document.addEventListener('DOMContentLoaded', () => {
-            renderKanban();
+            render();
             initCalendar();
-            initSortable();
+            initDrag();
         });
 
-        // KANBAN RENDER
-        function renderKanban() {
-            const cols = { todo: 'todo-list', inprogress: 'inprogress-list', done: 'done-list' };
-            Object.values(cols).forEach(id => document.getElementById(id).innerHTML = '');
+        function render() {
+            const lists = { todo: 'todo-list', inprogress: 'inprogress-list', done: 'done-list' };
+            Object.values(lists).forEach(id => document.getElementById(id).innerHTML = '');
 
-            tasks.forEach(task => {
+            tasks.forEach(t => {
                 const card = `
-                    <div onclick="openSidePanel('${task.id}')" data-id="${task.id}" class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm hover:border-primary cursor-pointer transition-all group">
-                        <div class="flex justify-between items-start mb-2">
-                            <span class="text-[10px] font-bold text-slate-400 font-mono">${task.id}</span>
-                            <span class="text-[10px] bg-slate-100 px-2 py-0.5 rounded font-bold">${task.date}</span>
+                    <div onclick="openPanel('${t.id}')" data-id="${t.id}" class="task-card bg-white p-5 rounded-2xl shadow-sm cursor-pointer group">
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="text-[10px] font-bold text-slate-300 font-mono">${t.id}</span>
+                            <span class="text-[10px] font-bold text-slate-400 bg-slate-50 px-2 py-1 rounded-lg">${t.date}</span>
                         </div>
-                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-primary transition-colors">${task.title}</h3>
-                        <p class="text-xs text-slate-500 line-clamp-2">${task.desc}</p>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1 group-hover:text-elite-600 transition-colors">${t.title}</h3>
+                        <p class="text-xs text-slate-400 line-clamp-2">${t.desc}</p>
                     </div>`;
-                document.getElementById(cols[task.status]).insertAdjacentHTML('beforeend', card);
+                document.getElementById(lists[t.status]).insertAdjacentHTML('beforeend', card);
             });
+            updateStats();
+        }
 
-            updateCounts();
+        function updateStats() {
+            ['todo', 'inprogress', 'done'].forEach(s => {
+                document.getElementById(`${s}-count`).innerText = tasks.filter(t => t.status === s).length;
+            });
+            localStorage.setItem('tm_elite', JSON.stringify(tasks));
             if(calendar) calendar.refetchEvents();
         }
 
-        function updateCounts() {
-            ['todo', 'inprogress', 'done'].forEach(s => {
-                document.querySelector(`.${s}-count`).innerText = tasks.filter(t => t.status === s).length;
-            });
-            localStorage.setItem('tm_pro_v4', JSON.stringify(tasks));
-        }
-
-        // SÜRÜKLE BIRAK
-        function initSortable() {
+        function initDrag() {
             ['todo-list', 'inprogress-list', 'done-list'].forEach(id => {
                 new Sortable(document.getElementById(id), {
                     group: 'tasks',
-                    animation: 200,
-                    ghostClass: 'sortable-ghost',
-                    onEnd: (evt) => {
-                        const id = evt.item.getAttribute('data-id');
-                        const newStatus = evt.to.getAttribute('data-status');
-                        const task = tasks.find(t => t.id === id);
-                        task.status = newStatus;
-                        updateCounts();
-                        if(calendar) calendar.refetchEvents();
+                    animation: 250,
+                    onEnd: (e) => {
+                        const task = tasks.find(t => t.id === e.item.getAttribute('data-id'));
+                        task.status = e.to.getAttribute('data-status');
+                        updateStats();
                     }
                 });
             });
         }
 
-        // TAKVİM AYARLARI
         function initCalendar() {
-            const calendarEl = document.getElementById('calendar');
-            calendar = new FullCalendar.Calendar(calendarEl, {
+            calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
                 initialView: 'dayGridMonth',
                 locale: 'tr',
-                headerToolbar: { left: 'prev,next today', center: 'title', right: '' },
-                events: (info, successCallback) => {
-                    const events = tasks.map(t => ({
-                        id: t.id,
-                        title: t.title,
-                        start: t.date,
-                        backgroundColor: t.status === 'done' ? '#10b981' : (t.status === 'inprogress' ? '#3b82f6' : '#94a3b8')
-                    }));
-                    successCallback(events);
+                events: (info, success) => {
+                    success(tasks.map(t => ({ id: t.id, title: t.title, start: t.date, color: t.status === 'done' ? '#10b981' : '#3b82f6' })));
                 },
-                eventClick: (info) => openSidePanel(info.event.id)
+                eventClick: (info) => openPanel(info.event.id)
             });
             calendar.render();
         }
 
-        // GÖRÜNÜM DEĞİŞTİRME
-        function switchView(view) {
-            if(view === 'kanban') {
-                document.getElementById('kanbanView').classList.remove('hidden');
-                document.getElementById('calendarView').classList.add('hidden');
-                document.getElementById('btnKanban').classList.add('bg-white', 'shadow-sm', 'text-primary');
-                document.getElementById('btnCalendar').classList.remove('bg-white', 'shadow-sm', 'text-primary');
-            } else {
-                document.getElementById('kanbanView').classList.add('hidden');
-                document.getElementById('calendarView').classList.remove('hidden');
-                document.getElementById('btnCalendar').classList.add('bg-white', 'shadow-sm', 'text-primary');
-                document.getElementById('btnKanban').classList.remove('bg-white', 'shadow-sm', 'text-primary');
-                setTimeout(() => calendar.render(), 10);
-            }
+        function switchView(v) {
+            document.getElementById('kanbanView').classList.toggle('hidden', v === 'calendar');
+            document.getElementById('calendarView').classList.toggle('hidden', v === 'kanban');
+            document.getElementById('btnK').className = v === 'kanban' ? 'px-5 py-1.5 text-sm font-bold rounded-lg bg-white shadow-sm text-elite-600' : 'px-5 py-1.5 text-sm font-bold rounded-lg text-slate-500';
+            document.getElementById('btnC').className = v === 'calendar' ? 'px-5 py-1.5 text-sm font-bold rounded-lg bg-white shadow-sm text-elite-600' : 'px-5 py-1.5 text-sm font-bold rounded-lg text-slate-500';
+            if(v === 'calendar') setTimeout(() => calendar.render(), 10);
         }
 
-        // PANEL İŞLEMLERİ
-        function openSidePanel(id) {
-            activeTaskId = id;
-            const task = tasks.find(t => t.id === id);
-            document.getElementById('panelTaskID').innerText = task.id;
-            document.getElementById('panelTitle').value = task.title;
-            document.getElementById('panelDesc').value = task.desc;
-            document.getElementById('panelStatus').value = task.status;
-            document.getElementById('panelDate').value = task.date;
-            document.getElementById('sidePanel').classList.remove('panel-hidden');
+        function openPanel(id) {
+            activeID = id;
+            const t = tasks.find(x => x.id === id);
+            document.getElementById('pID').innerText = t.id;
+            document.getElementById('pTitle').value = t.title;
+            document.getElementById('pStatus').value = t.status;
+            document.getElementById('pDate').value = t.date;
+            document.getElementById('pDesc').value = t.desc;
+            document.getElementById('sidePanel').classList.add('open');
         }
 
-        function closeSidePanel() {
-            document.getElementById('sidePanel').classList.add('panel-hidden');
-            activeTaskId = null;
+        function closeSidePanel() { document.getElementById('sidePanel').classList.remove('open'); activeID = null; }
+
+        function saveChanges() {
+            const t = tasks.find(x => x.id === activeID);
+            t.title = document.getElementById('pTitle').value;
+            t.status = document.getElementById('pStatus').value;
+            t.date = document.getElementById('pDate').value;
+            t.desc = document.getElementById('pDesc').value;
+            render(); closeSidePanel();
         }
 
-        function savePanelChanges() {
-            const task = tasks.find(t => t.id === activeTaskId);
-            task.title = document.getElementById('panelTitle').value;
-            task.desc = document.getElementById('panelDesc').value;
-            task.status = document.getElementById('panelStatus').value;
-            task.date = document.getElementById('panelDate').value;
-            closeSidePanel();
-            renderKanban();
+        function deleteTask() {
+            if(confirm('Silinsin mi?')) { tasks = tasks.filter(t => t.id !== activeID); render(); closeSidePanel(); }
         }
 
-        function deleteCurrentTask() {
-            if(confirm('Bu görevi silmek istediğine emin misin?')) {
-                tasks = tasks.filter(t => t.id !== activeTaskId);
-                closeSidePanel();
-                renderKanban();
-            }
-        }
+        function openModal() { document.getElementById('modal').classList.remove('hidden'); }
+        function closeModal() { document.getElementById('modal').classList.add('hidden'); }
 
-        // YENİ GÖREV EKLEME
-        function openNewTaskModal() { document.getElementById('modalNewTask').classList.remove('hidden'); }
-        function closeNewTaskModal() { document.getElementById('modalNewTask').classList.add('hidden'); }
-
-        function createNewTask() {
-            const title = document.getElementById('newTitle').value;
-            const date = document.getElementById('newDate').value;
-            const desc = document.getElementById('newDesc').value;
-
-            if(!title || !date) return alert('Başlık ve tarih zorunludur!');
-
-            tasks.push({
-                id: 'T-' + Math.floor(100 + Math.random()*900),
-                title, desc, date, status: 'todo'
-            });
-
-            closeNewTaskModal();
-            renderKanban();
-            // Formu temizle
-            document.getElementById('newTitle').value = '';
-            document.getElementById('newDesc').value = '';
+        function addTask() {
+            const title = document.getElementById('nTitle').value;
+            const date = document.getElementById('nDate').value;
+            if(!title || !date) return;
+            tasks.push({ id: 'T-' + Math.floor(100 + Math.random()*900), title, date, desc: document.getElementById('nDesc').value, status: 'todo' });
+            render(); closeModal();
         }
     </script>
 </body>
