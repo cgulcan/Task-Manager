@@ -515,8 +515,6 @@ else c.innerHTML=vSettings();
 
 var tb=document.getElementById("tabbar");
 tb.innerHTML=[{id:"dash",l:"Özet"},{id:"tasks",l:"Görevler"},{id:"board",l:"Pano"},{id:"settings",l:"Ayarlar"}].map(function(t){return'<button class="tab-btn'+(tab===t.id?" active":"")+'" data-action="tab" data-val="'+t.id+'">'+TAB_IC[t.id]+'<span>'+t.l+'</span></button>'}).join("");
-
-// Arama dinleyicilerini (search listeners) global scope'a taşıdığımız için buradan kaldırdık.
 }
 
 function doFilter(){
@@ -541,7 +539,8 @@ var p=P[t.priority]||P.medium,a=fm(t.assignee),d=dl(t.dueDate);
 var su=t.subtasks||[],sd=su.filter(function(x){return x.done}).length,st=su.length;
 var priColor={critical:"var(--red-mid)",high:"var(--amber-mid)",medium:"var(--blue-mid)",low:"var(--green-mid)"}[t.priority];
 
-var h='<div class="sbg" data-action="close-sheet"><div class="sht" data-stop="1"><div class="sht-bar"><div></div></div>';
+// 🛠️ DÜZELTME: sbg etiketinden data-action="close-sheet" özelliğini sildik.
+var h='<div class="sbg"><div class="sht" data-stop="1"><div class="sht-bar"><div></div></div>';
 h+='<div class="sht-hd"><button data-action="close-sheet">Kapat</button><span class="tt">Görev Detayı</span><button class="sv" data-action="edit-task" data-id="'+esc(t.id)+'">Düzenle</button></div>';
 h+='<div class="sht-ct">';
 h+='<div class="dh"><div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">'+priChip(t.priority)+'<span style="font-size:12px;color:var(--lbl3)">'+esc(t.category)+'</span></div>';
@@ -589,7 +588,8 @@ var f=t?JSON.parse(JSON.stringify(t)):{id:"",title:"",description:"",priority:"m
 formData=f;
 var ed=!!t;
 
-var h='<div class="sbg" data-action="close-sheet"><div class="sht" data-stop="1"><div class="sht-bar"><div></div></div>';
+// 🛠️ DÜZELTME: sbg etiketinden data-action="close-sheet" özelliğini sildik.
+var h='<div class="sbg"><div class="sht" data-stop="1"><div class="sht-bar"><div></div></div>';
 h+='<div class="sht-hd"><button data-action="close-sheet">İptal</button><span class="tt">'+(ed?"Görevi Düzenle":"Yeni Görev")+'</span><button class="sv" data-action="save-task"'+(f.title.trim()?"":" disabled")+'>'+(ed?"Kaydet":"Ekle")+'</button></div>';
 h+='<div class="sht-ct">';
 h+='<div class="grp"><div class="grp-b">';
@@ -629,7 +629,8 @@ if(inp){inp.addEventListener("input",function(){var btn=document.querySelector("
 }
 
 function openTeam(){
-var h='<div class="sbg" data-action="close-sheet"><div class="sht" data-stop="1"><div class="sht-bar"><div></div></div>';
+// 🛠️ DÜZELTME: sbg etiketinden data-action="close-sheet" özelliğini sildik.
+var h='<div class="sbg"><div class="sht" data-stop="1"><div class="sht-bar"><div></div></div>';
 h+='<div class="sht-hd"><button data-action="close-sheet">Kapat</button><span class="tt">Ekip</span><div style="min-width:60px"></div></div>';
 h+='<div class="sht-ct">';
 h+='<div class="grp"><div class="grp-h">'+team.length+' üye</div><div class="grp-b">';
@@ -676,7 +677,6 @@ Object.keys(t).forEach(function(k){if(k!=="id")data[k]=t[k]});
 db.collection("tasks").doc(t.id).set(data).catch(function(e){console.error(e)});
 }
 
-// Olay Dinleyicileri Global Scope (Delegation)
 document.addEventListener("input", function(e) {
   if (e.target.id === "qinp") {
     var b = document.getElementById("clr-btn");
@@ -686,16 +686,24 @@ document.addEventListener("input", function(e) {
 });
 
 document.addEventListener("click",function(e){
-var el=e.target.closest("[data-action]");
-if(!el)return;
-var act=el.getAttribute("data-action");
-var id=el.getAttribute("data-id");
-var val=el.getAttribute("data-val");
+  // 🛠️ DÜZELTME: Tıklama yalnızca karanlık arkaplana (sbg sınıfına) geldiyse pencereyi kapatırız.
+  if (e.target.classList.contains("sbg")) {
+    closeSheet();
+    return;
+  }
 
-if(act==="close-sheet"){
-if(el.classList.contains("sbg")||el.tagName==="BUTTON"){closeSheet()}
-return;
-}
+  var el=e.target.closest("[data-action]");
+  if(!el)return;
+
+  var act=el.getAttribute("data-action");
+  var id=el.getAttribute("data-id");
+  var val=el.getAttribute("data-val");
+
+  // İptal / Kapat Butonları için doğrudan kontrol
+  if(act==="close-sheet"){
+    closeSheet();
+    return;
+  }
 
 switch(act){
 case"tab":tab=val;sfilt="all";render();var c=document.getElementById("content");if(c)c.scrollTop=0;break;
@@ -791,7 +799,7 @@ if(r.length){team=r;sv();render()}
 }
 
 render();
-console.log("HF IT v4.0 Premium loaded (Optimized)");
+console.log("HF IT v4.0 Premium loaded (Fix v2)");
 </script>
 </body>
 </html>
