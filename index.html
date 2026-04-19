@@ -306,7 +306,6 @@ function abg(n){var h=0;for(var i=0;i<n.length;i++)h+=n.charCodeAt(i);h%=360;ret
 function ini(n){var p=n.split(" ").filter(Boolean);if(p.length>=2)return(p[0][0]+p[p.length-1][0]).toUpperCase();return n.slice(0,2).toUpperCase()}
 function avH(n,z){z=z||40;return'<div class="ava" style="width:'+z+'px;height:'+z+'px;font-size:'+Math.round(z*.34)+'px;background:'+abg(n)+'">'+esc(ini(n))+'</div>'}
 
-// Greeting based on time of day
 function greeting(){var h=new Date().getHours();if(h<6)return"İyi geceler";if(h<12)return"Günaydın";if(h<18)return"İyi günler";return"İyi akşamlar"}
 
 var tasks=lg("hfit-tasks",[
@@ -326,9 +325,7 @@ function fm(id){if(!id)return null;for(var i=0;i<team.length;i++)if(team[i].id==
 function findTask(id){for(var i=0;i<tasks.length;i++)if(tasks[i].id===id)return tasks[i];return null}
 function gs(){var o={total:tasks.length,todo:0,ip:0,rv:0,done:0,ov:0,today:0,critical:0};tasks.forEach(function(t){if(t.status==="todo")o.todo++;if(t.status==="inprogress")o.ip++;if(t.status==="review")o.rv++;if(t.status==="done")o.done++;if(t.priority==="critical"&&t.status!=="done")o.critical++;var d=dl(t.dueDate);if(d!==null&&d<0&&t.status!=="done")o.ov++;if(d===0&&t.status!=="done")o.today++});o.pct=o.total?Math.round(o.done/o.total*100):0;o.active=o.total-o.done;return o}
 
-// Priority chip
 function priChip(priority){var p=P[priority]||P.medium;return'<span class="pri-chip chip-'+priority+'">'+p.lu+'</span>'}
-// Status chip (used in detail seg)
 function statusName(status){return(S[status]||S.todo).l}
 
 function trowH(t){
@@ -353,7 +350,6 @@ h+='<div class="trow-pbar"><div class="trow-pbar-bar"><div style="width:'+(sd/st
 return h+'</div>';
 }
 
-// HEADER - universal
 function headerH(title,sub){
 var dmi=dark?"☀":"◐";
 return'<div class="hdr"><div class="hdr-l">'+
@@ -365,7 +361,6 @@ avH("Cengiz Gülcan",40)+
 '</div></div>';
 }
 
-// ═══ DASHBOARD ═══
 function vDash(){
 var s=gs();
 var uname=team[0]?team[0].name.split(" ")[0]:"Cengiz";
@@ -374,14 +369,12 @@ var h='<div class="hdr"><div class="hdr-l"><div class="ovr">Halk Faktoring · IT
 h+='<div class="conn-strip"><div class="conn-dot" style="background:'+(fbok?"var(--teal-mid)":"var(--amber-mid)")+'"></div>'+(fbok?"Firebase bağlı — canlı senkron":"Yerel depolama · bu cihazda")+'</div>';
 
 h+='<div class="sec">';
-// Hero card - completion
 h+='<div class="hero"><div class="hero-top"><div class="hero-top-l"><div class="ovr">Bu hafta</div><div class="sub">'+s.active+' aktif · '+s.critical+' kritik</div></div>';
 h+='<div class="hero-chip '+(s.pct>=50?"up":"down")+'">'+(s.pct>=50?"↑":"↓")+' %'+s.pct+'</div></div>';
 h+='<div class="hero-num"><span class="n">'+s.pct+'</span><span class="s">%</span><span class="t">'+s.done+' / '+s.total+' tamam</span></div>';
 h+='<div class="hero-bar"><div style="flex:'+s.pct+'"></div><div style="flex:'+(100-s.pct)+'"></div></div>';
 h+='</div>';
 
-// Stat tiles - 2x2
 h+='<div class="tiles">';
 h+='<div class="tile coral"><div class="tile-row"><div class="tile-dot"></div><span class="tile-lbl">Gecikmiş</span></div><div class="tile-n">'+s.ov+'</div><div class="tile-s">'+(s.ov===0?"hepsi zamanında":"acil müdahale")+'</div></div>';
 h+='<div class="tile blue"><div class="tile-row"><div class="tile-dot"></div><span class="tile-lbl">Devam</span></div><div class="tile-n">'+s.ip+'</div><div class="tile-s">aktif görev</div></div>';
@@ -389,7 +382,6 @@ h+='<div class="tile purple"><div class="tile-row"><div class="tile-dot"></div><
 h+='<div class="tile teal"><div class="tile-row"><div class="tile-dot"></div><span class="tile-lbl">Tamamlandı</span></div><div class="tile-n">'+s.done+'</div><div class="tile-s">bu dönem</div></div>';
 h+='</div></div>';
 
-// Overdue section
 var ov=tasks.filter(function(t){var d=dl(t.dueDate);return d!==null&&d<0&&t.status!=="done"});
 if(ov.length){
 h+='<div class="sec"><div class="sec-h"><span class="lbl" style="color:var(--red-fg)">Gecikmiş</span><span class="cnt">'+ov.length+' görev</span></div><div class="tlist">';
@@ -397,7 +389,6 @@ ov.forEach(function(t){h+=trowH(t)});
 h+='</div></div>';
 }
 
-// Today
 var td=tasks.filter(function(t){return dl(t.dueDate)===0&&t.status!=="done"});
 if(td.length){
 h+='<div class="sec"><div class="sec-h"><span class="lbl" style="color:var(--purple-fg)">Bugün</span><span class="cnt">'+td.length+' görev</span></div><div class="tlist">';
@@ -405,7 +396,6 @@ td.forEach(function(t){h+=trowH(t)});
 h+='</div></div>';
 }
 
-// Priority tasks
 h+='<div class="sec"><div class="sec-h"><span class="lbl">Öncelikliler</span><span class="cnt">'+tasks.filter(function(t){return t.status!=="done"}).length+' görev</span></div><div class="tlist">';
 if(!tasks.length){
 h+='<div class="empty"><div class="empty-ic">◯</div><div class="empty-t">Henüz görev yok</div><div class="empty-s">＋ ile başla</div></div>';
@@ -422,7 +412,6 @@ h+='</div></div>';
 return h;
 }
 
-// ═══ TASKS ═══
 function vTasks(){
 var h=headerH("Görevler",tasks.length+" kayıt");
 h+='<div class="sec">';
@@ -440,7 +429,6 @@ h+='</div></div>';
 return h;
 }
 
-// ═══ BOARD ═══
 function vBoard(){
 var h=headerH("Pano","Kanban görünümü");
 h+='<div class="board">';
@@ -471,7 +459,6 @@ h+='</div>';
 return h;
 }
 
-// ═══ SETTINGS ═══
 function vSettings(){
 var s=gs();
 var h=headerH("Ayarlar","Tercihler ve hesap");
@@ -510,7 +497,6 @@ h+='</div></div>';
 return h;
 }
 
-// Tab icons (SVG inline)
 var TAB_IC={
 dash:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>',
 tasks:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12l2 2 4-4"/></svg>',
@@ -530,13 +516,7 @@ else c.innerHTML=vSettings();
 var tb=document.getElementById("tabbar");
 tb.innerHTML=[{id:"dash",l:"Özet"},{id:"tasks",l:"Görevler"},{id:"board",l:"Pano"},{id:"settings",l:"Ayarlar"}].map(function(t){return'<button class="tab-btn'+(tab===t.id?" active":"")+'" data-action="tab" data-val="'+t.id+'">'+TAB_IC[t.id]+'<span>'+t.l+'</span></button>'}).join("");
 
-if(tab==="tasks"){
-var inp=document.getElementById("qinp");
-if(inp){
-inp.addEventListener("input",doFilter);
-inp.addEventListener("input",function(){var b=document.getElementById("clr-btn");if(b)b.style.display=inp.value?"flex":"none"});
-}
-}
+// Arama dinleyicilerini (search listeners) global scope'a taşıdığımız için buradan kaldırdık.
 }
 
 function doFilter(){
@@ -696,6 +676,15 @@ Object.keys(t).forEach(function(k){if(k!=="id")data[k]=t[k]});
 db.collection("tasks").doc(t.id).set(data).catch(function(e){console.error(e)});
 }
 
+// Olay Dinleyicileri Global Scope (Delegation)
+document.addEventListener("input", function(e) {
+  if (e.target.id === "qinp") {
+    var b = document.getElementById("clr-btn");
+    if (b) b.style.display = e.target.value ? "flex" : "none";
+    doFilter();
+  }
+});
+
 document.addEventListener("click",function(e){
 var el=e.target.closest("[data-action]");
 if(!el)return;
@@ -783,6 +772,7 @@ case"export":exportData();break;
 case"reset":
   if(!confirm("Tüm görevler silinecek. Emin misin?"))return;
   if(!confirm("Geri alınamaz. Devam edelim mi?"))return;
+  if(fbok&&db){alert("Uyarı: Firebase aktif! Cihazı sıfırlasan bile veriler sunucudan tekrar inebilir. Tam sıfırlama için Firebase konsolunu da kontrol et.")};
   tasks=[];team=[{id:"1",name:"Cengiz Gülcan",role:"IT Yönetici"}];sv();render();
   break;
 }
@@ -801,7 +791,7 @@ if(r.length){team=r;sv();render()}
 }
 
 render();
-console.log("HF IT v4.0 Premium loaded");
+console.log("HF IT v4.0 Premium loaded (Optimized)");
 </script>
 </body>
 </html>
