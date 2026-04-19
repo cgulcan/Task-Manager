@@ -1,100 +1,59 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="HF IT">
-<meta name="theme-color" content="#f6f8f7">
-<title>HF IT Command Center</title>
-<style>
-:root {
-  --bg: #f6f8f7;
-  --panel: #ffffff;
-  --panel-2: #eef4f1;
-  --ink: #171a1c;
-  --muted: #69706f;
-  --soft: #9aa3a0;
-  --line: #dce4e0;
-  --field: #f1f5f3;
-  --accent: #008c7a;
-  --accent-2: #0fb8a0;
-  --danger: #d83a34;
-  --warn: #d58a00;
-  --info: #147fb5;
-  --ok: #238b45;
-  --violet: #6f50b5;
-  --shadow: 0 18px 55px rgba(26, 36, 34, 0.11);
-  --radius: 8px;
+
+  <div id="sheet-root"></div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
+"use strict";
+
+
+var FIREBASE_CONFIG = { apiKey:"", authDomain:"", projectId:"", storageBucket:"", messagingSenderId:"", appId:"" };
+var db = null, fbok = false, cloudReady = false, blockCloudSave = false;
+try {
+  if (FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.projectId && window.firebase) {
+    firebase.initializeApp(FIREBASE_CONFIG);
+    db = firebase.firestore();
+    fbok = true;
+  }
+} catch(e) { console.warn(e); }
+
+function loadScript(src) {
+  return new Promise(function(resolve, reject) {
+    var script = document.createElement("script");
+    script.src = src;
+    script.onload = resolve;
+    script.onerror = reject;
+    document.head.appendChild(script);
+  });
 }
-body.dark {
-  --bg: #161818;
-  --panel: #202423;
-  --panel-2: #282d2b;
-  --ink: #f6f8f7;
-  --muted: #b2bbb7;
-  --soft: #77827d;
-  --line: #343b38;
-  --field: #292f2d;
-  --accent: #2dd4bf;
-  --accent-2: #5eead4;
-  --danger: #ff766f;
-  --warn: #ffc857;
-  --info: #6bc8f0;
-  --ok: #7ee28f;
-  --violet: #b8a2ff;
-  --shadow: 0 20px 60px rgba(0, 0, 0, 0.36);
+function startFirebase() {
+  if (!FIREBASE_CONFIG.apiKey || !FIREBASE_CONFIG.projectId) return;
+  loadScript("https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js")
+    .then(function() { return loadScript("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"); })
+    .then(function() {
+      firebase.initializeApp(FIREBASE_CONFIG);
+      db = firebase.firestore();
+      fbok = true;
+      initCloud();
+      render();
+    })
+    .catch(function(error) {
+      console.warn("Firebase yüklenemedi, yerel modda devam ediliyor:", error);
+      fbok = false;
+      cloudReady = false;
+      render();
+    });
 }
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-html, body { width: 100%; height: 100dvh; overflow: hidden; }
-body {
-  background:
-    radial-gradient(circle at 12% 8%, rgba(15, 184, 160, 0.16), transparent 26%),
-    radial-gradient(circle at 88% 0%, rgba(216, 58, 52, 0.11), transparent 24%),
-    var(--bg);
-  color: var(--ink);
-  font: 500 15px/1.35 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  user-select: none;
-  -webkit-user-select: none;
-}
-button, input, textarea, select { border: 0; outline: 0; background: transparent; color: inherit; font: inherit; }
-button, select, label { cursor: pointer; }
-svg { display: block; }
-.app {
-  width: min(1180px, 100vw);
-  height: 100dvh;
-  margin: 0 auto;
-  display: grid;
-  grid-template-rows: auto 1fr;
-  position: relative;
-}
-.topbar {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 18px;
-  align-items: center;
-  padding: max(14px, env(safe-area-inset-top)) 18px 12px;
-}
-.eyebrow { color: var(--muted); font-size: 11px; font-weight: 800; letter-spacing: 1.4px; text-transform: uppercase; }
-.title { margin-top: 2px; font-size: clamp(23px, 4vw, 31px); line-height: 1.05; font-weight: 850; letter-spacing: -0.03em; }
-.top-actions { display: flex; align-items: center; gap: 10px; }
-.icon-btn, .avatar, .mini-btn {
-  height: 42px;
-  min-width: 42px;
-  border-radius: var(--radius);
-  background: color-mix(in srgb, var(--panel) 82%, transparent);
-  border: 1px solid var(--line);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 850;
-}
-.icon-btn:active, .mini-btn:active, .primary:active, .task:active, .nav-btn:active { transform: scale(0.97); }
-.avatar { color: #fff; border: 0; }
-.mini-btn { padding: 0 13px; gap: 8px; color: var(--accent); }
-.layout {
-  min-height: 0;
-  padding: 0 18px calc(18px + env(safe-area-inset-bottom));
-  display: grid;
+
+var PRIORITIES = {
+  critical: { label:"Kritik", rank:0 },
+  high: { label:"Yüksek", rank:1 },
+  }
+});
+render();
+initCloud();
+startFirebase();
+</script>
+</body>
+</html>
