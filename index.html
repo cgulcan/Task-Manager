@@ -314,6 +314,12 @@ input,textarea,select,button{font-family:inherit;color:inherit;background:none;b
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <script>
+// 🛡️ HATA YAKALAYICI (BOMBOŞ EKRANLARI ENGELLER)
+window.onerror = function(msg, url, line) {
+    document.body.innerHTML = '<div style="padding:30px;color:#ff4a4a;font-family:sans-serif;background:#111;height:100vh;"><h3>Sistem Hatası Yakalandı 🐛</h3><p>Verilerde veya kodda bir çakışma var. Lütfen aşağıdaki metni destek ekibine (bana) kopyala:</p><pre style="background:#222;padding:15px;border-radius:10px;color:#fff;white-space:pre-wrap;">' + msg + '<br>Satır: ' + line + '</pre><button onclick="localStorage.clear();location.reload();" style="margin-top:20px;padding:10px 20px;background:#ff4a4a;color:#fff;border:none;border-radius:8px;cursor:pointer;">Zorla Sıfırla ve Yenile</button></div>';
+    return false;
+};
+
 "use strict";
 
 var FC={apiKey:"",authDomain:"",projectId:"",storageBucket:"",messagingSenderId:"",appId:""};
@@ -343,8 +349,10 @@ function dl(d){if(!d)return null;var t=new Date();t.setHours(0,0,0,0);var x=new 
 function rd(d){var x=dl(d);if(x===null)return"";if(x<-1)return Math.abs(x)+" gün gecikti";if(x===-1)return"Dün gecikti";if(x===0)return"Bugün";if(x===1)return"Yarın";if(x<=7)return x+" gün";return fd(d)}
 function dueColor(d){if(d===null||d===undefined)return"var(--lbl3)";var x=dl(d);if(x===null)return"var(--lbl3)";if(x<0)return"var(--red-mid)";if(x<=2)return"var(--amber-mid)";return"var(--lbl2)"}
 function esc(s){if(s===null||s===undefined)return"";var d=document.createElement("div");d.textContent=String(s);return d.innerHTML}
-function abg(n){var h=0;for(var i=0;i<n.length;i++)h+=n.charCodeAt(i);h%=360;return"linear-gradient(135deg,hsl("+h+",48%,52%),hsl("+((h+35)%360)+",52%,40%))"}
-function ini(n){var p=n.split(" ").filter(Boolean);if(p.length>=2)return(p[0][0]+p[p.length-1][0]).toUpperCase();return n.slice(0,2).toUpperCase()}
+
+// 🛡️ EKSİK VERİ KALKANLARI
+function abg(n){n=n||"X";var h=0;for(var i=0;i<n.length;i++)h+=n.charCodeAt(i);h%=360;return"linear-gradient(135deg,hsl("+h+",48%,52%),hsl("+((h+35)%360)+",52%,40%))"}
+function ini(n){n=n||"XX";var p=n.split(" ").filter(Boolean);if(p.length>=2)return(p[0][0]+p[p.length-1][0]).toUpperCase();return n.slice(0,2).toUpperCase()}
 function avH(n,z){z=z||42;return'<div class="ava" style="width:'+z+'px;height:'+z+'px;font-size:'+Math.round(z*.34)+'px;background:'+abg(n)+'">'+esc(ini(n))+'</div>'}
 
 function greeting(){var h=new Date().getHours();if(h<6)return"İyi geceler";if(h<12)return"Günaydın";if(h<18)return"İyi günler";return"İyi akşamlar"}
@@ -353,12 +361,14 @@ var tasks=lg("hfit-tasks",[
 {id:"s1",title:"BDDK Aylık Rapor Hazırlığı",description:"Regülatif raporların kontrol edilmesi ve BDDK portalına yüklenmesi",priority:"critical",status:"inprogress",category:"BDDK & Raporlama",assignee:"1",dueDate:"2026-04-22",createdAt:new Date().toISOString(),subtasks:[{id:"a1",text:"Verilerin doğrulanması",done:true},{id:"a2",text:"Rapor formatının kontrolü",done:false},{id:"a3",text:"BDDK portalına yükleme",done:false}]},
 {id:"s2",title:"SQL Server Yedekleme Kontrolü",description:"dbfactoring ve dbfactoring_log veritabanlarının yedekleme doğrulaması",priority:"high",status:"todo",category:"Veritabanı",assignee:"1",dueDate:"2026-04-21",createdAt:new Date().toISOString(),subtasks:[]},
 {id:"s3",title:"Mobil Uygulama Test Senaryoları",description:"QR → Infact → RatingPro → PowerCurve akışının test ortamında doğrulanması",priority:"high",status:"review",category:"Yazılım",assignee:"1",dueDate:"2026-04-25",createdAt:new Date().toISOString(),subtasks:[{id:"b1",text:"QR scan testi",done:true},{id:"b2",text:"RatingPro entegrasyonu",done:true},{id:"b3",text:"PowerCurve karar motoru",done:false}]},
-{id:"s4",title:"Hyper-V Cluster Bakımı",description:"Sanal sunucuların performans kontrolü ve firmware güncellemeleri",priority:"medium",status:"todo",category:"Sunucu & Altyapı",assignee:"",dueDate:"2026-04-28",createdAt:new Date().toISOString(),subtasks:[]},
-{id:"s5",title:"Dijital Mizan Nihai Rapor",description:"Prometeia projesi kapanış belgelerinin tamamlanması",priority:"low",status:"done",category:"Dijitalleşme",assignee:"1",dueDate:"2026-04-15",createdAt:new Date().toISOString(),subtasks:[]},
-{id:"s6",title:"E-Defter Tebliği Uyum",description:"1 Temmuz 2025 tebliği kapsamında gerekli aksiyonların planlanması",priority:"medium",status:"inprogress",category:"Dijitalleşme",assignee:"1",dueDate:"2026-05-01",createdAt:new Date().toISOString(),subtasks:[{id:"c1",text:"Tebliğ gereksinimlerinin analizi",done:true},{id:"c2",text:"BIS Infact entegrasyonu",done:false}]},
-{id:"s7",title:"Veeam v13 Lisans Yenileme",description:"Eylül 2026 öncesi Veeam Instance lisanslarının yenilenmesi",priority:"medium",status:"todo",category:"Sunucu & Altyapı",assignee:"",dueDate:"2026-09-15",createdAt:new Date().toISOString(),subtasks:[]}
+{id:"s4",title:"Hyper-V Cluster Bakımı",description:"Sanal sunucuların performans kontrolü ve firmware güncellemeleri",priority:"medium",status:"todo",category:"Sunucu & Altyapı",assignee:"",dueDate:"2026-04-28",createdAt:new Date().toISOString(),subtasks:[]}
 ]);
+// 🛡️ LOCALSTORAGE BOZULMASINI ENGELLER
+if(!Array.isArray(tasks)) tasks = [];
+
 var team=lg("hfit-team",[{id:"1",name:"Cengiz Gülcan",role:"IT Yönetici"}]);
+if(!Array.isArray(team)) team = [{id:"1",name:"Cengiz Gülcan",role:"IT Yönetici"}];
+
 var tab="dash",dark=lg("hfit-dark",true),sfilt="all",formData=null;
 
 function sv(){ls("hfit-tasks",tasks);ls("hfit-team",team)}
@@ -404,7 +414,7 @@ avH("Cengiz Gülcan",42)+
 
 function vDash(){
 var s=gs();
-var uname=team[0]?team[0].name.split(" ")[0]:"Cengiz";
+var uname=(team[0]&&team[0].name)?team[0].name.split(" ")[0]:"Kullanıcı";
 var h=headerH(greeting()+', '+uname,"Halk Faktoring · IT");
 
 h+='<div class="conn-strip"><div class="conn-dot" style="background:'+(fbok?"var(--teal-mid);color:var(--teal-mid)":"var(--amber-mid);color:var(--amber-mid)")+'"></div>'+(fbok?"Sistem Senkronize — Aktif":"Yerel Depolama — Çevrimdışı")+'</div>';
@@ -490,7 +500,7 @@ h+='<div style="display:flex;align-items:center;gap:8px;font-size:11px;flex-wrap
 if(t.dueDate)h+='<span style="color:'+dueColor(t.dueDate)+';font-weight:600">'+esc(rd(t.dueDate))+'</span>';
 h+='</div>';
 if(st>0)h+='<div style="margin-top:12px;display:flex;align-items:center;gap:8px"><div style="flex:1;height:4px;background:var(--fill2);border-radius:2px;overflow:hidden"><div style="width:'+(sd/st*100)+'%;height:100%;background:var(--accent);border-radius:2px;box-shadow:var(--accent-glow)"></div></div><span style="font-size:11px;color:var(--lbl2);font-weight:600;font-variant-numeric:tabular-nums">'+sd+'/'+st+'</span></div>';
-if(a)h+='<div style="display:flex;justify-content:flex-end;margin-top:12px">'+avH(a.name,24)+'</div>';
+if(a&&a.name)h+='<div style="display:flex;justify-content:flex-end;margin-top:12px">'+avH(a.name,24)+'</div>';
 h+='</div>';
 });
 if(!col.length)h+='<div style="padding:24px 16px;text-align:center;color:var(--lbl4);border:1px dashed var(--border);border-radius:12px;font-size:13px;font-weight:500">Boş</div>';
@@ -505,7 +515,6 @@ var s=gs();
 var h=headerH("Sistem Tercihleri","AYARLAR & HESAP");
 
 h+='<div class="grp"><div class="grp-h">Görsel Arayüz</div><div class="grp-b glass">';
-// 🐛 HATA BURADAYDI, DÜZELTİLDİ: (dark?"Aktif":"Pasif")
 h+='<div class="cell" data-action="toggle-dark"><div class="cell-ic" style="background:var(--purple-bg);color:var(--purple-mid)">'+(dark?'<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>')+'</div><div class="cell-b"><div class="cell-t">Dark Mode (Gece Mavisi)</div><div class="cell-sub">'+(dark?"Aktif":"Pasif")+'</div></div><div class="toggle'+(dark?" on":"")+'"><div class="toggle-k"></div></div></div>';
 h+='</div></div>';
 
@@ -537,4 +546,316 @@ var TAB_IC={
 dash:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="4"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="4"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg>',
 tasks:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12l2 2 4-4"/></svg>',
 board:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="6" height="18" rx="2"/><rect x="13" y="3" width="8" height="12" rx="2"/></svg>',
-settings:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.6
+settings:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 004.6 15a1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6 1.65 1.65 0 0010 3.09V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09A1.65 1.65 0 0019.4 15z"/></svg>'
+};
+
+function render(){
+document.body.classList.toggle("dark",dark);
+document.querySelector('meta[name="theme-color"]').setAttribute("content",dark?"#0f121b":"#eef1f5");
+var c=document.getElementById("content");
+if(tab==="dash")c.innerHTML=vDash();
+else if(tab==="tasks")c.innerHTML=vTasks();
+else if(tab==="board")c.innerHTML=vBoard();
+else c.innerHTML=vSettings();
+
+var tb=document.getElementById("tabbar");
+tb.innerHTML=[{id:"dash",l:"Özet"},{id:"tasks",l:"Veritabanı"},{id:"board",l:"Pano"},{id:"settings",l:"Sistem"}].map(function(t){return'<button class="tab-btn'+(tab===t.id?" active":"")+'" data-action="tab" data-val="'+t.id+'">'+TAB_IC[t.id]+'<span>'+t.l+'</span></button>'}).join("");
+}
+
+function doFilter(){
+var q=(document.getElementById("qinp")||{}).value||"";q=q.toLowerCase();
+var el=document.getElementById("tlist");if(!el)return;
+var ft=tasks.filter(function(t){
+if(sfilt!=="all"&&t.status!==sfilt)return false;
+if(q&&t.title.toLowerCase().indexOf(q)===-1&&t.category.toLowerCase().indexOf(q)===-1&&(t.description||"").toLowerCase().indexOf(q)===-1)return false;
+return true;
+}).sort(function(a,b){return P[a.priority].s-P[b.priority].s});
+var h="";
+if(!ft.length)h='<div class="empty glass"><div class="empty-ic">◯</div><div class="empty-t">Bulunamadı</div><div class="empty-s">Farklı anahtar kelime dene</div></div>';
+else ft.forEach(function(t){h+=trowH(t)});
+el.innerHTML=h;
+}
+
+function closeSheet(){var r=document.getElementById("sroot");r.innerHTML="";formData=null}
+
+function openDetail(id){
+var t=findTask(id);if(!t)return;
+var p=P[t.priority]||P.medium,a=fm(t.assignee),d=dl(t.dueDate);
+var su=t.subtasks||[],sd=su.filter(function(x){return x.done}).length,st=su.length;
+
+var h='<div class="sbg"><div class="sht" data-stop="1"><div class="sht-bar"><div></div></div>';
+h+='<div class="sht-hd"><button data-action="close-sheet">Kapat</button><span class="tt">Görev Detayı</span><button class="sv" data-action="edit-task" data-id="'+esc(t.id)+'">Düzenle</button></div>';
+h+='<div class="sht-ct">';
+h+='<div class="dh"><div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">'+priChip(t.priority)+'<span style="font-size:12px;color:var(--lbl3);font-weight:600">'+esc(t.category)+'</span></div>';
+h+='<h2>'+esc(t.title)+'</h2>';
+if(t.description)h+='<p>'+esc(t.description)+'</p>';
+h+='</div>';
+
+h+='<div style="padding:0 20px 24px"><div style="font-size:12px;color:var(--accent);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;padding:0 4px;font-weight:600">Sistem Durumu</div>';
+h+='<div class="seg">';
+Object.keys(S).forEach(function(k){h+='<button data-action="change-status" data-id="'+esc(t.id)+'" data-val="'+k+'" class="'+(t.status===k?"active":"")+'">'+S[k].l+'</button>'});
+h+='</div></div>';
+
+h+='<div class="grp"><div class="grp-h">Bağlantılı Veriler</div><div class="grp-b glass">';
+if(a){h+='<div class="cell">'+avH(a.name,36)+'<div class="cell-b"><div class="cell-t">Atanan Görevli</div><div class="cell-sub">'+esc(a.name)+'</div></div></div>'}
+if(t.dueDate){
+h+='<div class="cell"><div class="cell-ic" style="background:'+(d!==null&&d<0?"var(--red-bg);color:var(--red-mid)":d!==null&&d<=2?"var(--amber-bg);color:var(--amber-mid)":"var(--teal-bg);color:var(--teal-mid)")+'"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="cell-b"><div class="cell-t">Termin Tarihi</div><div class="cell-sub">'+esc(fl(t.dueDate))+'</div></div>';
+if(d!==null&&d<0)h+='<span class="badge" style="background:var(--red-bg);color:var(--red-mid)">Gecikti</span>';
+else if(d===0)h+='<span class="badge" style="background:var(--amber-bg);color:var(--amber-mid)">Bugün</span>';
+else if(d===1)h+='<span class="badge" style="background:var(--blue-bg);color:var(--blue-mid)">Yarın</span>';
+h+='</div>';
+}
+h+='<div class="cell"><div class="cell-ic" style="background:var(--fill2);color:var(--lbl3)"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div class="cell-b"><div class="cell-t">Kayıt Tarihi</div><div class="cell-sub">'+esc(fd(t.createdAt))+'</div></div></div>';
+h+='</div></div>';
+
+if(st>0){
+h+='<div class="grp"><div class="grp-h">Bağımlılıklar (Alt Görev) · '+sd+'/'+st+'</div><div class="grp-b glass">';
+su.forEach(function(sub){
+h+='<div class="sub-row'+(sub.done?" done":"")+'">';
+h+='<button class="chk '+(sub.done?"chk-on":"chk-off")+'" data-action="toggle-sub" data-tid="'+esc(t.id)+'" data-sid="'+esc(sub.id)+'">'+(sub.done?"✓":"")+'</button>';
+h+='<span class="sub-text">'+esc(sub.text)+'</span>';
+h+='</div>';
+});
+h+='<div style="padding:20px"><div class="pbar-lg" style="height:6px;background:var(--fill2);border-radius:3px;overflow:hidden"><div class="pbar-f" style="height:100%;background:var(--accent);border-radius:3px;transition:width .4s;width:'+(sd/st*100)+'%;box-shadow:var(--accent-glow)"></div></div><div style="display:flex;justify-content:space-between;margin-top:10px;font-size:12px;color:var(--lbl2);font-weight:600;letter-spacing:.5px;text-transform:uppercase"><span>İşlem Hacmi</span><span style="font-variant-numeric:tabular-nums;color:var(--accent)">%'+Math.round(sd/st*100)+'</span></div></div>';
+h+='</div></div>';
+}
+
+h+='<div class="grp"><div class="grp-b glass"><div class="cell dest" data-action="delete-task" data-id="'+esc(t.id)+'"><div class="cell-ic" style="background:var(--red-bg);color:var(--red-mid)"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></div><div class="cell-b"><div class="cell-t">Sistemden Sil</div></div></div></div></div>';
+h+='</div></div></div>';
+document.getElementById("sroot").innerHTML=h;
+}
+
+function openForm(id, existingData){
+var t;
+if(existingData) {
+  t = existingData;
+} else if(id) {
+  t = findTask(id);
+} else {
+  t = null;
+}
+
+var f=t?JSON.parse(JSON.stringify(t)):{id:"",title:"",description:"",priority:"medium",status:"todo",category:CATS[0],assignee:"",dueDate:"",subtasks:[]};
+formData=f;
+var ed=!!(t && t.id);
+var safeTitle = (f.title || "");
+
+var h='<div class="sbg"><div class="sht" data-stop="1"><div class="sht-bar"><div></div></div>';
+h+='<div class="sht-hd"><button data-action="close-sheet">İptal</button><span class="tt">'+(ed?"Veri Düzenleme":"Yeni Görev Nodu")+'</span><button class="sv" data-action="save-task"'+(safeTitle.trim()?"":" disabled")+'>'+(ed?"Kaydet":"Enjekte Et")+'</button></div>';
+h+='<div class="sht-ct">';
+h+='<div class="grp"><div class="grp-b glass">';
+h+='<div style="padding:16px;border-bottom:1px solid var(--sep)"><input id="ft" value="'+esc(safeTitle)+'" placeholder="Terminal Başlığı..." style="width:100%;font-size:18px;font-weight:600;letter-spacing:-.2px" autocomplete="off"></div>';
+h+='<div style="padding:16px"><textarea id="fd" placeholder="Detaylı log veya açıklama ekle..." rows="3" style="width:100%;font-size:15px;resize:none;line-height:1.6">'+esc(f.description)+'</textarea></div>';
+h+='</div></div>';
+
+h+='<div class="grp"><div class="grp-h">Sınıflandırma</div><div class="grp-b glass">';
+h+='<div class="ff"><label>Öncelik Seviyesi</label><select id="fp">';Object.keys(P).forEach(function(k){h+='<option value="'+k+'"'+(f.priority===k?" selected":"")+'>'+P[k].l+'</option>'});h+='</select></div>';
+h+='<div class="ff"><label>Durum Kodu</label><select id="fs">';Object.keys(S).forEach(function(k){h+='<option value="'+k+'"'+(f.status===k?" selected":"")+'>'+S[k].l+'</option>'});h+='</select></div>';
+h+='<div class="ff"><label>Modül (Kategori)</label><select id="fc">';CATS.forEach(function(c){h+='<option'+(f.category===c?" selected":"")+'>'+esc(c)+'</option>'});h+='</select></div>';
+h+='<div class="ff"><label>Atanan Kişi</label><select id="fa"><option value="">Belirtilmedi</option>';team.forEach(function(m){h+='<option value="'+esc(m.id)+'"'+(f.assignee===m.id?" selected":"")+'>'+esc(m.name)+'</option>'});h+='</select></div>';
+h+='<div class="ff"><label>Termin Tarihi</label><input type="date" id="fdt" value="'+(f.dueDate||"")+'"></div>';
+h+='</div></div>';
+
+h+='<div class="grp"><div class="grp-h">Bağımlılıklar (Alt Görev)</div><div class="grp-b glass">';
+(f.subtasks||[]).forEach(function(st,i){
+h+='<div class="sub-row'+(st.done?" done":"")+'">';
+h+='<button class="chk '+(st.done?"chk-on":"chk-off")+'" data-action="form-toggle-sub" data-idx="'+i+'">'+(st.done?"✓":"")+'</button>';
+h+='<span class="sub-text">'+esc(st.text)+'</span>';
+h+='<button class="del-btn" data-action="form-del-sub" data-idx="'+i+'">−</button>';
+h+='</div>';
+});
+h+='<div class="add-row"><input id="fns" placeholder="Yeni işlem adımı gir..." autocomplete="off"><button data-action="form-add-sub">+</button></div>';
+h+='</div></div>';
+
+if(ed){
+h+='<div class="grp"><div class="grp-b glass"><div class="cell dest" data-action="delete-task" data-id="'+esc(f.id)+'"><div class="cell-ic" style="background:var(--red-bg);color:var(--red-mid)"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></div><div class="cell-b"><div class="cell-t">Sistemden Sil</div></div></div></div></div>';
+}
+
+h+='</div></div></div>';
+document.getElementById("sroot").innerHTML=h;
+setTimeout(function(){
+var inp=document.getElementById("ft");
+if(inp){inp.addEventListener("input",function(){var btn=document.querySelector("[data-action=save-task]");if(btn)btn.disabled=!inp.value.trim()});if(!ed)inp.focus()}
+},50);
+}
+
+function openTeam(){
+var h='<div class="sbg"><div class="sht" data-stop="1"><div class="sht-bar"><div></div></div>';
+h+='<div class="sht-hd"><button data-action="close-sheet">Kapat</button><span class="tt">Ekip Veritabanı</span><div style="min-width:60px"></div></div>';
+h+='<div class="sht-ct">';
+h+='<div class="grp"><div class="grp-h">'+team.length+' Kayıtlı Üye</div><div class="grp-b glass">';
+team.forEach(function(m){
+h+='<div class="cell">'+avH(m.name,40)+'<div class="cell-b"><div class="cell-t">'+esc(m.name)+'</div><div class="cell-sub">'+esc(m.role)+'</div></div>';
+if(team.length>1)h+='<button class="del-btn" data-action="del-member" data-id="'+esc(m.id)+'">−</button>';
+h+='</div>';
+});
+h+='</div></div>';
+h+='<div class="grp"><div class="grp-h">Sisteme Üye Ekle</div><div class="grp-b glass">';
+h+='<div class="ff"><label>Ad Soyad</label><input id="tmn" placeholder="Örn: Ali Yılmaz" class="right"></div>';
+h+='<div class="ff"><label>Pozisyon</label><input id="tmr" placeholder="Örn: Uzman" class="right"></div>';
+h+='<div style="padding:16px"><button class="btn-p" data-action="add-member">Kayıt Oluştur</button></div>';
+h+='</div></div>';
+h+='</div></div></div>';
+document.getElementById("sroot").innerHTML=h;
+setTimeout(function(){var inp=document.getElementById("tmn");if(inp)inp.focus()},100);
+}
+
+function syncForm(){
+if(!formData)return;
+var el;
+el=document.getElementById("ft");if(el)formData.title=el.value;
+el=document.getElementById("fd");if(el)formData.description=el.value;
+el=document.getElementById("fp");if(el)formData.priority=el.value;
+el=document.getElementById("fs");if(el)formData.status=el.value;
+el=document.getElementById("fc");if(el)formData.category=el.value;
+el=document.getElementById("fa");if(el)formData.assignee=el.value;
+el=document.getElementById("fdt");if(el)formData.dueDate=el.value;
+}
+
+function exportData(){
+var data={tasks:tasks,team:team,exportDate:new Date().toISOString()};
+var blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+var url=URL.createObjectURL(blob);
+var a=document.createElement("a");a.href=url;a.download="hfit-system-backup-"+new Date().toISOString().slice(0,10)+".json";
+document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+}
+
+function syncToFB(t){
+if(!fbok||!db)return;
+var data={};
+Object.keys(t).forEach(function(k){if(k!=="id")data[k]=t[k]});
+db.collection("tasks").doc(t.id).set(data).catch(function(e){console.error(e)});
+}
+
+document.addEventListener("input", function(e) {
+  if (e.target.id === "qinp") {
+    var b = document.getElementById("clr-btn");
+    if (b) b.style.display = e.target.value ? "flex" : "none";
+    doFilter();
+  }
+});
+
+document.addEventListener("click",function(e){
+  if (e.target.classList.contains("sbg")) {
+    closeSheet();
+    return;
+  }
+
+  var el=e.target.closest("[data-action]");
+  if(!el)return;
+
+  var act=el.getAttribute("data-action");
+  var id=el.getAttribute("data-id");
+  var val=el.getAttribute("data-val");
+
+  if(act==="close-sheet"){
+    closeSheet();
+    return;
+  }
+
+switch(act){
+case"tab":tab=val;sfilt="all";render();var c=document.getElementById("content");if(c)c.scrollTop=0;break;
+case"new-task":openForm(null);break;
+case"toggle-dark":dark=!dark;ls("hfit-dark",dark);render();break;
+case"detail":openDetail(id);break;
+case"edit-task":closeSheet();setTimeout(function(){openForm(id)},50);break;
+case"change-status":
+  var tt=findTask(id);
+  if(tt){tt.status=val;sv();if(fbok)syncToFB(tt);openDetail(id);render()}
+  break;
+case"toggle-sub":
+  var tid=el.getAttribute("data-tid"),sid=el.getAttribute("data-sid");
+  var tsk=findTask(tid);
+  if(tsk){(tsk.subtasks||[]).forEach(function(s){if(s.id===sid)s.done=!s.done});sv();if(fbok)syncToFB(tsk);openDetail(tid);render()}
+  break;
+case"delete-task":
+  if(!confirm("İşlemi onaylıyor musun? Veritabanından kalıcı silinecektir."))return;
+  if(fbok&&db)db.collection("tasks").doc(id).delete().catch(function(e){console.error(e)});
+  tasks=tasks.filter(function(t){return t.id!==id});sv();closeSheet();render();
+  break;
+case"save-task":
+  syncForm();if(!formData||!formData.title.trim())return;
+  if(formData.id){
+    var idx=-1;tasks.forEach(function(t,i){if(t.id===formData.id)idx=i});
+    if(idx>=0)tasks[idx]=formData;
+    if(fbok)syncToFB(formData);
+  }else{
+    formData.id=uid();
+    formData.createdAt=new Date().toISOString();
+    tasks.unshift(formData);
+    if(fbok)syncToFB(formData);
+  }
+  sv();closeSheet();render();
+  break;
+case"form-toggle-sub":
+  syncForm();var fi=parseInt(el.getAttribute("data-idx"));
+  if(formData&&formData.subtasks[fi]){
+    formData.subtasks[fi].done=!formData.subtasks[fi].done;
+    openForm(formData.id||null, formData);
+  }
+  break;
+case"form-del-sub":
+  syncForm();var di=parseInt(el.getAttribute("data-idx"));
+  if(formData){
+    formData.subtasks.splice(di,1);
+    openForm(formData.id||null, formData);
+  }
+  break;
+case"form-add-sub":
+  syncForm();var ns=document.getElementById("fns");
+  if(ns&&ns.value.trim()){
+    formData.subtasks.push({id:uid(),text:ns.value.trim(),done:false});
+    openForm(formData.id||null, formData);
+    setTimeout(function(){var n=document.getElementById("fns");if(n)n.focus()},50);
+  }
+  break;
+case"filter-status":
+  sfilt=val;
+  document.querySelectorAll("#sseg button").forEach(function(b){b.classList.toggle("active",b.getAttribute("data-val")===val)});
+  doFilter();
+  break;
+case"clear-search":
+  var qi=document.getElementById("qinp");if(qi){qi.value="";doFilter();el.style.display="none"}
+  break;
+case"team-sheet":openTeam();break;
+case"add-member":
+  var mn=document.getElementById("tmn"),mr=document.getElementById("tmr");
+  if(mn&&mn.value.trim()){
+    var newM={id:uid(),name:mn.value.trim(),role:(mr?mr.value.trim():"")||"Ekip Üyesi"};
+    team.push(newM);
+    if(fbok&&db)db.collection("team").doc(newM.id).set({name:newM.name,role:newM.role}).catch(function(e){console.error(e)});
+    sv();openTeam();render();
+  }
+  break;
+case"del-member":
+  if(!confirm("Kullanıcı erişimini kaldırmak istediğine emin misin?"))return;
+  if(fbok&&db)db.collection("team").doc(id).delete().catch(function(e){console.error(e)});
+  team=team.filter(function(m){return m.id!==id});sv();openTeam();render();
+  break;
+case"export":exportData();break;
+case"reset":
+  if(!confirm("Tüm veritabanı sıfırlanacak. Bu işlem kritik, emin misin?"))return;
+  if(!confirm("Son Karar: Geri alınamaz. Onaylıyor musun?"))return;
+  if(fbok&&db){alert("Sistem Uyarısı: Firebase aktif! Cihazı sıfırlasan bile veriler buluttan tekrar inebilir. Tam sıfırlama için Firebase yönetim konsolunu kontrol et.")}
+  tasks=[];team=[{id:"1",name:"Cengiz Gülcan",role:"Sistem Yöneticisi"}];sv();render();
+  break;
+}
+});
+
+if(fbok){
+db.collection("tasks").onSnapshot(function(snap){
+var r=[];
+snap.forEach(function(d){var x=d.data();if(x.createdAt&&x.createdAt.toDate)x.createdAt=x.createdAt.toDate().toISOString();r.push(Object.assign({id:d.id},x))});
+if(r.length){tasks=r.sort(function(a,b){return new Date(b.createdAt)-new Date(a.createdAt)});sv();render()}
+});
+db.collection("team").onSnapshot(function(snap){
+var r=[];snap.forEach(function(d){r.push(Object.assign({id:d.id},d.data()))});
+if(r.length){team=r;sv();render()}
+});
+}
+
+render();
+console.log("HF IT Premium System v6.0 loaded - [Anti-Crash Activated]");
+</script>
+</body>
+</html>
