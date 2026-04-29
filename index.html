@@ -8,64 +8,136 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <title>Halk Faktoring · Görev & Proje Takip Portalı</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 <style>
+/* Font Awesome offline fallback - sadece kullanılan ikonlar için Unicode/SVG */
+.fa-solid,.fa-regular,.fa-brands,[class^="fa-"]{display:inline-block;font-style:normal;width:1em;text-align:center;font-family:inherit}
+.fa-solid::before,.fa-regular::before,[class^="fa-"]::before{display:inline-block}
+.fa-bars::before{content:"☰"}
+.fa-xmark::before{content:"✕"}
+.fa-plus::before{content:"+"}
+.fa-pen::before,.fa-pencil::before{content:"✎"}
+.fa-trash::before,.fa-trash-can::before{content:"🗑"}
+.fa-check::before{content:"✓"}
+.fa-magnifying-glass::before,.fa-search::before{content:"🔍"}
+.fa-filter::before{content:"⚲"}
+.fa-arrow-right::before{content:"→"}
+.fa-arrow-left::before{content:"←"}
+.fa-arrow-up::before{content:"↑"}
+.fa-arrow-down::before{content:"↓"}
+.fa-chevron-right::before{content:"›"}
+.fa-chevron-left::before{content:"‹"}
+.fa-chevron-down::before{content:"⌄"}
+.fa-chevron-up::before{content:"⌃"}
+.fa-calendar::before,.fa-calendar-day::before,.fa-calendar-days::before{content:"📅"}
+.fa-clock::before{content:"🕐"}
+.fa-user::before{content:"👤"}
+.fa-users::before{content:"👥"}
+.fa-envelope::before{content:"✉"}
+.fa-bell::before{content:"🔔"}
+.fa-flag::before{content:"⚑"}
+.fa-tag::before,.fa-tags::before{content:"🏷"}
+.fa-folder::before,.fa-folder-open::before{content:"📁"}
+.fa-chart-pie::before{content:"◔"}
+.fa-chart-bar::before,.fa-chart-column::before,.fa-chart-line::before,.fa-chart-simple::before{content:"📊"}
+.fa-list::before,.fa-list-ul::before,.fa-list-check::before{content:"☰"}
+.fa-table::before,.fa-table-cells::before,.fa-table-columns::before{content:"⊞"}
+.fa-gear::before,.fa-cog::before{content:"⚙"}
+.fa-right-from-bracket::before,.fa-arrow-right-from-bracket::before,.fa-sign-out::before{content:"⏻"}
+.fa-sun::before{content:"☀"}
+.fa-moon::before{content:"☾"}
+.fa-bolt::before{content:"⚡"}
+.fa-star::before{content:"★"}
+.fa-circle::before{content:"●"}
+.fa-circle-check::before,.fa-check-circle::before{content:"✓"}
+.fa-circle-xmark::before,.fa-times-circle::before{content:"✕"}
+.fa-circle-info::before,.fa-info-circle::before{content:"ⓘ"}
+.fa-triangle-exclamation::before,.fa-exclamation-triangle::before{content:"⚠"}
+.fa-spinner::before{content:"◴"}
+.fa-spin{animation:fa-spin 1s linear infinite}
+@keyframes fa-spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.fa-eye::before{content:"👁"}
+.fa-link::before{content:"🔗"}
+.fa-paper-plane::before{content:"➤"}
+.fa-download::before{content:"⬇"}
+.fa-upload::before{content:"⬆"}
+.fa-print::before{content:"🖨"}
+.fa-file::before,.fa-file-lines::before,.fa-file-text::before{content:"📄"}
+.fa-file-excel::before{content:"📊"}
+.fa-file-pdf::before{content:"📕"}
+.fa-building::before{content:"🏢"}
+.fa-briefcase::before{content:"💼"}
+.fa-diagram-project::before,.fa-project-diagram::before,.fa-sitemap::before{content:"⊟"}
+.fa-clipboard::before,.fa-clipboard-list::before,.fa-clipboard-check::before{content:"📋"}
+.fa-house::before,.fa-home::before{content:"🏠"}
+.fa-database::before{content:"🗄"}
+.fa-server::before{content:"🖥"}
+.fa-code::before{content:"⟨/⟩"}
+.fa-shield::before,.fa-shield-halved::before{content:"🛡"}
+.fa-lock::before{content:"🔒"}
+.fa-unlock::before{content:"🔓"}
+.fa-key::before{content:"🔑"}
+.fa-comment::before,.fa-comments::before,.fa-message::before{content:"💬"}
+.fa-paperclip::before{content:"📎"}
+.fa-rotate::before,.fa-rotate-right::before,.fa-arrows-rotate::before,.fa-sync::before{content:"↻"}
+.fa-grip::before,.fa-grip-vertical::before,.fa-grip-lines::before{content:"⋮⋮"}
+.fa-ellipsis::before,.fa-ellipsis-vertical::before{content:"⋯"}
+.fa-bars-progress::before,.fa-tasks::before{content:"☷"}
+.fa-flask::before{content:"⚗"}
+.fa-bug::before{content:"🐛"}
+
 /* =====================================================================
-   TASARIM SİSTEMİ - Editorial / Refined Corporate
-   ===================================================================== */
+TASARIM SİSTEMİ - Editorial / Refined Corporate
+===================================================================== */
 :root{
-  --bg:#f6f5f1;
-  --bg-elev:#ffffff;
-  --bg-soft:#efece5;
-  --ink:#0b1220;
-  --ink-2:#384152;
-  --ink-3:#6b7385;
-  --line:#e3ddd0;
-  --line-2:#ece7da;
-  --accent:#b8895a;          /* terracotta/brass */
-  --accent-2:#1a3b3a;         /* deep teal */
-  --accent-3:#c2410c;         /* burnt orange */
-  --ok:#15803d;
-  --warn:#b45309;
-  --err:#b91c1c;
-  --info:#1d4ed8;
-  --shadow:0 1px 2px rgba(11,18,32,.04), 0 8px 24px rgba(11,18,32,.06);
-  --shadow-lg:0 12px 40px rgba(11,18,32,.12);
-  --radius:14px;
-  --radius-sm:10px;
-  --radius-lg:20px;
-  --serif:"Plus Jakarta Sans", system-ui, sans-serif;
-  --display:"Manrope", system-ui, sans-serif;
-  --mono:"JetBrains Mono", ui-monospace, monospace;
-  --sidebar-w:268px;
-  --topbar-h:64px;
+–bg:#f6f5f1;
+–bg-elev:#ffffff;
+–bg-soft:#efece5;
+–ink:#0b1220;
+–ink-2:#384152;
+–ink-3:#6b7385;
+–line:#e3ddd0;
+–line-2:#ece7da;
+–accent:#b8895a;          /* terracotta/brass */
+–accent-2:#1a3b3a;         /* deep teal */
+–accent-3:#c2410c;         /* burnt orange */
+–ok:#15803d;
+–warn:#b45309;
+–err:#b91c1c;
+–info:#1d4ed8;
+–shadow:0 1px 2px rgba(11,18,32,.04), 0 8px 24px rgba(11,18,32,.06);
+–shadow-lg:0 12px 40px rgba(11,18,32,.12);
+–radius:14px;
+–radius-sm:10px;
+–radius-lg:20px;
+–serif:-apple-system,BlinkMacSystemFont,“Segoe UI”,Roboto,“Helvetica Neue”,Arial,sans-serif;
+–display:-apple-system,BlinkMacSystemFont,“Segoe UI”,Roboto,“Helvetica Neue”,Arial,sans-serif;
+–mono:ui-monospace,“SF Mono”,Menlo,Consolas,“Roboto Mono”,monospace;
+–sidebar-w:268px;
+–topbar-h:64px;
 }
-[data-theme="dark"]{
-  --bg:#0b1220;
-  --bg-elev:#111a2c;
-  --bg-soft:#0f1626;
-  --ink:#f1efe8;
-  --ink-2:#c8cdd9;
-  --ink-3:#8993a6;
-  --line:#1f2940;
-  --line-2:#172033;
-  --accent:#d6a37a;
-  --accent-2:#7dd3c4;
-  --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
-  --shadow-lg:0 12px 40px rgba(0,0,0,.5);
+[data-theme=“dark”]{
+–bg:#0b1220;
+–bg-elev:#111a2c;
+–bg-soft:#0f1626;
+–ink:#f1efe8;
+–ink-2:#c8cdd9;
+–ink-3:#8993a6;
+–line:#1f2940;
+–line-2:#172033;
+–accent:#d6a37a;
+–accent-2:#7dd3c4;
+–shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+–shadow-lg:0 12px 40px rgba(0,0,0,.5);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--serif);font-size:14.5px;line-height:1.5;-webkit-font-smoothing:antialiased}
+html,body{margin:0;padding:0;background:var(–bg);color:var(–ink);font-family:var(–serif);font-size:14.5px;line-height:1.5;-webkit-font-smoothing:antialiased}
 body{min-height:100vh;min-height:100dvh}
 a{color:inherit;text-decoration:none}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 input,select,textarea{font-family:inherit;font-size:14px;color:inherit}
 ::-webkit-scrollbar{width:10px;height:10px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--line);border-radius:10px;border:2px solid var(--bg)}
+::-webkit-scrollbar-thumb{background:var(–line);border-radius:10px;border:2px solid var(–bg)}
 
 /* =====================================================================
 GİRİŞ EKRANI
