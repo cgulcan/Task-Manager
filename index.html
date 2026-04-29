@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="tr">
 <head>
 <meta charset="UTF-8" />
@@ -89,283 +88,283 @@
 TASARIM SİSTEMİ - Editorial / Refined Corporate
 ===================================================================== */
 :root{
-–bg:#f6f5f1;
-–bg-elev:#ffffff;
-–bg-soft:#efece5;
-–ink:#0b1220;
-–ink-2:#384152;
-–ink-3:#6b7385;
-–line:#e3ddd0;
-–line-2:#ece7da;
-–accent:#b8895a;          /* terracotta/brass */
-–accent-2:#1a3b3a;         /* deep teal */
-–accent-3:#c2410c;         /* burnt orange */
-–ok:#15803d;
-–warn:#b45309;
-–err:#b91c1c;
-–info:#1d4ed8;
-–shadow:0 1px 2px rgba(11,18,32,.04), 0 8px 24px rgba(11,18,32,.06);
-–shadow-lg:0 12px 40px rgba(11,18,32,.12);
-–radius:14px;
-–radius-sm:10px;
-–radius-lg:20px;
-–serif:-apple-system,BlinkMacSystemFont,“Segoe UI”,Roboto,“Helvetica Neue”,Arial,sans-serif;
-–display:-apple-system,BlinkMacSystemFont,“Segoe UI”,Roboto,“Helvetica Neue”,Arial,sans-serif;
-–mono:ui-monospace,“SF Mono”,Menlo,Consolas,“Roboto Mono”,monospace;
-–sidebar-w:268px;
-–topbar-h:64px;
+--bg:#f6f5f1;
+--bg-elev:#ffffff;
+--bg-soft:#efece5;
+--ink:#0b1220;
+--ink-2:#384152;
+--ink-3:#6b7385;
+--line:#e3ddd0;
+--line-2:#ece7da;
+--accent:#b8895a;          /* terracotta/brass */
+--accent-2:#1a3b3a;         /* deep teal */
+--accent-3:#c2410c;         /* burnt orange */
+--ok:#15803d;
+--warn:#b45309;
+--err:#b91c1c;
+--info:#1d4ed8;
+--shadow:0 1px 2px rgba(11,18,32,.04), 0 8px 24px rgba(11,18,32,.06);
+--shadow-lg:0 12px 40px rgba(11,18,32,.12);
+--radius:14px;
+--radius-sm:10px;
+--radius-lg:20px;
+--serif:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+--display:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+--mono:ui-monospace,"SF Mono",Menlo,Consolas,"Roboto Mono",monospace;
+--sidebar-w:268px;
+--topbar-h:64px;
 }
-[data-theme=“dark”]{
-–bg:#0b1220;
-–bg-elev:#111a2c;
-–bg-soft:#0f1626;
-–ink:#f1efe8;
-–ink-2:#c8cdd9;
-–ink-3:#8993a6;
-–line:#1f2940;
-–line-2:#172033;
-–accent:#d6a37a;
-–accent-2:#7dd3c4;
-–shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
-–shadow-lg:0 12px 40px rgba(0,0,0,.5);
+[data-theme="dark"]{
+--bg:#0b1220;
+--bg-elev:#111a2c;
+--bg-soft:#0f1626;
+--ink:#f1efe8;
+--ink-2:#c8cdd9;
+--ink-3:#8993a6;
+--line:#1f2940;
+--line-2:#172033;
+--accent:#d6a37a;
+--accent-2:#7dd3c4;
+--shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+--shadow-lg:0 12px 40px rgba(0,0,0,.5);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;padding:0;background:var(–bg);color:var(–ink);font-family:var(–serif);font-size:14.5px;line-height:1.5;-webkit-font-smoothing:antialiased}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--serif);font-size:14.5px;line-height:1.5;-webkit-font-smoothing:antialiased}
 body{min-height:100vh;min-height:100dvh}
 a{color:inherit;text-decoration:none}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 input,select,textarea{font-family:inherit;font-size:14px;color:inherit}
 ::-webkit-scrollbar{width:10px;height:10px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(–line);border-radius:10px;border:2px solid var(–bg)}
+::-webkit-scrollbar-thumb{background:var(--line);border-radius:10px;border:2px solid var(--bg)}
 
 /* =====================================================================
 GİRİŞ EKRANI
 ===================================================================== */
-.login-wrap{min-height:100vh;min-height:100dvh;display:grid;grid-template-columns:1.1fr 1fr;background:var(–bg)}
+.login-wrap{min-height:100vh;min-height:100dvh;display:grid;grid-template-columns:1.1fr 1fr;background:var(--bg)}
 .login-art{position:relative;background:linear-gradient(135deg,#0b1220 0%,#1a3b3a 60%,#b8895a 140%);overflow:hidden;color:#f1efe8;padding:48px}
-.login-art::before{content:””;position:absolute;inset:0;background-image:radial-gradient(circle at 20% 20%,rgba(216,167,122,.18),transparent 40%),radial-gradient(circle at 80% 80%,rgba(125,211,196,.12),transparent 40%);pointer-events:none}
-.login-art::after{content:””;position:absolute;inset:0;background-image:url(“data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence baseFrequency='0.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.4 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>”);opacity:.4;mix-blend-mode:overlay;pointer-events:none}
+.login-art::before{content:"";position:absolute;inset:0;background-image:radial-gradient(circle at 20% 20%,rgba(216,167,122,.18),transparent 40%),radial-gradient(circle at 80% 80%,rgba(125,211,196,.12),transparent 40%);pointer-events:none}
+.login-art::after{content:"";position:absolute;inset:0;background-image:url("data:image/svg+xml;utf8,<svg xmlns='[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)' width='200' height='200'><filter id='n'><feTurbulence baseFrequency='0.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.4 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>");opacity:.4;mix-blend-mode:overlay;pointer-events:none}
 .login-art-inner{position:relative;height:100%;display:flex;flex-direction:column;justify-content:space-between;z-index:2}
-.login-brand{display:flex;align-items:center;gap:14px;font-family:var(–display);font-weight:800;letter-spacing:-.02em;font-size:18px}
+.login-brand{display:flex;align-items:center;gap:14px;font-family:var(--display);font-weight:800;letter-spacing:-.02em;font-size:18px}
 .login-brand-mark{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#d6a37a,#b8895a);display:grid;place-items:center;color:#0b1220;font-weight:800;font-size:20px;box-shadow:0 4px 16px rgba(0,0,0,.25)}
-.login-hero{font-family:var(–display);font-size:clamp(36px,4vw,56px);font-weight:800;line-height:1.05;letter-spacing:-.03em;margin:auto 0}
+.login-hero{font-family:var(--display);font-size:clamp(36px,4vw,56px);font-weight:800;line-height:1.05;letter-spacing:-.03em;margin:auto 0}
 .login-hero em{font-style:normal;color:#d6a37a;display:block}
-.login-hero small{display:block;font-size:15px;font-weight:500;opacity:.75;margin-top:24px;max-width:420px;line-height:1.6;font-family:var(–serif)}
-.login-meta{display:flex;gap:24px;font-size:12px;text-transform:uppercase;letter-spacing:.2em;opacity:.6;font-family:var(–mono)}
+.login-hero small{display:block;font-size:15px;font-weight:500;opacity:.75;margin-top:24px;max-width:420px;line-height:1.6;font-family:var(--serif)}
+.login-meta{display:flex;gap:24px;font-size:12px;text-transform:uppercase;letter-spacing:.2em;opacity:.6;font-family:var(--mono)}
 .login-form-wrap{display:grid;place-items:center;padding:48px 32px}
 .login-form{width:100%;max-width:380px}
-.login-form h2{font-family:var(–display);font-size:28px;font-weight:800;letter-spacing:-.02em;margin:0 0 6px}
-.login-form p.sub{color:var(–ink-3);margin:0 0 32px;font-size:14px}
+.login-form h2{font-family:var(--display);font-size:28px;font-weight:800;letter-spacing:-.02em;margin:0 0 6px}
+.login-form p.sub{color:var(--ink-3);margin:0 0 32px;font-size:14px}
 .field{margin-bottom:16px}
-.field label{display:block;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(–ink-3);margin-bottom:8px}
-.field input{width:100%;padding:13px 14px;border:1.5px solid var(–line);background:var(–bg-elev);border-radius:var(–radius-sm);transition:border-color .15s,background .15s;outline:none}
-.field input:focus{border-color:var(–ink)}
+.field label{display:block;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);margin-bottom:8px}
+.field input{width:100%;padding:13px 14px;border:1.5px solid var(--line);background:var(--bg-elev);border-radius:var(--radius-sm);transition:border-color .15s,background .15s;outline:none}
+.field input:focus{border-color:var(--ink)}
 .field-icon{position:relative}
-.field-icon i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(–ink-3);font-size:13px;pointer-events:none}
+.field-icon i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--ink-3);font-size:13px;pointer-events:none}
 .field-icon input{padding-left:38px}
-.btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px 16px;background:var(–ink);color:var(–bg-elev);border-radius:var(–radius-sm);font-weight:600;font-size:14px;transition:transform .1s,opacity .15s}
+.btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px 16px;background:var(--ink);color:var(--bg-elev);border-radius:var(--radius-sm);font-weight:600;font-size:14px;transition:transform .1s,opacity .15s}
 .btn-primary:hover{opacity:.9}
 .btn-primary:active{transform:scale(.98)}
 .btn-primary:disabled{opacity:.5;cursor:not-allowed}
-.login-error{margin-top:14px;padding:10px 12px;background:rgba(185,28,28,.08);border:1px solid rgba(185,28,28,.25);color:var(–err);border-radius:var(–radius-sm);font-size:13px;display:none}
+.login-error{margin-top:14px;padding:10px 12px;background:rgba(185,28,28,.08);border:1px solid rgba(185,28,28,.25);color:var(--err);border-radius:var(--radius-sm);font-size:13px;display:none}
 .login-error.show{display:block}
-.login-help{margin-top:24px;padding-top:20px;border-top:1px solid var(–line);font-size:12px;color:var(–ink-3);line-height:1.6}
-.login-help code{font-family:var(–mono);background:var(–bg-soft);padding:2px 6px;border-radius:4px;font-size:11.5px}
+.login-help{margin-top:24px;padding-top:20px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3);line-height:1.6}
+.login-help code{font-family:var(--mono);background:var(--bg-soft);padding:2px 6px;border-radius:4px;font-size:11.5px}
 
 /* =====================================================================
 APP LAYOUT
 ===================================================================== */
-.app{display:grid;min-height:100vh;min-height:100dvh;grid-template-columns:var(–sidebar-w) 1fr;background:var(–bg)}
+.app{display:grid;min-height:100vh;min-height:100dvh;grid-template-columns:var(--sidebar-w) 1fr;background:var(--bg)}
 .app.show{display:grid}
 .login-wrap{display:none !important}
 
-.sidebar{position:sticky;top:0;height:100vh;height:100dvh;background:var(–bg-elev);border-right:1px solid var(–line);display:flex;flex-direction:column;overflow:hidden}
-.sb-brand{padding:20px 22px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(–line-2)}
-.sb-brand .mark{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#0b1220,#1a3b3a);color:#d6a37a;display:grid;place-items:center;font-weight:800;font-size:16px;font-family:var(–display)}
-.sb-brand .name{font-family:var(–display);font-weight:800;font-size:15px;letter-spacing:-.01em}
-.sb-brand .sub{font-size:11px;color:var(–ink-3);font-family:var(–mono);letter-spacing:.05em;text-transform:uppercase}
+.sidebar{position:sticky;top:0;height:100vh;height:100dvh;background:var(--bg-elev);border-right:1px solid var(--line);display:flex;flex-direction:column;overflow:hidden}
+.sb-brand{padding:20px 22px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--line-2)}
+.sb-brand .mark{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#0b1220,#1a3b3a);color:#d6a37a;display:grid;place-items:center;font-weight:800;font-size:16px;font-family:var(--display)}
+.sb-brand .name{font-family:var(--display);font-weight:800;font-size:15px;letter-spacing:-.01em}
+.sb-brand .sub{font-size:11px;color:var(--ink-3);font-family:var(--mono);letter-spacing:.05em;text-transform:uppercase}
 .sb-nav{flex:1;overflow-y:auto;padding:14px 12px}
-.sb-section{font-size:10.5px;text-transform:uppercase;letter-spacing:.18em;color:var(–ink-3);padding:14px 12px 8px;font-weight:700;font-family:var(–mono)}
-.sb-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;color:var(–ink-2);font-size:14px;font-weight:500;cursor:pointer;transition:background .12s,color .12s;margin-bottom:2px;position:relative}
-.sb-item:hover{background:var(–bg-soft);color:var(–ink)}
-.sb-item.active{background:var(–ink);color:var(–bg-elev)}
-.sb-item.active .badge{background:var(–accent);color:#0b1220}
+.sb-section{font-size:10.5px;text-transform:uppercase;letter-spacing:.18em;color:var(--ink-3);padding:14px 12px 8px;font-weight:700;font-family:var(--mono)}
+.sb-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;color:var(--ink-2);font-size:14px;font-weight:500;cursor:pointer;transition:background .12s,color .12s;margin-bottom:2px;position:relative}
+.sb-item:hover{background:var(--bg-soft);color:var(--ink)}
+.sb-item.active{background:var(--ink);color:var(--bg-elev)}
+.sb-item.active .badge{background:var(--accent);color:#0b1220}
 .sb-item i{width:18px;text-align:center;font-size:14px;opacity:.85}
-.sb-item .badge{margin-left:auto;background:var(–bg-soft);color:var(–ink-2);font-size:11px;font-weight:700;padding:2px 7px;border-radius:8px;font-family:var(–mono)}
+.sb-item .badge{margin-left:auto;background:var(--bg-soft);color:var(--ink-2);font-size:11px;font-weight:700;padding:2px 7px;border-radius:8px;font-family:var(--mono)}
 .sb-sub{padding-left:34px;display:none}
 .sb-sub.open{display:block}
 .sb-sub .sb-item{padding:7px 12px;font-size:13px}
-.sb-foot{padding:14px;border-top:1px solid var(–line-2);display:flex;align-items:center;gap:10px}
-.sb-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#b8895a,#1a3b3a);display:grid;place-items:center;color:#fff;font-weight:700;font-size:14px;font-family:var(–display)}
+.sb-foot{padding:14px;border-top:1px solid var(--line-2);display:flex;align-items:center;gap:10px}
+.sb-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#b8895a,#1a3b3a);display:grid;place-items:center;color:#fff;font-weight:700;font-size:14px;font-family:var(--display)}
 .sb-foot .who{flex:1;min-width:0}
 .sb-foot .who .nm{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sb-foot .who .rl{font-size:11px;color:var(–ink-3);font-family:var(–mono);text-transform:uppercase;letter-spacing:.05em}
-.sb-foot button{width:32px;height:32px;border-radius:8px;color:var(–ink-3);transition:background .12s,color .12s}
-.sb-foot button:hover{background:var(–bg-soft);color:var(–ink)}
+.sb-foot .who .rl{font-size:11px;color:var(--ink-3);font-family:var(--mono);text-transform:uppercase;letter-spacing:.05em}
+.sb-foot button{width:32px;height:32px;border-radius:8px;color:var(--ink-3);transition:background .12s,color .12s}
+.sb-foot button:hover{background:var(--bg-soft);color:var(--ink)}
 
 /* MAIN */
 .main{min-width:0;display:flex;flex-direction:column}
-.topbar{position:sticky;top:0;z-index:50;height:var(–topbar-h);background:rgba(246,245,241,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(–line);display:flex;align-items:center;gap:16px;padding:0 28px}
-[data-theme=“dark”] .topbar{background:rgba(11,18,32,.85)}
-.tb-burger{display:none;width:38px;height:38px;border-radius:10px;border:1px solid var(–line);align-items:center;justify-content:center}
-.tb-title{font-family:var(–display);font-size:20px;font-weight:800;letter-spacing:-.02em;flex:1;min-width:0}
-.tb-title .crumb{font-size:11px;font-weight:600;color:var(–ink-3);text-transform:uppercase;letter-spacing:.18em;display:block;margin-bottom:2px;font-family:var(–mono)}
+.topbar{position:sticky;top:0;z-index:50;height:var(--topbar-h);background:rgba(246,245,241,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:16px;padding:0 28px}
+[data-theme="dark"] .topbar{background:rgba(11,18,32,.85)}
+.tb-burger{display:none;width:38px;height:38px;border-radius:10px;border:1px solid var(--line);align-items:center;justify-content:center}
+.tb-title{font-family:var(--display);font-size:20px;font-weight:800;letter-spacing:-.02em;flex:1;min-width:0}
+.tb-title .crumb{font-size:11px;font-weight:600;color:var(--ink-3);text-transform:uppercase;letter-spacing:.18em;display:block;margin-bottom:2px;font-family:var(--mono)}
 .tb-actions{display:flex;align-items:center;gap:8px}
-.tb-btn{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 14px;border-radius:10px;border:1px solid var(–line);background:var(–bg-elev);font-size:13px;font-weight:600;color:var(–ink-2);transition:all .12s}
-.tb-btn:hover{border-color:var(–ink-3);color:var(–ink)}
-.tb-btn.primary{background:var(–ink);color:var(–bg-elev);border-color:var(–ink)}
-.tb-btn.primary:hover{opacity:.9;color:var(–bg-elev)}
-.tb-icon{width:38px;height:38px;border-radius:10px;border:1px solid var(–line);background:var(–bg-elev);display:grid;place-items:center;color:var(–ink-2);transition:all .12s}
-.tb-icon:hover{color:var(–ink);border-color:var(–ink-3)}
+.tb-btn{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg-elev);font-size:13px;font-weight:600;color:var(--ink-2);transition:all .12s}
+.tb-btn:hover{border-color:var(--ink-3);color:var(--ink)}
+.tb-btn.primary{background:var(--ink);color:var(--bg-elev);border-color:var(--ink)}
+.tb-btn.primary:hover{opacity:.9;color:var(--bg-elev)}
+.tb-icon{width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--bg-elev);display:grid;place-items:center;color:var(--ink-2);transition:all .12s}
+.tb-icon:hover{color:var(--ink);border-color:var(--ink-3)}
 
 .page{padding:28px;max-width:1600px;margin:0 auto;width:100%}
 .page-head{margin-bottom:28px}
-.page-head h1{font-family:var(–display);font-size:32px;font-weight:800;letter-spacing:-.025em;margin:0 0 6px;line-height:1.1}
-.page-head p{color:var(–ink-3);margin:0;font-size:14.5px;max-width:680px}
+.page-head h1{font-family:var(--display);font-size:32px;font-weight:800;letter-spacing:-.025em;margin:0 0 6px;line-height:1.1}
+.page-head p{color:var(--ink-3);margin:0;font-size:14.5px;max-width:680px}
 
 /* =====================================================================
 DASHBOARD
 ===================================================================== */
 .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:24px}
-.kpi{background:var(–bg-elev);border:1px solid var(–line);border-radius:var(–radius);padding:18px 20px;position:relative;overflow:hidden;transition:transform .15s,box-shadow .15s}
-.kpi:hover{transform:translateY(-2px);box-shadow:var(–shadow)}
-.kpi .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.15em;color:var(–ink-3);font-weight:700;font-family:var(–mono);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.kpi{background:var(--bg-elev);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;position:relative;overflow:hidden;transition:transform .15s,box-shadow .15s}
+.kpi:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.kpi .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.15em;color:var(--ink-3);font-weight:700;font-family:var(--mono);margin-bottom:10px;display:flex;align-items:center;gap:8px}
 .kpi .lbl i{font-size:11px}
-.kpi .val{font-family:var(–display);font-size:36px;font-weight:800;letter-spacing:-.03em;line-height:1}
-.kpi .delta{font-size:12px;color:var(–ink-3);margin-top:6px}
-.kpi.k-open .lbl i{color:var(–info)}
-.kpi.k-progress .lbl i{color:var(–accent)}
-.kpi.k-done .lbl i{color:var(–ok)}
+.kpi .val{font-family:var(--display);font-size:36px;font-weight:800;letter-spacing:-.03em;line-height:1}
+.kpi .delta{font-size:12px;color:var(--ink-3);margin-top:6px}
+.kpi.k-open .lbl i{color:var(--info)}
+.kpi.k-progress .lbl i{color:var(--accent)}
+.kpi.k-done .lbl i{color:var(--ok)}
 .kpi.k-late{background:linear-gradient(135deg,#fff,#fdf4f0)}
-[data-theme=“dark”] .kpi.k-late{background:linear-gradient(135deg,#111a2c,#1f1518)}
-.kpi.k-late .lbl i{color:var(–err)}
-.kpi.k-late .val{color:var(–err)}
+[data-theme="dark"] .kpi.k-late{background:linear-gradient(135deg,#111a2c,#1f1518)}
+.kpi.k-late .lbl i{color:var(--err)}
+.kpi.k-late .val{color:var(--err)}
 
 .dash-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:14px;margin-bottom:24px}
-.card{background:var(–bg-elev);border:1px solid var(–line);border-radius:var(–radius);padding:22px}
+.card{background:var(--bg-elev);border:1px solid var(--line);border-radius:var(--radius);padding:22px}
 .card-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;gap:12px}
-.card-head h3{font-family:var(–display);font-size:16px;font-weight:700;letter-spacing:-.01em;margin:0}
-.card-head p{color:var(–ink-3);font-size:12.5px;margin:2px 0 0}
+.card-head h3{font-family:var(--display);font-size:16px;font-weight:700;letter-spacing:-.01em;margin:0}
+.card-head p{color:var(--ink-3);font-size:12.5px;margin:2px 0 0}
 .card-head .act{display:flex;gap:6px}
-.tag{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:8px;font-size:11.5px;font-weight:600;background:var(–bg-soft);color:var(–ink-2);font-family:var(–mono);text-transform:uppercase;letter-spacing:.05em}
+.tag{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:8px;font-size:11.5px;font-weight:600;background:var(--bg-soft);color:var(--ink-2);font-family:var(--mono);text-transform:uppercase;letter-spacing:.05em}
 
 .chart-bars{display:flex;flex-direction:column;gap:14px}
 .bar-row{display:grid;grid-template-columns:130px 1fr 50px;gap:12px;align-items:center;font-size:13px}
-.bar-row .nm{font-weight:600;color:var(–ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.bar-row .num{font-family:var(–mono);font-weight:600;color:var(–ink-3);text-align:right;font-size:12px}
-.bar-track{height:10px;background:var(–bg-soft);border-radius:6px;overflow:hidden;position:relative}
-.bar-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(–accent-2),var(–accent));transition:width .6s cubic-bezier(.4,0,.2,1)}
+.bar-row .nm{font-weight:600;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-row .num{font-family:var(--mono);font-weight:600;color:var(--ink-3);text-align:right;font-size:12px}
+.bar-track{height:10px;background:var(--bg-soft);border-radius:6px;overflow:hidden;position:relative}
+.bar-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--accent-2),var(--accent));transition:width .6s cubic-bezier(.4,0,.2,1)}
 
 .donut-wrap{display:flex;align-items:center;gap:24px}
 .donut{width:160px;height:160px;flex-shrink:0;position:relative}
 .donut svg{transform:rotate(-90deg)}
 .donut .center{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
-.donut .center .v{font-family:var(–display);font-size:28px;font-weight:800;letter-spacing:-.02em;line-height:1}
-.donut .center .l{font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:var(–ink-3);font-weight:700;margin-top:4px;font-family:var(–mono)}
+.donut .center .v{font-family:var(--display);font-size:28px;font-weight:800;letter-spacing:-.02em;line-height:1}
+.donut .center .l{font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:var(--ink-3);font-weight:700;margin-top:4px;font-family:var(--mono)}
 .legend{flex:1;min-width:0}
-.lg-row{display:flex;align-items:center;gap:10px;padding:6px 0;font-size:13px;border-bottom:1px dashed var(–line-2)}
+.lg-row{display:flex;align-items:center;gap:10px;padding:6px 0;font-size:13px;border-bottom:1px dashed var(--line-2)}
 .lg-row:last-child{border-bottom:none}
 .lg-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
-.lg-row .nm{flex:1;color:var(–ink-2);font-weight:500}
-.lg-row .num{font-family:var(–mono);font-weight:700;color:var(–ink)}
+.lg-row .nm{flex:1;color:var(--ink-2);font-weight:500}
+.lg-row .num{font-family:var(--mono);font-weight:700;color:var(--ink)}
 
 .spark-wrap{margin-top:8px}
 .spark-stats{display:flex;gap:24px;margin-bottom:16px}
-.spark-stats div{font-size:12px;color:var(–ink-3);text-transform:uppercase;letter-spacing:.1em;font-family:var(–mono)}
-.spark-stats div b{display:block;font-family:var(–display);font-size:24px;font-weight:800;color:var(–ink);letter-spacing:-.02em;margin-top:4px;text-transform:none}
+.spark-stats div{font-size:12px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--mono)}
+.spark-stats div b{display:block;font-family:var(--display);font-size:24px;font-weight:800;color:var(--ink);letter-spacing:-.02em;margin-top:4px;text-transform:none}
 
 /* =====================================================================
 GÖREVLER LISTE
 ===================================================================== */
-.toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:16px;padding:14px;background:var(–bg-elev);border:1px solid var(–line);border-radius:var(–radius)}
+.toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:16px;padding:14px;background:var(--bg-elev);border:1px solid var(--line);border-radius:var(--radius)}
 .search-box{position:relative;flex:1;min-width:220px;max-width:340px}
-.search-box i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(–ink-3);font-size:13px}
-.search-box input{width:100%;padding:9px 12px 9px 36px;border:1px solid var(–line);background:var(–bg);border-radius:9px;outline:none}
-.search-box input:focus{border-color:var(–ink-3)}
-.toolbar select{padding:9px 32px 9px 12px;border:1px solid var(–line);background:var(–bg);border-radius:9px;outline:none;font-size:13px;font-weight:500;color:var(–ink-2);appearance:none;background-image:url(“data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='%236b7385' d='M0 0l5 6 5-6z'/></svg>”);background-repeat:no-repeat;background-position:right 12px center}
-.toolbar select:focus{border-color:var(–ink-3)}
+.search-box i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--ink-3);font-size:13px}
+.search-box input{width:100%;padding:9px 12px 9px 36px;border:1px solid var(--line);background:var(--bg);border-radius:9px;outline:none}
+.search-box input:focus{border-color:var(--ink-3)}
+.toolbar select{padding:9px 32px 9px 12px;border:1px solid var(--line);background:var(--bg);border-radius:9px;outline:none;font-size:13px;font-weight:500;color:var(--ink-2);appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)' width='10' height='6' viewBox='0 0 10 6'><path fill='%236b7385' d='M0 0l5 6 5-6z'/></svg>");background-repeat:no-repeat;background-position:right 12px center}
+.toolbar select:focus{border-color:var(--ink-3)}
 
 .task-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
-.task-card{background:var(–bg-elev);border:1px solid var(–line);border-radius:var(–radius);padding:16px;cursor:pointer;transition:transform .15s,box-shadow .15s,border-color .15s;position:relative;overflow:hidden}
-.task-card:hover{transform:translateY(-2px);box-shadow:var(–shadow);border-color:var(–ink-3)}
-.task-card::before{content:””;position:absolute;left:0;top:0;bottom:0;width:4px;background:var(–accent)}
+.task-card{background:var(--bg-elev);border:1px solid var(--line);border-radius:var(--radius);padding:16px;cursor:pointer;transition:transform .15s,box-shadow .15s,border-color .15s;position:relative;overflow:hidden}
+.task-card:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:var(--ink-3)}
+.task-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--accent)}
 .task-card.p-low::before{background:#94a3b8}
 .task-card.p-normal::before{background:#3b82f6}
 .task-card.p-high::before{background:#f59e0b}
 .task-card.p-critical::before{background:#dc2626}
-.task-card.late{background:linear-gradient(135deg,var(–bg-elev),#fef2f2)}
-[data-theme=“dark”] .task-card.late{background:linear-gradient(135deg,var(–bg-elev),#2a1518)}
+.task-card.late{background:linear-gradient(135deg,var(--bg-elev),#fef2f2)}
+[data-theme="dark"] .task-card.late{background:linear-gradient(135deg,var(--bg-elev),#2a1518)}
 .tc-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px}
-.tc-title{font-family:var(–display);font-weight:700;font-size:15px;letter-spacing:-.01em;line-height:1.3;flex:1}
-.tc-desc{font-size:13px;color:var(–ink-3);line-height:1.5;margin-bottom:12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tc-title{font-family:var(--display);font-weight:700;font-size:15px;letter-spacing:-.01em;line-height:1.3;flex:1}
+.tc-desc{font-size:13px;color:var(--ink-3);line-height:1.5;margin-bottom:12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .tc-meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
-.chip{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:7px;font-size:11.5px;font-weight:600;background:var(–bg-soft);color:var(–ink-2);font-family:var(–mono);text-transform:uppercase;letter-spacing:.04em}
+.chip{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:7px;font-size:11.5px;font-weight:600;background:var(--bg-soft);color:var(--ink-2);font-family:var(--mono);text-transform:uppercase;letter-spacing:.04em}
 .chip i{font-size:10px}
 .chip.s-yeni{background:#dbeafe;color:#1e40af}
 .chip.s-devam{background:#fef3c7;color:#92400e}
 .chip.s-bekleme{background:#e0e7ff;color:#4338ca}
 .chip.s-tamam{background:#d1fae5;color:#065f46}
 .chip.s-iptal{background:#fee2e2;color:#991b1b}
-[data-theme=“dark”] .chip.s-yeni{background:#1e3a8a;color:#dbeafe}
-[data-theme=“dark”] .chip.s-devam{background:#78350f;color:#fef3c7}
-[data-theme=“dark”] .chip.s-bekleme{background:#312e81;color:#e0e7ff}
-[data-theme=“dark”] .chip.s-tamam{background:#064e3b;color:#d1fae5}
-[data-theme=“dark”] .chip.s-iptal{background:#7f1d1d;color:#fee2e2}
+[data-theme="dark"] .chip.s-yeni{background:#1e3a8a;color:#dbeafe}
+[data-theme="dark"] .chip.s-devam{background:#78350f;color:#fef3c7}
+[data-theme="dark"] .chip.s-bekleme{background:#312e81;color:#e0e7ff}
+[data-theme="dark"] .chip.s-tamam{background:#064e3b;color:#d1fae5}
+[data-theme="dark"] .chip.s-iptal{background:#7f1d1d;color:#fee2e2}
 .chip.p-low{background:#f1f5f9;color:#475569}
 .chip.p-normal{background:#dbeafe;color:#1e40af}
 .chip.p-high{background:#ffedd5;color:#9a3412}
 .chip.p-critical{background:#fee2e2;color:#991b1b}
-[data-theme=“dark”] .chip.p-low{background:#1e293b;color:#cbd5e1}
-[data-theme=“dark”] .chip.p-normal{background:#1e3a8a;color:#dbeafe}
-[data-theme=“dark”] .chip.p-high{background:#7c2d12;color:#ffedd5}
-[data-theme=“dark”] .chip.p-critical{background:#7f1d1d;color:#fee2e2}
-.tc-foot{display:flex;align-items:center;gap:10px;padding-top:12px;border-top:1px dashed var(–line-2);font-size:12px;color:var(–ink-3)}
+[data-theme="dark"] .chip.p-low{background:#1e293b;color:#cbd5e1}
+[data-theme="dark"] .chip.p-normal{background:#1e3a8a;color:#dbeafe}
+[data-theme="dark"] .chip.p-high{background:#7c2d12;color:#ffedd5}
+[data-theme="dark"] .chip.p-critical{background:#7f1d1d;color:#fee2e2}
+.tc-foot{display:flex;align-items:center;gap:10px;padding-top:12px;border-top:1px dashed var(--line-2);font-size:12px;color:var(--ink-3)}
 .tc-foot .ass{display:flex;align-items:center;gap:7px;flex:1;min-width:0}
-.tc-avatar{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#b8895a,#1a3b3a);color:#fff;display:grid;place-items:center;font-size:10px;font-weight:700;font-family:var(–display);flex-shrink:0}
-.tc-foot .due{font-family:var(–mono);font-weight:600}
-.tc-foot .due.late{color:var(–err)}
-.tc-foot .due.soon{color:var(–warn)}
-.tc-progress{height:5px;background:var(–bg-soft);border-radius:3px;overflow:hidden;margin-top:10px}
-.tc-progress-fill{height:100%;background:linear-gradient(90deg,var(–accent-2),var(–accent));border-radius:3px;transition:width .4s}
+.tc-avatar{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#b8895a,#1a3b3a);color:#fff;display:grid;place-items:center;font-size:10px;font-weight:700;font-family:var(--display);flex-shrink:0}
+.tc-foot .due{font-family:var(--mono);font-weight:600}
+.tc-foot .due.late{color:var(--err)}
+.tc-foot .due.soon{color:var(--warn)}
+.tc-progress{height:5px;background:var(--bg-soft);border-radius:3px;overflow:hidden;margin-top:10px}
+.tc-progress-fill{height:100%;background:linear-gradient(90deg,var(--accent-2),var(--accent));border-radius:3px;transition:width .4s}
 
-.empty{padding:60px 20px;text-align:center;color:var(–ink-3)}
-.empty i{font-size:42px;color:var(–line);margin-bottom:14px;display:block}
-.empty h4{font-family:var(–display);font-weight:700;color:var(–ink-2);margin:0 0 6px;font-size:17px}
+.empty{padding:60px 20px;text-align:center;color:var(--ink-3)}
+.empty i{font-size:42px;color:var(--line);margin-bottom:14px;display:block}
+.empty h4{font-family:var(--display);font-weight:700;color:var(--ink-2);margin:0 0 6px;font-size:17px}
 
 /* =====================================================================
 KANBAN
 ===================================================================== */
 .kanban{display:grid;grid-template-columns:repeat(5,minmax(260px,1fr));gap:14px;overflow-x:auto;padding-bottom:8px}
-.kb-col{background:var(–bg-soft);border-radius:var(–radius);padding:12px;min-height:200px}
-.kb-col-head{display:flex;align-items:center;justify-content:space-between;padding:6px 8px 12px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(–ink-2);font-family:var(–mono)}
-.kb-col-head .count{background:var(–bg-elev);color:var(–ink);padding:2px 8px;border-radius:8px;font-family:var(–mono)}
+.kb-col{background:var(--bg-soft);border-radius:var(--radius);padding:12px;min-height:200px}
+.kb-col-head{display:flex;align-items:center;justify-content:space-between;padding:6px 8px 12px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-2);font-family:var(--mono)}
+.kb-col-head .count{background:var(--bg-elev);color:var(--ink);padding:2px 8px;border-radius:8px;font-family:var(--mono)}
 .kb-list{display:flex;flex-direction:column;gap:8px}
 
 /* =====================================================================
 TAKVİM
 ===================================================================== */
 .cal-head{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
-.cal-nav{display:flex;align-items:center;gap:4px;background:var(–bg-elev);border:1px solid var(–line);border-radius:10px;padding:4px}
-.cal-nav button{width:32px;height:32px;border-radius:6px;color:var(–ink-2);transition:background .12s}
-.cal-nav button:hover{background:var(–bg-soft)}
-.cal-title{font-family:var(–display);font-size:22px;font-weight:800;letter-spacing:-.02em;flex:1}
-.cal-views{display:flex;background:var(–bg-elev);border:1px solid var(–line);border-radius:10px;padding:4px;gap:2px}
-.cal-views button{padding:6px 14px;border-radius:6px;font-size:13px;font-weight:600;color:var(–ink-3);transition:all .12s}
-.cal-views button.active{background:var(–ink);color:var(–bg-elev)}
+.cal-nav{display:flex;align-items:center;gap:4px;background:var(--bg-elev);border:1px solid var(--line);border-radius:10px;padding:4px}
+.cal-nav button{width:32px;height:32px;border-radius:6px;color:var(--ink-2);transition:background .12s}
+.cal-nav button:hover{background:var(--bg-soft)}
+.cal-title{font-family:var(--display);font-size:22px;font-weight:800;letter-spacing:-.02em;flex:1}
+.cal-views{display:flex;background:var(--bg-elev);border:1px solid var(--line);border-radius:10px;padding:4px;gap:2px}
+.cal-views button{padding:6px 14px;border-radius:6px;font-size:13px;font-weight:600;color:var(--ink-3);transition:all .12s}
+.cal-views button.active{background:var(--ink);color:var(--bg-elev)}
 
-.cal-grid{background:var(–bg-elev);border:1px solid var(–line);border-radius:var(–radius);overflow:hidden}
-.cal-week-head{display:grid;grid-template-columns:repeat(7,1fr);background:var(–bg-soft);border-bottom:1px solid var(–line)}
-.cal-week-head div{padding:10px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(–ink-3);font-family:var(–mono)}
+.cal-grid{background:var(--bg-elev);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.cal-week-head{display:grid;grid-template-columns:repeat(7,1fr);background:var(--bg-soft);border-bottom:1px solid var(--line)}
+.cal-week-head div{padding:10px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--ink-3);font-family:var(--mono)}
 .cal-month{display:grid;grid-template-columns:repeat(7,1fr);grid-auto-rows:minmax(110px,1fr)}
-.cal-day{border-right:1px solid var(–line-2);border-bottom:1px solid var(–line-2);padding:8px;display:flex;flex-direction:column;gap:4px;min-height:100px;cursor:pointer;transition:background .12s;position:relative}
-.cal-day:hover{background:var(–bg-soft)}
-.cal-day.other{background:var(–bg-soft);opacity:.5}
+.cal-day{border-right:1px solid var(--line-2);border-bottom:1px solid var(--line-2);padding:8px;display:flex;flex-direction:column;gap:4px;min-height:100px;cursor:pointer;transition:background .12s;position:relative}
+.cal-day:hover{background:var(--bg-soft)}
+.cal-day.other{background:var(--bg-soft);opacity:.5}
 .cal-day.today{background:linear-gradient(135deg,#fff8ed,#fff)}
-[data-theme=“dark”] .cal-day.today{background:linear-gradient(135deg,#1f1815,#111a2c)}
-.cal-day .num{font-family:var(–display);font-size:13px;font-weight:700;color:var(–ink-2);margin-bottom:2px}
-.cal-day.today .num{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(–ink);color:var(–bg-elev)}
-.cal-event{font-size:11px;padding:2px 6px;border-radius:4px;background:var(–accent);color:#fff;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+[data-theme="dark"] .cal-day.today{background:linear-gradient(135deg,#1f1815,#111a2c)}
+.cal-day .num{font-family:var(--display);font-size:13px;font-weight:700;color:var(--ink-2);margin-bottom:2px}
+.cal-day.today .num{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--ink);color:var(--bg-elev)}
+.cal-event{font-size:11px;padding:2px 6px;border-radius:4px;background:var(--accent);color:#fff;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
 .cal-event.s-yeni{background:#3b82f6}
 .cal-event.s-devam{background:#f59e0b;color:#fff}
 .cal-event.s-bekleme{background:#6366f1}
@@ -373,24 +372,24 @@ TAKVİM
 .cal-event.s-iptal{background:#94a3b8}
 .cal-event.late{background:#dc2626;color:#fff;animation:pulse-late 2s ease-in-out infinite}
 @keyframes pulse-late{0%,100%{opacity:1}50%{opacity:.7}}
-.cal-more{font-size:10.5px;color:var(–ink-3);font-weight:700;font-family:var(–mono);padding:0 6px}
+.cal-more{font-size:10.5px;color:var(--ink-3);font-weight:700;font-family:var(--mono);padding:0 6px}
 
 /* =====================================================================
 TABLO (Parametreler / Raporlar)
 ===================================================================== */
-.tbl-wrap{background:var(–bg-elev);border:1px solid var(–line);border-radius:var(–radius);overflow:hidden}
+.tbl-wrap{background:var(--bg-elev);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
 .tbl{width:100%;border-collapse:collapse;font-size:13.5px}
-.tbl thead th{background:var(–bg-soft);font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(–ink-3);font-weight:700;padding:12px 16px;text-align:left;border-bottom:1px solid var(–line);font-family:var(–mono);white-space:nowrap}
-.tbl tbody td{padding:14px 16px;border-bottom:1px solid var(–line-2);color:var(–ink-2);vertical-align:middle}
+.tbl thead th{background:var(--bg-soft);font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-3);font-weight:700;padding:12px 16px;text-align:left;border-bottom:1px solid var(--line);font-family:var(--mono);white-space:nowrap}
+.tbl tbody td{padding:14px 16px;border-bottom:1px solid var(--line-2);color:var(--ink-2);vertical-align:middle}
 .tbl tbody tr:last-child td{border-bottom:none}
-.tbl tbody tr:hover{background:var(–bg-soft)}
+.tbl tbody tr:hover{background:var(--bg-soft)}
 .tbl .row-act{display:flex;gap:4px;justify-content:flex-end}
-.tbl .row-act button{width:30px;height:30px;border-radius:6px;color:var(–ink-3);transition:background .12s,color .12s}
-.tbl .row-act button:hover{background:var(–bg-soft);color:var(–ink)}
-.tbl .row-act button.danger:hover{background:rgba(185,28,28,.1);color:var(–err)}
+.tbl .row-act button{width:30px;height:30px;border-radius:6px;color:var(--ink-3);transition:background .12s,color .12s}
+.tbl .row-act button:hover{background:var(--bg-soft);color:var(--ink)}
+.tbl .row-act button.danger:hover{background:rgba(185,28,28,.1);color:var(--err)}
 .status-dot{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600}
-.status-dot::before{content:””;width:7px;height:7px;border-radius:50%;background:var(–ok)}
-.status-dot.off::before{background:var(–ink-3)}
+.status-dot::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--ok)}
+.status-dot.off::before{background:var(--ink-3)}
 
 /* =====================================================================
 MODAL
@@ -398,80 +397,80 @@ MODAL
 .modal-bg{position:fixed;inset:0;background:rgba(11,18,32,.5);backdrop-filter:blur(4px);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;animation:fadein .15s}
 .modal-bg.show{display:flex}
 @keyframes fadein{from{opacity:0}to{opacity:1}}
-.modal{background:var(–bg-elev);border-radius:var(–radius-lg);box-shadow:var(–shadow-lg);width:100%;max-width:680px;max-height:92vh;overflow:hidden;display:flex;flex-direction:column;animation:slideup .2s cubic-bezier(.16,1,.3,1)}
+.modal{background:var(--bg-elev);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);width:100%;max-width:680px;max-height:92vh;overflow:hidden;display:flex;flex-direction:column;animation:slideup .2s cubic-bezier(.16,1,.3,1)}
 @keyframes slideup{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
 .modal.lg{max-width:880px}
 .modal.sm{max-width:440px}
-.modal-head{padding:20px 24px;border-bottom:1px solid var(–line);display:flex;align-items:center;justify-content:space-between;gap:12px}
-.modal-head h3{font-family:var(–display);font-size:18px;font-weight:800;letter-spacing:-.02em;margin:0}
-.modal-head p{font-size:12.5px;color:var(–ink-3);margin:2px 0 0}
-.modal-close{width:34px;height:34px;border-radius:8px;color:var(–ink-3);transition:background .12s,color .12s}
-.modal-close:hover{background:var(–bg-soft);color:var(–ink)}
+.modal-head{padding:20px 24px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.modal-head h3{font-family:var(--display);font-size:18px;font-weight:800;letter-spacing:-.02em;margin:0}
+.modal-head p{font-size:12.5px;color:var(--ink-3);margin:2px 0 0}
+.modal-close{width:34px;height:34px;border-radius:8px;color:var(--ink-3);transition:background .12s,color .12s}
+.modal-close:hover{background:var(--bg-soft);color:var(--ink)}
 .modal-body{padding:24px;overflow-y:auto;flex:1}
-.modal-foot{padding:16px 24px;border-top:1px solid var(–line);display:flex;justify-content:flex-end;gap:8px;background:var(–bg-soft)}
+.modal-foot{padding:16px 24px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px;background:var(--bg-soft)}
 .btn{display:inline-flex;align-items:center;gap:7px;padding:9px 16px;border-radius:9px;font-weight:600;font-size:13.5px;border:1px solid transparent;transition:all .12s}
-.btn.ghost{border-color:var(–line);background:var(–bg-elev);color:var(–ink-2)}
-.btn.ghost:hover{border-color:var(–ink-3);color:var(–ink)}
-.btn.solid{background:var(–ink);color:var(–bg-elev)}
+.btn.ghost{border-color:var(--line);background:var(--bg-elev);color:var(--ink-2)}
+.btn.ghost:hover{border-color:var(--ink-3);color:var(--ink)}
+.btn.solid{background:var(--ink);color:var(--bg-elev)}
 .btn.solid:hover{opacity:.9}
-.btn.danger{background:var(–err);color:#fff}
+.btn.danger{background:var(--err);color:#fff}
 .btn.danger:hover{opacity:.9}
 
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .form-grid .full{grid-column:1/-1}
 .form-row{display:flex;flex-direction:column;gap:6px}
-.form-row label{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(–ink-3);font-family:var(–mono)}
-.form-row label .req{color:var(–err)}
-.form-row input,.form-row select,.form-row textarea{padding:10px 12px;border:1.5px solid var(–line);background:var(–bg);border-radius:9px;outline:none;transition:border-color .12s;font-size:14px}
-.form-row input:focus,.form-row select:focus,.form-row textarea:focus{border-color:var(–ink)}
+.form-row label{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);font-family:var(--mono)}
+.form-row label .req{color:var(--err)}
+.form-row input,.form-row select,.form-row textarea{padding:10px 12px;border:1.5px solid var(--line);background:var(--bg);border-radius:9px;outline:none;transition:border-color .12s;font-size:14px}
+.form-row input:focus,.form-row select:focus,.form-row textarea:focus{border-color:var(--ink)}
 .form-row textarea{min-height:80px;resize:vertical;font-family:inherit}
-.form-row select{appearance:none;background-image:url(“data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='%236b7385' d='M0 0l5 6 5-6z'/></svg>”);background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+.form-row select{appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)' width='10' height='6' viewBox='0 0 10 6'><path fill='%236b7385' d='M0 0l5 6 5-6z'/></svg>");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
 
 /* TASK DETAY MODAL */
-.td-tabs{display:flex;gap:4px;padding:0 24px;border-bottom:1px solid var(–line);background:var(–bg-soft)}
-.td-tabs button{padding:12px 16px;font-size:13px;font-weight:600;color:var(–ink-3);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .12s}
-.td-tabs button.active{color:var(–ink);border-bottom-color:var(–ink)}
-.td-info{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px;padding:14px 16px;background:var(–bg-soft);border-radius:var(–radius-sm)}
+.td-tabs{display:flex;gap:4px;padding:0 24px;border-bottom:1px solid var(--line);background:var(--bg-soft)}
+.td-tabs button{padding:12px 16px;font-size:13px;font-weight:600;color:var(--ink-3);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .12s}
+.td-tabs button.active{color:var(--ink);border-bottom-color:var(--ink)}
+.td-info{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px;padding:14px 16px;background:var(--bg-soft);border-radius:var(--radius-sm)}
 .td-info .item{font-size:12.5px}
-.td-info .item .l{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(–ink-3);font-weight:700;font-family:var(–mono);margin-bottom:3px}
-.td-info .item .v{color:var(–ink);font-weight:600}
+.td-info .item .l{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-3);font-weight:700;font-family:var(--mono);margin-bottom:3px}
+.td-info .item .v{color:var(--ink);font-weight:600}
 .td-progress-wrap{margin-bottom:18px}
-.td-progress-wrap .l{font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(–ink-3);font-weight:700;font-family:var(–mono);margin-bottom:8px;display:flex;justify-content:space-between}
-.td-progress-bar{height:10px;background:var(–bg-soft);border-radius:5px;overflow:hidden}
-.td-progress-bar div{height:100%;background:linear-gradient(90deg,var(–accent-2),var(–accent));border-radius:5px;transition:width .4s}
+.td-progress-wrap .l{font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);font-weight:700;font-family:var(--mono);margin-bottom:8px;display:flex;justify-content:space-between}
+.td-progress-bar{height:10px;background:var(--bg-soft);border-radius:5px;overflow:hidden}
+.td-progress-bar div{height:100%;background:linear-gradient(90deg,var(--accent-2),var(--accent));border-radius:5px;transition:width .4s}
 .td-progress-input{display:flex;align-items:center;gap:10px;margin-top:8px}
 .td-progress-input input[type=range]{flex:1}
-.td-progress-input span{font-family:var(–mono);font-weight:700;min-width:42px;text-align:right}
-.td-log{padding:12px 14px;border-left:3px solid var(–line);margin-left:6px;margin-bottom:10px;font-size:13px}
-.td-log .when{font-size:11px;color:var(–ink-3);font-family:var(–mono);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
-.td-log .who{font-weight:700;color:var(–ink)}
-.td-log .what{color:var(–ink-2);margin-top:2px}
-.td-log.add{border-left-color:var(–ok)}
-.td-log.update{border-left-color:var(–accent)}
-.td-log.note{border-left-color:var(–info)}
+.td-progress-input span{font-family:var(--mono);font-weight:700;min-width:42px;text-align:right}
+.td-log{padding:12px 14px;border-left:3px solid var(--line);margin-left:6px;margin-bottom:10px;font-size:13px}
+.td-log .when{font-size:11px;color:var(--ink-3);font-family:var(--mono);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.td-log .who{font-weight:700;color:var(--ink)}
+.td-log .what{color:var(--ink-2);margin-top:2px}
+.td-log.add{border-left-color:var(--ok)}
+.td-log.update{border-left-color:var(--accent)}
+.td-log.note{border-left-color:var(--info)}
 
 .note-add{display:flex;gap:8px;margin-top:14px}
-.note-add textarea{flex:1;padding:9px 12px;border:1.5px solid var(–line);border-radius:9px;background:var(–bg);min-height:60px;outline:none;font-family:inherit;font-size:13.5px}
-.note-add textarea:focus{border-color:var(–ink)}
+.note-add textarea{flex:1;padding:9px 12px;border:1.5px solid var(--line);border-radius:9px;background:var(--bg);min-height:60px;outline:none;font-family:inherit;font-size:13.5px}
+.note-add textarea:focus{border-color:var(--ink)}
 
 /* TOAST */
 .toast-wrap{position:fixed;bottom:24px;right:24px;z-index:2000;display:flex;flex-direction:column;gap:8px;pointer-events:none}
-.toast{background:var(–ink);color:var(–bg-elev);padding:12px 16px;border-radius:10px;box-shadow:var(–shadow-lg);font-size:13.5px;font-weight:500;display:flex;align-items:center;gap:10px;min-width:240px;max-width:380px;animation:tslide .25s cubic-bezier(.16,1,.3,1);pointer-events:auto}
+.toast{background:var(--ink);color:var(--bg-elev);padding:12px 16px;border-radius:10px;box-shadow:var(--shadow-lg);font-size:13.5px;font-weight:500;display:flex;align-items:center;gap:10px;min-width:240px;max-width:380px;animation:tslide .25s cubic-bezier(.16,1,.3,1);pointer-events:auto}
 @keyframes tslide{from{transform:translateX(20px);opacity:0}to{transform:translateX(0);opacity:1}}
-.toast.ok{background:var(–ok)}
-.toast.err{background:var(–err)}
-.toast.warn{background:var(–warn)}
+.toast.ok{background:var(--ok)}
+.toast.err{background:var(--err)}
+.toast.warn{background:var(--warn)}
 
 /* SETTINGS */
 .set-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
-.set-card{background:var(–bg-elev);border:1px solid var(–line);border-radius:var(–radius);padding:20px}
-.set-card h4{font-family:var(–display);font-weight:700;font-size:15px;letter-spacing:-.01em;margin:0 0 4px}
-.set-card p{font-size:12.5px;color:var(–ink-3);margin:0 0 14px;line-height:1.5}
-.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-top:1px solid var(–line-2);font-size:13.5px;font-weight:500}
+.set-card{background:var(--bg-elev);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+.set-card h4{font-family:var(--display);font-weight:700;font-size:15px;letter-spacing:-.01em;margin:0 0 4px}
+.set-card p{font-size:12.5px;color:var(--ink-3);margin:0 0 14px;line-height:1.5}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-top:1px solid var(--line-2);font-size:13.5px;font-weight:500}
 .toggle-row:first-of-type{border-top:none;padding-top:0}
-.switch{position:relative;width:42px;height:24px;background:var(–line);border-radius:14px;cursor:pointer;transition:background .15s}
-.switch::after{content:””;position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .2s}
-.switch.on{background:var(–ink)}
+.switch{position:relative;width:42px;height:24px;background:var(--line);border-radius:14px;cursor:pointer;transition:background .15s}
+.switch::after{content:"";position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .2s}
+.switch.on{background:var(--ink)}
 .switch.on::after{transform:translateX(18px)}
 
 /* =====================================================================
@@ -484,7 +483,7 @@ RESPONSIVE
 }
 @media (max-width:880px){
 .app{grid-template-columns:1fr}
-.sidebar{position:fixed;left:-100%;top:0;width:88%;max-width:320px;z-index:200;transition:left .25s cubic-bezier(.16,1,.3,1);box-shadow:var(–shadow-lg)}
+.sidebar{position:fixed;left:-100%;top:0;width:88%;max-width:320px;z-index:200;transition:left .25s cubic-bezier(.16,1,.3,1);box-shadow:var(--shadow-lg)}
 .sidebar.open{left:0}
 .sb-overlay{display:none;position:fixed;inset:0;background:rgba(11,18,32,.4);backdrop-filter:blur(2px);z-index:150}
 .sb-overlay.show{display:block}
@@ -527,11 +526,8 @@ body{padding-bottom:env(safe-area-inset-bottom)}
 .page{padding:0;max-width:100%}
 }
 </style>
-
 </head>
 <body>
-
-<!-- ================= GİRİŞ EKRANI (DEVRE DIŞI) ================= -->
 
 <div class="login-wrap" id="loginWrap" style="display:none !important">
   <aside class="login-art" style="display:none"></aside>
@@ -544,8 +540,6 @@ body{padding-bottom:env(safe-area-inset-bottom)}
     </form>
   </div>
 </div>
-
-<!-- ================= ANA UYGULAMA ================= -->
 
 <div class="app" id="app">
   <div class="sb-overlay" id="sbOverlay"></div>
@@ -567,28 +561,25 @@ body{padding-bottom:env(safe-area-inset-bottom)}
       <div class="sb-item admin-only" data-view="projects"><i class="fa-solid fa-diagram-project"></i>Projeler</div>
       <div class="sb-item admin-only" data-view="reports"><i class="fa-solid fa-chart-line"></i>Raporlar</div>
 
-```
-  <div class="sb-section admin-only">Parametreler</div>
-  <div class="sb-item admin-only" data-view="param-users"><i class="fa-solid fa-users"></i>Personeller</div>
-  <div class="sb-item admin-only" data-view="param-categories"><i class="fa-solid fa-tags"></i>Görev Konuları</div>
-  <div class="sb-item admin-only" data-view="param-projects"><i class="fa-solid fa-folder-open"></i>Proje Tanımları</div>
-  <div class="sb-item admin-only" data-view="param-statuses"><i class="fa-solid fa-flag"></i>Durumlar</div>
-  <div class="sb-item admin-only" data-view="param-priorities"><i class="fa-solid fa-bolt"></i>Öncelikler</div>
-  <div class="sb-item admin-only" data-view="param-departments"><i class="fa-solid fa-sitemap"></i>Departmanlar</div>
+      <div class="sb-section admin-only">Parametreler</div>
+      <div class="sb-item admin-only" data-view="param-users"><i class="fa-solid fa-users"></i>Personeller</div>
+      <div class="sb-item admin-only" data-view="param-categories"><i class="fa-solid fa-tags"></i>Görev Konuları</div>
+      <div class="sb-item admin-only" data-view="param-projects"><i class="fa-solid fa-folder-open"></i>Proje Tanımları</div>
+      <div class="sb-item admin-only" data-view="param-statuses"><i class="fa-solid fa-flag"></i>Durumlar</div>
+      <div class="sb-item admin-only" data-view="param-priorities"><i class="fa-solid fa-bolt"></i>Öncelikler</div>
+      <div class="sb-item admin-only" data-view="param-departments"><i class="fa-solid fa-sitemap"></i>Departmanlar</div>
 
-  <div class="sb-section">Sistem</div>
-  <div class="sb-item" data-view="settings"><i class="fa-solid fa-gear"></i>Ayarlar</div>
-</nav>
-<div class="sb-foot">
-  <div class="sb-avatar" id="sbAvatar">CG</div>
-  <div class="who">
-    <div class="nm" id="sbName">—</div>
-    <div class="rl" id="sbRole">—</div>
-  </div>
-  <button title="Çıkış" id="logoutBtn" style="display:none"><i class="fa-solid fa-right-from-bracket"></i></button>
-</div>
-```
-
+      <div class="sb-section">Sistem</div>
+      <div class="sb-item" data-view="settings"><i class="fa-solid fa-gear"></i>Ayarlar</div>
+    </nav>
+    <div class="sb-foot">
+      <div class="sb-avatar" id="sbAvatar">CG</div>
+      <div class="who">
+        <div class="nm" id="sbName">—</div>
+        <div class="rl" id="sbRole">—</div>
+      </div>
+      <button title="Çıkış" id="logoutBtn" style="display:none"><i class="fa-solid fa-right-from-bracket"></i></button>
+    </div>
   </aside>
 
   <div class="main">
@@ -604,18 +595,11 @@ body{padding-bottom:env(safe-area-inset-bottom)}
       </div>
     </header>
 
-```
-<main class="page" id="page"></main>
-```
-
+    <main class="page" id="page"></main>
   </div>
 </div>
 
-<!-- TOAST -->
-
 <div class="toast-wrap" id="toastWrap"></div>
-
-<!-- ================= MODAL: TASK FORM ================= -->
 
 <div class="modal-bg" id="taskModal">
   <div class="modal lg">
@@ -699,8 +683,6 @@ body{padding-bottom:env(safe-area-inset-bottom)}
   </div>
 </div>
 
-<!-- ================= MODAL: TASK DETAIL ================= -->
-
 <div class="modal-bg" id="detailModal">
   <div class="modal lg">
     <div class="modal-head">
@@ -723,8 +705,6 @@ body{padding-bottom:env(safe-area-inset-bottom)}
   </div>
 </div>
 
-<!-- ================= MODAL: PARAM FORM ================= -->
-
 <div class="modal-bg" id="paramModal">
   <div class="modal sm">
     <div class="modal-head">
@@ -742,8 +722,6 @@ body{padding-bottom:env(safe-area-inset-bottom)}
   </div>
 </div>
 
-<!-- ================= MODAL: CONFIRM ================= -->
-
 <div class="modal-bg" id="confirmModal">
   <div class="modal sm">
     <div class="modal-head">
@@ -759,10 +737,6 @@ body{padding-bottom:env(safe-area-inset-bottom)}
   </div>
 </div>
 
-<!-- ============================================================
-                      FIREBASE & APP LOGIC
-============================================================ -->
-
 <script type="module">
 /* ===========================================================
  * FIREBASE BAĞLANTI YAPILANDIRMASI
@@ -772,13 +746,13 @@ body{padding-bottom:env(safe-area-inset-bottom)}
  * eklemek için config alanlarını doldurun.
  *
  * Adımlar:
- * 1) https://console.firebase.google.com → Yeni proje oluşturun
+ * 1) [https://console.firebase.google.com](https://console.firebase.google.com) → Yeni proje oluşturun
  * 2) Authentication → Sign-in method → Email/Password etkinleştirin
  * 3) Firestore Database → Üretim modunda oluşturun
  * 4) Project Settings → Web App ekleyin → config'i kopyalayın
  * 5) Aşağıdaki firebaseConfig nesnesine yapıştırın
  * 6) Firestore Rules için bu dosyanın altındaki örnek kuralları
- *    Firebase Console → Firestore → Rules sekmesine yapıştırın
+ * Firebase Console → Firestore → Rules sekmesine yapıştırın
  *
  * Mail bildirimi için Firebase Cloud Functions kullanın
  * (bu dosyanın sonundaki "MAIL ENTEGRASYONU" yorum bloğuna bakın).
@@ -800,9 +774,9 @@ let collFn, docFn, getDocsFn, getDocFn, setDocFn, addDocFn, updateDocFn, deleteD
 
 if(USE_FIREBASE){
   try{
-    const app = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
-    const auth = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js");
-    const fs = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+    const app = await import("[https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js](https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js)");
+    const auth = await import("[https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js](https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js)");
+    const fs = await import("[https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js](https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js)");
     fbApp = app.initializeApp(firebaseConfig);
     fbAuth = auth.getAuth(fbApp);
     fbDb = fs.getFirestore(fbApp);
@@ -952,7 +926,6 @@ function closeModal(id){$("#"+id).classList.remove("show");document.body.style.o
 async function doLogin(email,pass){
   if(USE_FIREBASE){
     const cred=await signInFn(fbAuth,email,pass);
-    // Firebase user id ile users koleksiyonundan rol bilgisini çek
     const userDoc=await getDocFn(docFn(fbDb,"users",cred.user.uid));
     if(!userDoc.exists())throw new Error("Kullanıcı kaydı bulunamadı.");
     const u={id:cred.user.uid,...userDoc.data()};
@@ -962,14 +935,11 @@ async function doLogin(email,pass){
     Store.load();
     const q=(email||"").trim().toLowerCase();
     const p=(pass||"").trim().toLowerCase();
-    // Demo modunda hem tam mail hem de kullanıcı adı (@ öncesi) ile giriş kabul edilir
-    // Şifre karşılaştırması da büyük-küçük harf duyarsız
     const u=Store.list("users",x=>{
       if(!x.isActive)return false;
       if((x.pass||"").trim().toLowerCase()!==p)return false;
       const mail=(x.email||"").toLowerCase();
       const userName=mail.split("@")[0];
-      // Kullanıcı adı için hem "cengiz" hem "cengiz.gulcan" çalışsın
       const firstName=userName.split(".")[0];
       return mail===q||userName===q||firstName===q;
     });
@@ -980,11 +950,9 @@ async function doLogin(email,pass){
 async function doLogout(){
   if(USE_FIREBASE){try{await signOutFn(fbAuth);}catch(e){}}
   Store.user_clear();
-  // LOGIN DEVRE DIŞI - sayfa yenilenince tekrar admin olarak giriş yapılır
   location.reload();
 }
 
-// Login form artık devre dışı ama hata olmasın diye opsiyonel kontrol
 const _loginForm=$("#loginForm");
 if(_loginForm){
   _loginForm.addEventListener("submit",async e=>{
@@ -1014,18 +982,14 @@ let calCursor=new Date();
 let calView="month";
 
 function bootApp(){
-  // === LOGIN DEVRE DIŞI - Otomatik Yönetici (Cengiz Gülcan) Oturumu ===
   Store.load();
-  // Seed verisinin yüklendiğinden emin ol
   if(!Store.data||!Store.data.users||Store.data.users.length===0){
     Store.reset();
   }
-  // Cengiz (admin) ile otomatik giriş - oturum bilgisini her zaman tazele
   let u=Store.list("users",x=>x.role==="admin")[0];
   if(!u)u=Store.list("users")[0];
   if(u)Store.user_set(u);
 
-  // Login ekranını kesinlikle gizle, app'i göster
   const lw=$("#loginWrap");if(lw)lw.style.display="none";
   $("#app").classList.add("show");
   $("#app").style.display="grid";
@@ -1034,12 +998,10 @@ function bootApp(){
   $("#sbRole").textContent=u.role==="admin"?"Yönetici":"Personel";
   $("#sbAvatar").textContent=initials(u.fullName);
 
-  // Admin only öğeleri rol göre göster/gizle
   document.querySelectorAll(".admin-only").forEach(el=>{
     el.style.display=u.role==="admin"?"":"none";
   });
 
-  // İlk yükleme
   if(u.role!=="admin"&&["all-tasks","kanban","projects","reports","param-users","param-categories","param-projects","param-statuses","param-priorities","param-departments"].includes(currentView)){
     currentView="dashboard";
   }
@@ -1051,11 +1013,9 @@ function navigate(view){
   document.querySelectorAll(".sb-item[data-view]").forEach(el=>{
     el.classList.toggle("active",el.dataset.view===view);
   });
-  // Mobile menüyü kapat
   $("#sidebar").classList.remove("open");
   $("#sbOverlay").classList.remove("show");
 
-  // Top title
   const titles={
     dashboard:["Ana Görünüm","Dashboard"],
     "my-tasks":["Görevlerim","Bana Atanan Görevler"],
@@ -1093,7 +1053,6 @@ function navigate(view){
     settings:renderSettings
   };
   (renderers[view]||renderDashboard)();
-  // Görev sayısı badge
   const u=Store.user_get();
   if(u){
     const n=Store.list("tasks",t=>!t.isDeleted&&t.assignedToUserId===u.id&&t.status!=="tamam"&&t.status!=="iptal").length;
@@ -1152,7 +1111,6 @@ function renderDashboard(){
   const late=tasks.filter(isLate).length;
   const todayDue=tasks.filter(t=>t.dueDate===fmtDateInput(today())&&t.status!=="tamam"&&t.status!=="iptal").length;
 
-  // Personel bazlı (admin)
   const users=Store.list("users",x=>x.isActive&&x.role==="personel");
   const perUser=users.map(usr=>({
     name:usr.fullName,
@@ -1160,7 +1118,6 @@ function renderDashboard(){
   })).sort((a,b)=>b.count-a.count);
   const maxUser=Math.max(1,...perUser.map(x=>x.count));
 
-  // Proje bazlı
   const projects=Store.list("projects",p=>p.isActive);
   const perProj=projects.map(p=>({
     name:p.projectName,
@@ -1168,7 +1125,6 @@ function renderDashboard(){
   })).sort((a,b)=>b.count-a.count).slice(0,6);
   const maxProj=Math.max(1,...perProj.map(x=>x.count));
 
-  // Donut data
   const donutData=[
     {label:"Yeni",value:open,color:"#3b82f6",key:"yeni"},
     {label:"Devam",value:progress,color:"#f59e0b",key:"devam"},
@@ -1178,7 +1134,6 @@ function renderDashboard(){
   ];
   const donutTotal=donutData.reduce((s,d)=>s+d.value,0)||1;
 
-  // Aylık trend (son 6 ay)
   const months=[];
   for(let i=5;i>=0;i--){
     const d=new Date();d.setMonth(d.getMonth()-i);
@@ -1291,7 +1246,6 @@ function renderDashboard(){
     `:""}
   `;
 
-  // tıklama
   document.querySelectorAll("[data-task-id]").forEach(el=>{
     el.addEventListener("click",()=>openTaskDetail(el.dataset.taskId));
   });
@@ -1392,7 +1346,6 @@ function renderTaskList(opts){
     if(taskListFilters.assignee)arr=arr.filter(t=>t.assignedToUserId===taskListFilters.assignee);
     if(taskListFilters.lateOnly)arr=arr.filter(isLate);
     arr.sort((a,b)=>{
-      // Açık görevler önce, sonra deadline
       const aClosed=a.status==="tamam"||a.status==="iptal";
       const bClosed=b.status==="tamam"||b.status==="iptal";
       if(aClosed!==bClosed)return aClosed?1:-1;
@@ -1526,15 +1479,12 @@ function renderCalendar(){
     const ay=calCursor.getFullYear(),am=calCursor.getMonth();
     $("#calTitle").textContent=calCursor.toLocaleDateString("tr-TR",{month:"long",year:"numeric"});
     const first=new Date(ay,am,1);
-    let startDow=first.getDay();startDow=startDow===0?6:startDow-1; // Pazartesi başlangıç
+    let startDow=first.getDay();startDow=startDow===0?6:startDow-1;
     const daysInMonth=new Date(ay,am+1,0).getDate();
     const days=[];
-    // önceki ay
     const prevDays=new Date(ay,am,0).getDate();
     for(let i=startDow;i>0;i--)days.push({d:new Date(ay,am-1,prevDays-i+1),other:true});
-    // bu ay
     for(let i=1;i<=daysInMonth;i++)days.push({d:new Date(ay,am,i),other:false});
-    // sonraki ay (toplam 42)
     while(days.length<42){const last=days[days.length-1].d;const nd=new Date(last);nd.setDate(nd.getDate()+1);days.push({d:nd,other:nd.getMonth()!==am});}
 
     const tasks=Store.list("tasks",t=>!t.isDeleted&&(u.role==="admin"||t.assignedToUserId===u.id));
@@ -1542,7 +1492,6 @@ function renderCalendar(){
 
     $("#calMonth").innerHTML=days.map(({d,other})=>{
       const ds=fmtDateInput(d);
-      // Görev: dueDate'i bugün ile eşleşen
       const evs=tasks.filter(t=>t.dueDate===ds);
       const isToday=ds===todayStr;
       return `
@@ -1737,7 +1686,6 @@ function renderParamTable(kind){
     return;
   }
 
-  // Sabit listeler (durum & öncelik)
   if(kind==="statuses"||kind==="priorities"){
     const map=kind==="statuses"?STATUS_LABELS:PRIORITY_LABELS;
     const order=kind==="statuses"?STATUS_ORDER:Object.keys(PRIORITY_LABELS);
@@ -1852,7 +1800,6 @@ function renderParamTable(kind){
   document.querySelectorAll("[data-del]").forEach(b=>b.addEventListener("click",()=>{
     confirmAction("Bu kaydı silmek istediğinizden emin misiniz? Soft delete uygulanacaktır.",()=>{
       const r=Store.get(cfg.coll,b.dataset.del);
-      // soft delete (isActive=false), gerçek silme yerine
       if("isActive" in r)Store.update(cfg.coll,r.id,{isActive:false});
       else Store.remove(cfg.coll,r.id);
       toast("Kayıt silindi (pasif yapıldı)","ok");
@@ -1870,51 +1817,45 @@ function openParamForm(cfg,row){
       ${cfg.fields.map(f=>{
         const v=data[f.n];
         if(f.t==="textarea")return `<div class="form-row full"><label>${f.l}${f.req?' <span class="req">*</span>':''}</label><textarea data-name="${f.n}">${escapeHTML(v||"")}</textarea></div>`;
+        if(f.t==="select")return `<div class="form-row full"><label>${f.l}${f.req?' <span class="req">*</span>':''}</label><select data-name="${f.n}">${f.options.map(o=>`<option value="${o.v}" ${v===o.v?"selected":""}>${o.l}</option>`).join("")}</select></div>`;
+        if(f.t==="check")return `<div class="form-row full"><label style="display:flex;align-items:center;gap:8px"><input type="checkbox" data-name="${f.n}" ${v!==false?"checked":""} style="width:18px;height:18px;accent-color:var(--ink)"> ${f.l}</label></div>`;
+        return `<div class="form-row full"><label>${f.l}${f.req?' <span class="req">*</span>':''}</label><input type="${f.t}" data-name="${f.n}" value="${escapeHTML(v||"")}" ${f.req?"required":""}></div>`;
+      }).join("")}
+    </div>
+  `;
+  openModal("paramModal");
 
-```
-    if(f.t==="select")return `<div class="form-row full"><label>${f.l}${f.req?' <span class="req">*</span>':''}</label><select data-name="${f.n}">${f.options.map(o=>`<option value="${o.v}" ${v===o.v?"selected":""}>${o.l}</option>`).join("")}</select></div>`;
-    if(f.t==="check")return `<div class="form-row full"><label style="display:flex;align-items:center;gap:8px"><input type="checkbox" data-name="${f.n}" ${v!==false?"checked":""} style="width:18px;height:18px;accent-color:var(--ink)"> ${f.l}</label></div>`;
-    return `<div class="form-row full"><label>${f.l}${f.req?' <span class="req">*</span>':''}</label><input type="${f.t}" data-name="${f.n}" value="${escapeHTML(v||"")}" ${f.req?"required":""}></div>`;
-  }).join("")}
-</div>
-```
-
-`;
-openModal(“paramModal”);
-
-$(”#pmSave”).onclick=()=>{
-const obj={…(row||{})};
-let valid=true;
-cfg.fields.forEach(f=>{
-const el=$(”#pmBody”).querySelector(`[data-name="${f.n}"]`);
-if(!el)return;
-let v;
-if(f.t===“check”)v=el.checked;
-else v=el.value.trim();
-if(f.req&&!v&&f.t!==“check”){valid=false;el.style.borderColor=“var(–err)”;}
-obj[f.n]=v;
-});
-if(!valid){toast(“Zorunlu alanları doldurun”,“err”);return;}
-if(row){
-Store.update(cfg.coll,row.id,obj);
-toast(“Güncellendi”,“ok”);
-}else{
-Store.add(cfg.coll,obj);
-toast(“Eklendi”,“ok”);
-}
-closeModal(“paramModal”);
-renderParamTable(currentView.replace(“param-”,””));
-};
+  $("#pmSave").onclick=()=>{
+    const obj={...(row||{})};
+    let valid=true;
+    cfg.fields.forEach(f=>{
+      const el=$("#pmBody").querySelector(`[data-name="${f.n}"]`);
+      if(!el)return;
+      let v;
+      if(f.t==="check")v=el.checked;
+      else v=el.value.trim();
+      if(f.req&&!v&&f.t!=="check"){valid=false;el.style.borderColor="var(--err)";}
+      obj[f.n]=v;
+    });
+    if(!valid){toast("Zorunlu alanları doldurun","err");return;}
+    if(row){
+      Store.update(cfg.coll,row.id,obj);
+      toast("Güncellendi","ok");
+    }else{
+      Store.add(cfg.coll,obj);
+      toast("Eklendi","ok");
+    }
+    closeModal("paramModal");
+    renderParamTable(currentView.replace("param-",""));
+  };
 }
 
 /* ===========================================================
-
-- SETTINGS
-- =========================================================== */
-  function renderSettings(){
+ * SETTINGS
+ * =========================================================== */
+function renderSettings(){
   const u=Store.user_get();
-  $(”#page”).innerHTML=`
-  
+  $("#page").innerHTML=`
    <div class="page-head">
      <h1>Ayarlar</h1>
      <p>Görsel tema, hesap bilgileri ve sistem yardımcı fonksiyonları.</p>
@@ -1963,403 +1904,310 @@ renderParamTable(currentView.replace(“param-”,””));
        </div>
      </div>
    </div>
+  `;
 
-`;
+  $("#setDark").addEventListener("click",()=>{
+    const cur=document.documentElement.getAttribute("data-theme")||"light";
+    applyTheme(cur==="dark"?"light":"dark");
+    $("#setDark").classList.toggle("on");
+  });
 
-$(”#setDark”).addEventListener(“click”,()=>{
-const cur=document.documentElement.getAttribute(“data-theme”)||“light”;
-applyTheme(cur===“dark”?“light”:“dark”);
-$(”#setDark”).classList.toggle(“on”);
-});
-
-if($(”#resetData”))$(”#resetData”).addEventListener(“click”,()=>confirmAction(“Tüm yerel demo verileri orijinal hâline döndürülecek. Devam edilsin mi?”,()=>{
-Store.reset();toast(“Demo verisi sıfırlandı”,“ok”);navigate(“dashboard”);
-}));
-if($(”#exportData”))$(”#exportData”).addEventListener(“click”,()=>{
-const blob=new Blob([JSON.stringify(Store.data,null,2)],{type:“application/json”});
-const url=URL.createObjectURL(blob);
-const a=document.createElement(“a”);a.href=url;a.download=`portal_export_${Date.now()}.json`;
-document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
-toast(“Veri indirildi”,“ok”);
-});
+  if($("#resetData"))$("#resetData").addEventListener("click",()=>confirmAction("Tüm yerel demo verileri orijinal hâline döndürülecek. Devam edilsin mi?",()=>{
+    Store.reset();toast("Demo verisi sıfırlandı","ok");navigate("dashboard");
+  }));
+  if($("#exportData"))$("#exportData").addEventListener("click",()=>{
+    const blob=new Blob([JSON.stringify(Store.data,null,2)],{type:"application/json"});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");a.href=url;a.download=`portal_export_${Date.now()}.json`;
+    document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+    toast("Veri indirildi","ok");
+  });
 }
 
 /* ===========================================================
-
-- TASK FORM
-- =========================================================== */
-  function openTaskForm(task,prefill){
+ * TASK FORM
+ * =========================================================== */
+function openTaskForm(task,prefill){
   const u=Store.user_get();
-  if(u.role!==“admin”&&!task){toast(“Yalnızca yöneticiler görev oluşturabilir”,“err”);return;}
-  const cats=Store.list(“categories”,c=>c.isActive);
-  const projs=Store.list(“projects”,p=>p.isActive);
-  const personnel=Store.list(“users”,x=>x.isActive);
+  if(u.role!=="admin"&&!task){toast("Yalnızca yöneticiler görev oluşturabilir","err");return;}
+  const cats=Store.list("categories",c=>c.isActive);
+  const projs=Store.list("projects",p=>p.isActive);
+  const personnel=Store.list("users",x=>x.isActive);
 
-$(”#tfCategory”).innerHTML=’<option value="">— Konu Yok —</option>’+cats.map(c=>`<option value="${c.id}">${escapeHTML(c.categoryName)}</option>`).join(””);
-$(”#tfProject”).innerHTML=’<option value="">— Proje Yok —</option>’+projs.map(p=>`<option value="${p.id}">${escapeHTML(p.projectName)}</option>`).join(””);
-$(”#tfAssignee”).innerHTML=’<option value="">— Seçiniz —</option>’+personnel.map(p=>`<option value="${p.id}">${escapeHTML(p.fullName)}</option>`).join(””);
+  $("#tfCategory").innerHTML='<option value="">— Konu Yok —</option>'+cats.map(c=>`<option value="${c.id}">${escapeHTML(c.categoryName)}</option>`).join("");
+  $("#tfProject").innerHTML='<option value="">— Proje Yok —</option>'+projs.map(p=>`<option value="${p.id}">${escapeHTML(p.projectName)}</option>`).join("");
+  $("#tfAssignee").innerHTML='<option value="">— Seçiniz —</option>'+personnel.map(p=>`<option value="${p.id}">${escapeHTML(p.fullName)}</option>`).join("");
 
-if(task){
-$(”#taskModalTitle”).textContent=“Görevi Düzenle”;
-$(”#tfId”).value=task.id;
-$(”#tfTitle”).value=task.title;
-$(”#tfDesc”).value=task.description||””;
-$(”#tfCategory”).value=task.categoryId||””;
-$(”#tfProject”).value=task.projectId||””;
-$(”#tfAssignee”).value=task.assignedToUserId;
-$(”#tfPriority”).value=task.priority;
-$(”#tfStatus”).value=task.status;
-$(”#tfProgress”).value=task.progress||0;
-$(”#tfStart”).value=task.startDate;
-$(”#tfDue”).value=task.dueDate;
-$(”#tfLinks”).value=task.links||””;
-$(”#tfNotes”).value=task.notes||””;
-}else{
-$(”#taskModalTitle”).textContent=“Yeni Görev”;
-document.getElementById(“taskForm”).reset();
-$(”#tfId”).value=””;
-$(”#tfStatus”).value=“yeni”;
-$(”#tfPriority”).value=“normal”;
-$(”#tfProgress”).value=0;
-$(”#tfStart”).value=fmtDateInput(today());
-const due=new Date();due.setDate(due.getDate()+7);
-$(”#tfDue”).value=fmtDateInput(due);
-if(prefill){
-Object.keys(prefill).forEach(k=>{
-const map={startDate:“tfStart”,dueDate:“tfDue”};
-if(map[k])$(”#”+map[k]).value=prefill[k];
-});
-}
-}
-openModal(“taskModal”);
+  if(task){
+    $("#taskModalTitle").textContent="Görevi Düzenle";
+    $("#tfId").value=task.id;
+    $("#tfTitle").value=task.title;
+    $("#tfDesc").value=task.description||"";
+    $("#tfCategory").value=task.categoryId||"";
+    $("#tfProject").value=task.projectId||"";
+    $("#tfAssignee").value=task.assignedToUserId;
+    $("#tfPriority").value=task.priority;
+    $("#tfStatus").value=task.status;
+    $("#tfProgress").value=task.progress||0;
+    $("#tfStart").value=task.startDate;
+    $("#tfDue").value=task.dueDate;
+    $("#tfLinks").value=task.links||"";
+    $("#tfNotes").value=task.notes||"";
+  }else{
+    $("#taskModalTitle").textContent="Yeni Görev";
+    document.getElementById("taskForm").reset();
+    $("#tfId").value="";
+    $("#tfStatus").value="yeni";
+    $("#tfPriority").value="normal";
+    $("#tfProgress").value=0;
+    $("#tfStart").value=fmtDateInput(today());
+    const due=new Date();due.setDate(due.getDate()+7);
+    $("#tfDue").value=fmtDateInput(due);
+    if(prefill){
+      Object.keys(prefill).forEach(k=>{
+        const map={startDate:"tfStart",dueDate:"tfDue"};
+        if(map[k])$("#"+map[k]).value=prefill[k];
+      });
+    }
+  }
+  openModal("taskModal");
 }
 
-$(”#taskSave”).addEventListener(“click”,async()=>{
-const id=$(”#tfId”).value;
-const u=Store.user_get();
-const obj={
-title:$(”#tfTitle”).value.trim(),
-description:$(”#tfDesc”).value.trim(),
-categoryId:$(”#tfCategory”).value||null,
-projectId:$(”#tfProject”).value||null,
-assignedToUserId:$(”#tfAssignee”).value,
-priority:$(”#tfPriority”).value,
-status:$(”#tfStatus”).value,
-progress:Math.max(0,Math.min(100,parseInt($(”#tfProgress”).value)||0)),
-startDate:$(”#tfStart”).value,
-dueDate:$(”#tfDue”).value,
-links:$(”#tfLinks”).value.trim(),
-notes:$(”#tfNotes”).value.trim(),
-updatedAt:new Date().toISOString()
-};
-if(!obj.title){toast(“Başlık zorunludur”,“err”);return;}
-if(!obj.assignedToUserId){toast(“Personel seçimi zorunludur”,“err”);return;}
-if(!obj.startDate||!obj.dueDate){toast(“Tarihler zorunludur”,“err”);return;}
-if(new Date(obj.dueDate)<new Date(obj.startDate)){toast(“Bitiş tarihi başlangıçtan önce olamaz”,“err”);return;}
+$("#taskSave").addEventListener("click",async()=>{
+  const id=$("#tfId").value;
+  const u=Store.user_get();
+  const obj={
+    title:$("#tfTitle").value.trim(),
+    description:$("#tfDesc").value.trim(),
+    categoryId:$("#tfCategory").value||null,
+    projectId:$("#tfProject").value||null,
+    assignedToUserId:$("#tfAssignee").value,
+    priority:$("#tfPriority").value,
+    status:$("#tfStatus").value,
+    progress:Math.max(0,Math.min(100,parseInt($("#tfProgress").value)||0)),
+    startDate:$("#tfStart").value,
+    dueDate:$("#tfDue").value,
+    links:$("#tfLinks").value.trim(),
+    notes:$("#tfNotes").value.trim(),
+    updatedAt:new Date().toISOString()
+  };
+  if(!obj.title){toast("Başlık zorunludur","err");return;}
+  if(!obj.assignedToUserId){toast("Personel seçimi zorunludur","err");return;}
+  if(!obj.startDate||!obj.dueDate){toast("Tarihler zorunludur","err");return;}
+  if(new Date(obj.dueDate)<new Date(obj.startDate)){toast("Bitiş tarihi başlangıçtan önce olamaz","err");return;}
 
-if(obj.status===“tamam”){obj.progress=100;obj.completedDate=obj.completedDate||new Date().toISOString();}
+  if(obj.status==="tamam"){obj.progress=100;obj.completedDate=obj.completedDate||new Date().toISOString();}
 
-if(id){
-const old=Store.get(“tasks”,id);
-Store.update(“tasks”,id,obj);
-// log
-if(old.status!==obj.status){
-Store.add(“taskLogs”,{taskId:id,actionType:“update”,description:`Durum '${STATUS_LABELS[old.status]}' → '${STATUS_LABELS[obj.status]}' olarak güncellendi`,updatedBy:u.id,updatedAt:new Date().toISOString()});
-}
-if(old.assignedToUserId!==obj.assignedToUserId){
-const newU=Store.get(“users”,obj.assignedToUserId);
-Store.add(“taskLogs”,{taskId:id,actionType:“update”,description:`Atanan: ${newU?.fullName||"—"}`,updatedBy:u.id,updatedAt:new Date().toISOString()});
-sendAssignmentMail(Store.get(“tasks”,id));
-}
-toast(“Görev güncellendi”,“ok”);
-}else{
-obj.createdBy=u.id;
-obj.createdAt=new Date().toISOString();
-obj.isDeleted=false;
-obj.completedDate=obj.status===“tamam”?new Date().toISOString():null;
-const t=Store.add(“tasks”,obj);
-Store.add(“taskLogs”,{taskId:t.id,actionType:“create”,description:“Görev oluşturuldu”,updatedBy:u.id,updatedAt:new Date().toISOString()});
-sendAssignmentMail(t);
-toast(“Görev oluşturuldu ve atandı”,“ok”);
-}
-closeModal(“taskModal”);
-navigate(currentView);
+  if(id){
+    const old=Store.get("tasks",id);
+    Store.update("tasks",id,obj);
+    if(old.status!==obj.status){
+      Store.add("taskLogs",{taskId:id,actionType:"update",description:`Durum '${STATUS_LABELS[old.status]}' → '${STATUS_LABELS[obj.status]}' olarak güncellendi`,updatedBy:u.id,updatedAt:new Date().toISOString()});
+    }
+    if(old.assignedToUserId!==obj.assignedToUserId){
+      const newU=Store.get("users",obj.assignedToUserId);
+      Store.add("taskLogs",{taskId:id,actionType:"update",description:`Atanan: ${newU?.fullName||"—"}`,updatedBy:u.id,updatedAt:new Date().toISOString()});
+      sendAssignmentMail(Store.get("tasks",id));
+    }
+    toast("Görev güncellendi","ok");
+  }else{
+    obj.createdBy=u.id;
+    obj.createdAt=new Date().toISOString();
+    obj.isDeleted=false;
+    obj.completedDate=obj.status==="tamam"?new Date().toISOString():null;
+    const t=Store.add("tasks",obj);
+    Store.add("taskLogs",{taskId:t.id,actionType:"create",description:"Görev oluşturuldu",updatedBy:u.id,updatedAt:new Date().toISOString()});
+    sendAssignmentMail(t);
+    toast("Görev oluşturuldu ve atandı","ok");
+  }
+  closeModal("taskModal");
+  navigate(currentView);
 });
 
 /* ===========================================================
-
-- TASK DETAIL
-- =========================================================== */
-  let dmCurrentId=null;
-  function openTaskDetail(id){
-  const t=Store.get(“tasks”,id);
-  if(!t){toast(“Görev bulunamadı”,“err”);return;}
+ * TASK DETAIL
+ * =========================================================== */
+let dmCurrentId=null;
+function openTaskDetail(id){
+  const t=Store.get("tasks",id);
+  if(!t){toast("Görev bulunamadı","err");return;}
   const u=Store.user_get();
-  const isAdmin=u.role===“admin”;
+  const isAdmin=u.role==="admin";
   const isAssignee=t.assignedToUserId===u.id;
-  if(!isAdmin&&!isAssignee){toast(“Bu görevi görüntüleme yetkiniz yok”,“err”);return;}
+  if(!isAdmin&&!isAssignee){toast("Bu görevi görüntüleme yetkiniz yok","err");return;}
   dmCurrentId=id;
-  const usr=Store.get(“users”,t.assignedToUserId);
-  const proj=Store.get(“projects”,t.projectId);
-  const cat=Store.get(“categories”,t.categoryId);
+  const usr=Store.get("users",t.assignedToUserId);
+  const proj=Store.get("projects",t.projectId);
+  const cat=Store.get("categories",t.categoryId);
 
-$(”#dmTitle”).textContent=t.title;
-$(”#dmSub”).innerHTML=`<span class="chip s-${t.status}">${STATUS_LABELS[t.status]}</span> <span class="chip p-${t.priority}">${PRIORITY_LABELS[t.priority]}</span>${isLate(t)?' <span class="chip p-critical"><i class="fa-solid fa-triangle-exclamation"></i> Geciken</span>':''}`;
+  $("#dmTitle").textContent=t.title;
+  $("#dmSub").innerHTML=`<span class="chip s-${t.status}">${STATUS_LABELS[t.status]}</span> <span class="chip p-${t.priority}">${PRIORITY_LABELS[t.priority]}</span>${isLate(t)?' <span class="chip p-critical"><i class="fa-solid fa-triangle-exclamation"></i> Geciken</span>':''}`;
 
-// tab default = info
-document.querySelectorAll(”.td-tabs button”).forEach(b=>b.classList.toggle(“active”,b.dataset.tab===“info”));
-paintDetail(“info”);
+  document.querySelectorAll(".td-tabs button").forEach(b=>b.classList.toggle("active",b.dataset.tab==="info"));
+  paintDetail("info");
 
-function paintDetail(tab){
-if(tab===“info”){
-$(”#dmBody”).innerHTML=` <div class="td-info"> <div class="item"><div class="l">Atanan</div><div class="v">${escapeHTML(usr?.fullName||"—")}</div></div> <div class="item"><div class="l">Proje</div><div class="v">${escapeHTML(proj?.projectName||"—")}</div></div> <div class="item"><div class="l">Konu</div><div class="v">${escapeHTML(cat?.categoryName||"—")}</div></div> <div class="item"><div class="l">Oluşturan</div><div class="v">${escapeHTML(Store.get("users",t.createdBy)?.fullName||"—")}</div></div> <div class="item"><div class="l">Başlangıç</div><div class="v">${fmtDate(t.startDate)}</div></div> <div class="item"><div class="l">Bitiş</div><div class="v" style="${isLate(t)?'color:var(--err)':''}">${fmtDate(t.dueDate)}${isLate(t)?' <i class="fa-solid fa-triangle-exclamation"></i>':''}</div></div> <div class="item"><div class="l">Tamamlanma</div><div class="v">${fmtDate(t.completedDate)}</div></div> <div class="item"><div class="l">Son Güncelleme</div><div class="v">${fmtDateTime(t.updatedAt)}</div></div> </div> <div class="td-progress-wrap"> <div class="l"><span>İlerleme</span><span>${t.progress}%</span></div> <div class="td-progress-bar"><div style="width:${t.progress}%"></div></div> ${(isAdmin||isAssignee)&&t.status!=="tamam"&&t.status!=="iptal"?`
-<div class="td-progress-input">
-<input type="range" min="0" max="100" value="${t.progress}" id="dmProgressInput">
-<span id="dmProgressVal">${t.progress}%</span>
-<button class="btn solid" id="dmProgressSave" style="padding:6px 10px"><i class="fa-solid fa-check"></i></button>
-</div>
-`:""} </div> <div style="margin-bottom:18px"> <div style="font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);font-weight:700;font-family:var(--mono);margin-bottom:6px">Açıklama</div> <div style="font-size:14px;line-height:1.6;color:var(--ink-2);white-space:pre-wrap">${escapeHTML(t.description||"—")}</div> </div> ${t.notes?`<div style="margin-bottom:18px">
-<div style="font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);font-weight:700;font-family:var(--mono);margin-bottom:6px">Notlar</div>
-<div style="font-size:14px;line-height:1.6;color:var(--ink-2);white-space:pre-wrap;background:var(--bg-soft);padding:12px;border-radius:8px">${escapeHTML(t.notes)}</div>
-</div>`:""} ${t.links?`<div style="margin-bottom:18px">
-<div style="font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);font-weight:700;font-family:var(--mono);margin-bottom:6px">Bağlantılar</div>
-${t.links.split(”,”).map(l=>l.trim()).filter(Boolean).map(l=>`<a href="${escapeHTML(l)}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:6px 10px;background:var(--bg-soft);border-radius:6px;font-size:12.5px;color:var(--info);margin-right:6px;font-family:var(--mono)"><i class="fa-solid fa-link"></i>${escapeHTML(l)}</a>`).join(””)}
-</div>`:""} <div style="display:flex;gap:8px;flex-wrap:wrap"> ${(isAdmin||isAssignee)&&t.status!=="tamam"&&t.status!=="iptal"?`
-<button class="btn ghost" id="dmSetProgress"><i class="fa-solid fa-spinner"></i>Devam Ediyor</button>
-<button class="btn solid" id="dmSetDone"><i class="fa-solid fa-check-circle"></i>Tamamlandı Olarak İşaretle</button>
-`:""} </div> `;
-// Progress live
-const range=document.getElementById(“dmProgressInput”);
-if(range){
-range.addEventListener(“input”,e=>{$(”#dmProgressVal”).textContent=e.target.value+”%”;});
-document.getElementById(“dmProgressSave”).addEventListener(“click”,()=>{
-const v=parseInt(range.value);
-Store.update(“tasks”,t.id,{progress:v,updatedAt:new Date().toISOString()});
-Store.add(“taskLogs”,{taskId:t.id,actionType:“update”,description:`İlerleme güncellendi: %${v}`,updatedBy:u.id,updatedAt:new Date().toISOString()});
-toast(“İlerleme güncellendi”,“ok”);
-openTaskDetail(t.id);
-});
-}
-const setDone=document.getElementById(“dmSetDone”);
-if(setDone)setDone.addEventListener(“click”,()=>{
-Store.update(“tasks”,t.id,{status:“tamam”,progress:100,completedDate:new Date().toISOString(),updatedAt:new Date().toISOString()});
-Store.add(“taskLogs”,{taskId:t.id,actionType:“update”,description:“Görev tamamlandı olarak işaretlendi”,updatedBy:u.id,updatedAt:new Date().toISOString()});
-toast(“Görev tamamlandı”,“ok”);
-openTaskDetail(t.id);
-navigate(currentView);
-});
-const setProg=document.getElementById(“dmSetProgress”);
-if(setProg)setProg.addEventListener(“click”,()=>{
-Store.update(“tasks”,t.id,{status:“devam”,updatedAt:new Date().toISOString()});
-Store.add(“taskLogs”,{taskId:t.id,actionType:“update”,description:“Durum ‘Devam Ediyor’ olarak güncellendi”,updatedBy:u.id,updatedAt:new Date().toISOString()});
-toast(“Durum güncellendi”,“ok”);
-openTaskDetail(t.id);
-navigate(currentView);
-});
-}else{
-const logs=Store.list(“taskLogs”,l=>l.taskId===t.id).sort((a,b)=>new Date(b.updatedAt)-new Date(a.updatedAt));
-$(”#dmBody”).innerHTML=`<div style="margin-bottom:14px"> ${logs.map(l=>{ const lu=Store.get("users",l.updatedBy); return`<div class="td-log ${l.actionType==='create'?'add':l.actionType==='note'?'note':'update'}">
-<div class="when">${fmtDateTime(l.updatedAt)}</div>
-<div><span class="who">${escapeHTML(lu?.fullName||“Sistem”)}</span></div>
-<div class="what">${escapeHTML(l.description)}</div>
-</div>`; }).join("")||'<div style="color:var(--ink-3);font-size:13px;padding:14px;text-align:center">Henüz kayıt yok.</div>'} </div> ${(isAdmin||isAssignee)?`
-<div style="border-top:1px solid var(--line);padding-top:14px">
-<div style="font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);font-weight:700;font-family:var(--mono);margin-bottom:6px">Yeni Not / Açıklama</div>
-<div class="note-add">
-<textarea id="dmNoteText" placeholder="Açıklama veya ilerleme notu yazın..."></textarea>
-<button class="btn solid" id="dmNoteSave"><i class="fa-solid fa-paper-plane"></i></button>
-</div>
-</div>
-`:""} `;
-const noteSave=document.getElementById(“dmNoteSave”);
-if(noteSave)noteSave.addEventListener(“click”,()=>{
-const v=document.getElementById(“dmNoteText”).value.trim();
-if(!v){toast(“Boş not eklenemez”,“warn”);return;}
-Store.add(“taskLogs”,{taskId:t.id,actionType:“note”,description:v,updatedBy:u.id,updatedAt:new Date().toISOString()});
-Store.update(“tasks”,t.id,{updatedAt:new Date().toISOString()});
-toast(“Not eklendi”,“ok”);
-paintDetail(“logs”);
-});
-}
-}
+  function paintDetail(tab){
+    if(tab==="info"){
+      $("#dmBody").innerHTML=`
+        <div class="td-info">
+          <div class="item"><div class="l">Atanan</div><div class="v">${escapeHTML(usr?.fullName||"—")}</div></div>
+          <div class="item"><div class="l">Proje</div><div class="v">${escapeHTML(proj?.projectName||"—")}</div></div>
+          <div class="item"><div class="l">Konu</div><div class="v">${escapeHTML(cat?.categoryName||"—")}</div></div>
+          <div class="item"><div class="l">Oluşturan</div><div class="v">${escapeHTML(Store.get("users",t.createdBy)?.fullName||"—")}</div></div>
+          <div class="item"><div class="l">Başlangıç</div><div class="v">${fmtDate(t.startDate)}</div></div>
+          <div class="item"><div class="l">Bitiş</div><div class="v" style="${isLate(t)?'color:var(--err)':''}">${fmtDate(t.dueDate)}${isLate(t)?' <i class="fa-solid fa-triangle-exclamation"></i>':''}</div></div>
+          <div class="item"><div class="l">Tamamlanma</div><div class="v">${fmtDate(t.completedDate)}</div></div>
+          <div class="item"><div class="l">Son Güncelleme</div><div class="v">${fmtDateTime(t.updatedAt)}</div></div>
+        </div>
+        <div class="td-progress-wrap">
+          <div class="l"><span>İlerleme</span><span>${t.progress}%</span></div>
+          <div class="td-progress-bar"><div style="width:${t.progress}%"></div></div>
+          ${(isAdmin||isAssignee)&&t.status!=="tamam"&&t.status!=="iptal"?`
+            <div class="td-progress-input">
+              <input type="range" min="0" max="100" value="${t.progress}" id="dmProgressInput">
+              <span id="dmProgressVal">${t.progress}%</span>
+              <button class="btn solid" id="dmProgressSave" style="padding:6px 10px"><i class="fa-solid fa-check"></i></button>
+            </div>
+          `:""}
+        </div>
+        <div style="margin-bottom:18px">
+          <div style="font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);font-weight:700;font-family:var(--mono);margin-bottom:6px">Açıklama</div>
+          <div style="font-size:14px;line-height:1.6;color:var(--ink-2);white-space:pre-wrap">${escapeHTML(t.description||"—")}</div>
+        </div>
+        ${t.notes?`
+        <div style="margin-bottom:18px">
+          <div style="font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);font-weight:700;font-family:var(--mono);margin-bottom:6px">Notlar</div>
+          <div style="font-size:14px;line-height:1.6;color:var(--ink-2);white-space:pre-wrap;background:var(--bg-soft);padding:12px;border-radius:8px">${escapeHTML(t.notes)}</div>
+        </div>
+        `:""}
+        ${t.links?`
+        <div style="margin-bottom:18px">
+          <div style="font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);font-weight:700;font-family:var(--mono);margin-bottom:6px">Bağlantılar</div>
+          ${t.links.split(",").map(l=>l.trim()).filter(Boolean).map(l=>`<a href="${escapeHTML(l)}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:6px 10px;background:var(--bg-soft);border-radius:6px;font-size:12.5px;color:var(--info);margin-right:6px;font-family:var(--mono)"><i class="fa-solid fa-link"></i>${escapeHTML(l)}</a>`).join("")}
+        </div>
+        `:""}
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          ${(isAdmin||isAssignee)&&t.status!=="tamam"&&t.status!=="iptal"?`
+            <button class="btn ghost" id="dmSetProgress"><i class="fa-solid fa-spinner"></i>Devam Ediyor</button>
+            <button class="btn solid" id="dmSetDone"><i class="fa-solid fa-check-circle"></i>Tamamlandı Olarak İşaretle</button>
+          `:""}
+        </div>
+      `;
 
-document.querySelectorAll(”.td-tabs button”).forEach(b=>{
-b.onclick=()=>{
-document.querySelectorAll(”.td-tabs button”).forEach(x=>x.classList.toggle(“active”,x===b));
-paintDetail(b.dataset.tab);
-};
-});
-$(”#dmEdit”).onclick=()=>{closeModal(“detailModal”);openTaskForm(t);};
-$(”#dmDel”).onclick=()=>{
-confirmAction(“Görev silinsin mi? (Soft delete uygulanır)”,()=>{
-Store.update(“tasks”,t.id,{isDeleted:true,updatedAt:new Date().toISOString()});
-Store.add(“taskLogs”,{taskId:t.id,actionType:“delete”,description:“Görev silindi (soft delete)”,updatedBy:u.id,updatedAt:new Date().toISOString()});
-toast(“Görev silindi”,“ok”);
-closeModal(“detailModal”);
-navigate(currentView);
-});
-};
-// Personel ise edit/delete butonlarını gizle
-$(”#dmEdit”).style.display=isAdmin?””:“none”;
-$(”#dmDel”).style.display=isAdmin?””:“none”;
-
-openModal(“detailModal”);
-}
-
-/* ===========================================================
-
-- CONFIRM DIALOG
-- =========================================================== */
-  function confirmAction(text,cb){
-  $(”#cmText”).textContent=text;
-  $(”#cmYes”).onclick=()=>{closeModal(“confirmModal”);cb();};
-  openModal(“confirmModal”);
+      const range=document.getElementById("dmProgressInput");
+      if(range){
+        range.addEventListener("input",e=>{$("#dmProgressVal").textContent=e.target.value+"%";});
+        document.getElementById("dmProgressSave").addEventListener("click",()=>{
+          const v=parseInt(range.value);
+          Store.update("tasks",t.id,{progress:v,updatedAt:new Date().toISOString()});
+          Store.add("taskLogs",{taskId:t.id,actionType:"update",description:`İlerleme güncellendi: %${v}`,updatedBy:u.id,updatedAt:new Date().toISOString()});
+          toast("İlerleme güncellendi","ok");
+          openTaskDetail(t.id);
+        });
+      }
+      const setDone=document.getElementById("dmSetDone");
+      if(setDone)setDone.addEventListener("click",()=>{
+        Store.update("tasks",t.id,{status:"tamam",progress:100,completedDate:new Date().toISOString(),updatedAt:new Date().toISOString()});
+        Store.add("taskLogs",{taskId:t.id,actionType:"update",description:"Görev tamamlandı olarak işaretlendi",updatedBy:u.id,updatedAt:new Date().toISOString()});
+        toast("Görev tamamlandı","ok");
+        openTaskDetail(t.id);
+        navigate(currentView);
+      });
+      const setProg=document.getElementById("dmSetProgress");
+      if(setProg)setProg.addEventListener("click",()=>{
+        Store.update("tasks",t.id,{status:"devam",updatedAt:new Date().toISOString()});
+        Store.add("taskLogs",{taskId:t.id,actionType:"update",description:"Durum 'Devam Ediyor' olarak güncellendi",updatedBy:u.id,updatedAt:new Date().toISOString()});
+        toast("Durum güncellendi","ok");
+        openTaskDetail(t.id);
+        navigate(currentView);
+      });
+    }else{
+      const logs=Store.list("taskLogs",l=>l.taskId===t.id).sort((a,b)=>new Date(b.updatedAt)-new Date(a.updatedAt));
+      $("#dmBody").innerHTML=`
+        <div style="margin-bottom:14px">
+          ${logs.map(l=>{
+            const lu=Store.get("users",l.updatedBy);
+            return`
+              <div class="td-log ${l.actionType==='create'?'add':l.actionType==='note'?'note':'update'}">
+                <div class="when">${fmtDateTime(l.updatedAt)}</div>
+                <div><span class="who">${escapeHTML(lu?.fullName||"Sistem")}</span></div>
+                <div class="what">${escapeHTML(l.description)}</div>
+              </div>
+            `;
+          }).join("")||'<div style="color:var(--ink-3);font-size:13px;padding:14px;text-align:center">Henüz kayıt yok.</div>'}
+        </div>
+        ${(isAdmin||isAssignee)?`
+          <div style="border-top:1px solid var(--line);padding-top:14px">
+            <div style="font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);font-weight:700;font-family:var(--mono);margin-bottom:6px">Yeni Not / Açıklama</div>
+            <div class="note-add">
+              <textarea id="dmNoteText" placeholder="Açıklama veya ilerleme notu yazın..."></textarea>
+              <button class="btn solid" id="dmNoteSave"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+          </div>
+        `:""}
+      `;
+      const noteSave=document.getElementById("dmNoteSave");
+      if(noteSave)noteSave.addEventListener("click",()=>{
+        const v=document.getElementById("dmNoteText").value.trim();
+        if(!v){toast("Boş not eklenemez","warn");return;}
+        Store.add("taskLogs",{taskId:t.id,actionType:"note",description:v,updatedBy:u.id,updatedAt:new Date().toISOString()});
+        Store.update("tasks",t.id,{updatedAt:new Date().toISOString()});
+        toast("Not eklendi","ok");
+        paintDetail("logs");
+      });
+    }
   }
 
-/* ===========================================================
-
-- MAIL ENTEGRASYONU - GÖREV ATAMA BİLDİRİMİ
-- -----
-- Demo modda mail gönderimi simüle edilir (toast).
-- Üretim için aşağıdaki YÖNTEMLERDEN biri tercih edilebilir:
-- 
-- YÖNTEM 1: Firebase Cloud Functions (Önerilen, en güvenli)
-- -----
-- Cloud Functions içinde Nodemailer + SMTP kullanılır.
-- Frontend yalnızca Firestore’a kayıt yapar ve trigger ile
-- mail otomatik gönderilir.
-- 
-- functions/index.js:
-- 
-- const functions = require(‘firebase-functions’);
-- const nodemailer = require(‘nodemailer’);
-- const transporter = nodemailer.createTransport({
-- ```
-  host: 'smtp.office365.com', port: 587, secure: false,
-  ```
-- ```
-  auth: { user: functions.config().mail.user,
-  ```
-- ```
-          pass: functions.config().mail.pass }
-  ```
-- });
-- 
-- exports.sendTaskAssignmentMail = functions.firestore
-- ```
-  .document('tasks/{taskId}')
-  ```
-- ```
-  .onCreate(async (snap, ctx) => {
-  ```
-- ```
-    const t = snap.data();
-  ```
-- ```
-    const userDoc = await admin.firestore()
-  ```
-- ```
-      .doc(`users/${t.assignedToUserId}`).get();
-  ```
-- ```
-    const u = userDoc.data();
-  ```
-- 
-- ```
-    // ICS calendar invite oluşturma (Outlook/Google uyumlu):
-  ```
-- ```
-    const ics = [
-  ```
-- ```
-      'BEGIN:VCALENDAR','VERSION:2.0','METHOD:REQUEST',
-  ```
-- ```
-      'BEGIN:VEVENT',`UID:${ctx.params.taskId}@halkfaktoring.com`,
-  ```
-- ```
-      `DTSTAMP:${new Date().toISOString().replace(/[-:.]/g,'').slice(0,15)}Z`,
-  ```
-- ```
-      `DTSTART:${t.startDate.replace(/-/g,'')}T090000`,
-  ```
-- ```
-      `DTEND:${t.dueDate.replace(/-/g,'')}T180000`,
-  ```
-- ```
-      `SUMMARY:[Görev] ${t.title}`,
-  ```
-- ```
-      `DESCRIPTION:${t.description}\\n\\nÖncelik: ${t.priority}`,
-  ```
-- ```
-      `ORGANIZER;CN=Görev Portalı:mailto:[email protected]`,
-  ```
-- ```
-      `ATTENDEE;ROLE=REQ-PARTICIPANT:mailto:${u.email}`,
-  ```
-- ```
-      'END:VEVENT','END:VCALENDAR'
-  ```
-- ```
-    ].join('\r\n');
-  ```
-- 
-- ```
-    await transporter.sendMail({
-  ```
-- ```
-      from: '"Halk Faktoring · Görev Portalı" <[email protected]>',
-  ```
-- ```
-      to: u.email,
-  ```
-- ```
-      subject: `[Yeni Görev] ${t.title}`,
-  ```
-- ```
-      html: htmlTemplate(t),
-  ```
-- ```
-      icalEvent: { method: 'REQUEST', content: ics }
-  ```
-- ```
-    });
-  ```
-- ```
+  document.querySelectorAll(".td-tabs button").forEach(b=>{
+    b.onclick=()=>{
+      document.querySelectorAll(".td-tabs button").forEach(x=>x.classList.toggle("active",x===b));
+      paintDetail(b.dataset.tab);
+    };
   });
-  ```
-- 
-- YÖNTEM 2: EmailJS (Hızlı ama frontend tabanlı)
-- -----
-- https://www.emailjs.com hesabı oluşturup template ID alın.
-- 
-- import emailjs from ‘@emailjs/browser’;
-- emailjs.send(‘SERVICE_ID’,‘TEMPLATE_ID’,{
-- ```
-  to_email: assignee.email, task_title: t.title, ...
-  ```
-- },‘PUBLIC_KEY’);
-- 
-- YÖNTEM 3: SendGrid / SMTP REST API (mail gateway üzerinden)
-- =========================================================== */
-  function sendAssignmentMail(task){
+  $("#dmEdit").onclick=()=>{closeModal("detailModal");openTaskForm(t);};
+  $("#dmDel").onclick=()=>{
+    confirmAction("Görev silinsin mi? (Soft delete uygulanır)",()=>{
+      Store.update("tasks",t.id,{isDeleted:true,updatedAt:new Date().toISOString()});
+      Store.add("taskLogs",{taskId:t.id,actionType:"delete",description:"Görev silindi (soft delete)",updatedBy:u.id,updatedAt:new Date().toISOString()});
+      toast("Görev silindi","ok");
+      closeModal("detailModal");
+      navigate(currentView);
+    });
+  };
+  $("#dmEdit").style.display=isAdmin?"":"none";
+  $("#dmDel").style.display=isAdmin?"":"none";
+
+  openModal("detailModal");
+}
+
+/* ===========================================================
+ * CONFIRM DIALOG
+ * =========================================================== */
+function confirmAction(text,cb){
+  $("#cmText").textContent=text;
+  $("#cmYes").onclick=()=>{closeModal("confirmModal");cb();};
+  openModal("confirmModal");
+}
+
+/* ===========================================================
+ * MAIL ENTEGRASYONU - GÖREV ATAMA BİLDİRİMİ
+ * =========================================================== */
+function sendAssignmentMail(task){
   if(!task)return;
-  const assignee=Store.get(“users”,task.assignedToUserId);
+  const assignee=Store.get("users",task.assignedToUserId);
   if(!assignee)return;
-  const proj=Store.get(“projects”,task.projectId);
+  const proj=Store.get("projects",task.projectId);
   const portalUrl=window.location.origin+window.location.pathname;
 
-// Demo mod: Console + Toast
-const subject=`[Yeni Görev] ${task.title}`;
-const body=`
+  const subject=`[Yeni Görev] ${task.title}`;
+  const body=`
 Sayın ${assignee.fullName},
 
 Size yeni bir görev atanmıştır:
 
 📋 Başlık: ${task.title}
-📝 Açıklama: ${task.description||”—”}
-📁 Proje: ${proj?.projectName||”—”}
+📝 Açıklama: ${task.description||"—"}
+📁 Proje: ${proj?.projectName||"—"}
 ⚡ Öncelik: ${PRIORITY_LABELS[task.priority]}
 📅 Başlangıç: ${fmtDate(task.startDate)}
 🎯 Hedef Tarih: ${fmtDate(task.dueDate)}
@@ -2367,94 +2215,49 @@ Size yeni bir görev atanmıştır:
 🔗 Portal: ${portalUrl}
 
 Halk Faktoring · IT Görev Portalı
-`; console.log("📧 [Mail Gönderim Simülasyonu]\nKime: "+assignee.email+"\nKonu: "+subject+"\n"+body); toast(`Mail bildirimi hazırlandı: ${assignee.email}`,“ok”);
-
-// ICS calendar invite blob (kullanıcı isterse indirilebilir)
-// Bu kısım üretimde Cloud Functions tarafına taşınmalıdır.
+  `;
+  console.log("📧 [Mail Gönderim Simülasyonu]\nKime: "+assignee.email+"\nKonu: "+subject+"\n"+body);
+  toast(`Mail bildirimi hazırlandı: ${assignee.email}`,"ok");
 }
 
 /* ===========================================================
-
-- BAŞLANGIÇ
-- =========================================================== */
-  function _runInit(){
+ * BAŞLANGIÇ
+ * =========================================================== */
+function _runInit(){
   if(USE_FIREBASE){
-  // Firebase auth state listener
-  onAuthChangedFn(fbAuth, async (fbu)=>{
-  if(fbu){
-  try{
-  const userDoc=await getDocFn(docFn(fbDb,“users”,fbu.uid));
-  if(userDoc.exists()){
-  Store.user_set({id:fbu.uid,…userDoc.data()});
-  // Firestore’dan veri çek
-  await loadFromFirestore();
-  bootApp();
-  }
-  }catch(e){console.error(e);}
-  }
-  });
+    onAuthChangedFn(fbAuth, async (fbu)=>{
+      if(fbu){
+        try{
+          const userDoc=await getDocFn(docFn(fbDb,"users",fbu.uid));
+          if(userDoc.exists()){
+            Store.user_set({id:fbu.uid,...userDoc.data()});
+            await loadFromFirestore();
+            bootApp();
+          }
+        }catch(e){console.error(e);}
+      }
+    });
   }else{
-  Store.load();
-  // LOGIN DEVRE DIŞI - Her durumda bootApp çağır
-  bootApp();
+    Store.load();
+    bootApp();
   }
-  }
-  if(document.readyState===“loading”){
-  document.addEventListener(“DOMContentLoaded”,_runInit);
-  }else{
+}
+if(document.readyState==="loading"){
+  document.addEventListener("DOMContentLoaded",_runInit);
+}else{
   _runInit();
-  }
+}
 
 async function loadFromFirestore(){
-// Production örneği: koleksiyonlardan veri çek
-const cols=[“users”,“tasks”,“projects”,“categories”,“departments”,“taskLogs”];
-const data={};
-for(const c of cols){
-const snap=await getDocsFn(collFn(fbDb,c));
-data[c]=snap.docs.map(d=>({id:d.id,…d.data()}));
-}
-Store.data=data;
+  const cols=["users","tasks","projects","categories","departments","taskLogs"];
+  const data={};
+  for(const c of cols){
+    const snap=await getDocsFn(collFn(fbDb,c));
+    data[c]=snap.docs.map(d=>({id:d.id,...d.data()}));
+  }
+  Store.data=data;
 }
 </script>
-
-<!-- ============================================================
-                  FIRESTORE GÜVENLİK KURALLARI ÖRNEĞİ
-                  Console → Firestore → Rules sekmesine yapıştırın
-============================================================
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    function isSignedIn(){ return request.auth != null; }
-    function isAdmin(){
-      return isSignedIn() &&
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
-    }
-    function isSelf(uid){ return request.auth.uid == uid; }
-
-    match /users/{uid} {
-      allow read: if isSignedIn();
-      allow write: if isAdmin();
-      allow update: if isSelf(uid) && request.resource.data.role == resource.data.role;
-    }
-
-    match /tasks/{taskId} {
-      allow read: if isSignedIn() &&
-        (isAdmin() || resource.data.assignedToUserId == request.auth.uid);
-      allow create: if isAdmin();
-      allow update: if isAdmin() ||
-        (resource.data.assignedToUserId == request.auth.uid &&
-         request.resource.data.assignedToUserId == resource.data.assignedToUserId &&
-         request.resource.data.createdBy == resource.data.createdBy);
-      allow delete: if isAdmin();
-    }
-
-    match /projects/{id}     { allow read: if isSignedIn(); allow write: if isAdmin(); }
-    match /categories/{id}   { allow read: if isSignedIn(); allow write: if isAdmin(); }
-    match /departments/{id}  { allow read: if isSignedIn(); allow write: if isAdmin(); }
-    match /taskLogs/{id}     { allow read: if isSignedIn(); allow create: if isSignedIn(); }
-  }
-}
-============================================================ -->
 
 </body>
 </html>
