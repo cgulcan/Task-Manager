@@ -1,807 +1,2402 @@
 <!DOCTYPE html>
+
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no,maximum-scale=1">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="HF IT">
-<meta name="theme-color" content="#fafaf7">
-<title>HF IT Görev Takip</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#0b1220" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<title>Halk Faktoring · Görev & Proje Takip Portalı</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 <style>
+/* =====================================================================
+   TASARIM SİSTEMİ - Editorial / Refined Corporate
+   ===================================================================== */
 :root{
-  --bg:#fafaf7;--card:#ffffff;--press:#f0efeb;--sep:rgba(0,0,0,.08);
-  --lbl:#1a1a1a;--lbl2:#595959;--lbl3:#8c8c8c;--lbl4:#c7c7c2;
-  --accent:#1a1a1a;--accent2:#595959;
-  --blue-bg:#E6F1FB;--blue-fg:#0C447C;--blue-mid:#378ADD;
-  --teal-bg:#E1F5EE;--teal-fg:#085041;--teal-mid:#1D9E75;
-  --coral-bg:#FAECE7;--coral-fg:#712B13;--coral-mid:#D85A30;
-  --amber-bg:#FAEEDA;--amber-fg:#633806;--amber-mid:#BA7517;
-  --purple-bg:#EEEDFE;--purple-fg:#3C3489;--purple-mid:#7F77DD;
-  --red-bg:#FCEBEB;--red-fg:#791F1F;--red-mid:#E24B4A;
-  --green-bg:#EAF3DE;--green-fg:#27500A;--green-mid:#639922;
-  --gray-bg:#F1EFE8;--gray-fg:#444441;--gray-mid:#888780;
-  --fill:rgba(0,0,0,.04);--fill2:rgba(0,0,0,.08);
-  --shadow:0 1px 2px rgba(0,0,0,.04);
+  --bg:#f6f5f1;
+  --bg-elev:#ffffff;
+  --bg-soft:#efece5;
+  --ink:#0b1220;
+  --ink-2:#384152;
+  --ink-3:#6b7385;
+  --line:#e3ddd0;
+  --line-2:#ece7da;
+  --accent:#b8895a;          /* terracotta/brass */
+  --accent-2:#1a3b3a;         /* deep teal */
+  --accent-3:#c2410c;         /* burnt orange */
+  --ok:#15803d;
+  --warn:#b45309;
+  --err:#b91c1c;
+  --info:#1d4ed8;
+  --shadow:0 1px 2px rgba(11,18,32,.04), 0 8px 24px rgba(11,18,32,.06);
+  --shadow-lg:0 12px 40px rgba(11,18,32,.12);
+  --radius:14px;
+  --radius-sm:10px;
+  --radius-lg:20px;
+  --serif:"Plus Jakarta Sans", system-ui, sans-serif;
+  --display:"Manrope", system-ui, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, monospace;
+  --sidebar-w:268px;
+  --topbar-h:64px;
 }
-body.dark{
-  --bg:#0c0c0c;--card:#171717;--press:#242424;--sep:rgba(255,255,255,.08);
-  --lbl:#f5f5f5;--lbl2:#a3a3a3;--lbl3:#6e6e6e;--lbl4:#404040;
-  --accent:#f5f5f5;--accent2:#a3a3a3;
-  --blue-bg:rgba(55,138,221,.12);--blue-fg:#85B7EB;--blue-mid:#378ADD;
-  --teal-bg:rgba(29,158,117,.12);--teal-fg:#5DCAA5;--teal-mid:#1D9E75;
-  --coral-bg:rgba(216,90,48,.12);--coral-fg:#F0997B;--coral-mid:#D85A30;
-  --amber-bg:rgba(186,117,23,.15);--amber-fg:#EF9F27;--amber-mid:#BA7517;
-  --purple-bg:rgba(127,119,221,.15);--purple-fg:#AFA9EC;--purple-mid:#7F77DD;
-  --red-bg:rgba(226,75,74,.12);--red-fg:#F09595;--red-mid:#E24B4A;
-  --green-bg:rgba(99,153,34,.12);--green-fg:#97C459;--green-mid:#639922;
-  --gray-bg:rgba(180,178,169,.08);--gray-fg:#B4B2A9;--gray-mid:#888780;
-  --fill:rgba(255,255,255,.06);--fill2:rgba(255,255,255,.1);
-  --shadow:0 1px 3px rgba(0,0,0,.4);
+[data-theme="dark"]{
+  --bg:#0b1220;
+  --bg-elev:#111a2c;
+  --bg-soft:#0f1626;
+  --ink:#f1efe8;
+  --ink-2:#c8cdd9;
+  --ink-3:#8993a6;
+  --line:#1f2940;
+  --line-2:#172033;
+  --accent:#d6a37a;
+  --accent-2:#7dd3c4;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+  --shadow-lg:0 12px 40px rgba(0,0,0,.5);
 }
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;overflow:hidden}
-body{font-family:-apple-system,BlinkMacSystemFont,'Inter','SF Pro Display','Helvetica Neue',sans-serif;-webkit-font-smoothing:antialiased;background:var(--bg);color:var(--lbl);transition:background .3s,color .3s;display:flex;flex-direction:column;max-width:900px;margin:0 auto;user-select:none;-webkit-user-select:none;letter-spacing:-.01em}
-input,textarea,select,button{font-family:inherit;color:inherit;background:none;border:none;outline:none;letter-spacing:inherit}
-::-webkit-scrollbar{width:0;height:0}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--serif);font-size:14.5px;line-height:1.5;-webkit-font-smoothing:antialiased}
+body{min-height:100vh;min-height:100dvh}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select,textarea{font-family:inherit;font-size:14px;color:inherit}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--line);border-radius:10px;border:2px solid var(--bg)}
 
-.content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:88px}
+/* =====================================================================
+GİRİŞ EKRANI
+===================================================================== */
+.login-wrap{min-height:100vh;min-height:100dvh;display:grid;grid-template-columns:1.1fr 1fr;background:var(–bg)}
+.login-art{position:relative;background:linear-gradient(135deg,#0b1220 0%,#1a3b3a 60%,#b8895a 140%);overflow:hidden;color:#f1efe8;padding:48px}
+.login-art::before{content:””;position:absolute;inset:0;background-image:radial-gradient(circle at 20% 20%,rgba(216,167,122,.18),transparent 40%),radial-gradient(circle at 80% 80%,rgba(125,211,196,.12),transparent 40%);pointer-events:none}
+.login-art::after{content:””;position:absolute;inset:0;background-image:url(“data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence baseFrequency='0.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.4 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>”);opacity:.4;mix-blend-mode:overlay;pointer-events:none}
+.login-art-inner{position:relative;height:100%;display:flex;flex-direction:column;justify-content:space-between;z-index:2}
+.login-brand{display:flex;align-items:center;gap:14px;font-family:var(–display);font-weight:800;letter-spacing:-.02em;font-size:18px}
+.login-brand-mark{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#d6a37a,#b8895a);display:grid;place-items:center;color:#0b1220;font-weight:800;font-size:20px;box-shadow:0 4px 16px rgba(0,0,0,.25)}
+.login-hero{font-family:var(–display);font-size:clamp(36px,4vw,56px);font-weight:800;line-height:1.05;letter-spacing:-.03em;margin:auto 0}
+.login-hero em{font-style:normal;color:#d6a37a;display:block}
+.login-hero small{display:block;font-size:15px;font-weight:500;opacity:.75;margin-top:24px;max-width:420px;line-height:1.6;font-family:var(–serif)}
+.login-meta{display:flex;gap:24px;font-size:12px;text-transform:uppercase;letter-spacing:.2em;opacity:.6;font-family:var(–mono)}
+.login-form-wrap{display:grid;place-items:center;padding:48px 32px}
+.login-form{width:100%;max-width:380px}
+.login-form h2{font-family:var(–display);font-size:28px;font-weight:800;letter-spacing:-.02em;margin:0 0 6px}
+.login-form p.sub{color:var(–ink-3);margin:0 0 32px;font-size:14px}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(–ink-3);margin-bottom:8px}
+.field input{width:100%;padding:13px 14px;border:1.5px solid var(–line);background:var(–bg-elev);border-radius:var(–radius-sm);transition:border-color .15s,background .15s;outline:none}
+.field input:focus{border-color:var(–ink)}
+.field-icon{position:relative}
+.field-icon i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(–ink-3);font-size:13px;pointer-events:none}
+.field-icon input{padding-left:38px}
+.btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px 16px;background:var(–ink);color:var(–bg-elev);border-radius:var(–radius-sm);font-weight:600;font-size:14px;transition:transform .1s,opacity .15s}
+.btn-primary:hover{opacity:.9}
+.btn-primary:active{transform:scale(.98)}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed}
+.login-error{margin-top:14px;padding:10px 12px;background:rgba(185,28,28,.08);border:1px solid rgba(185,28,28,.25);color:var(–err);border-radius:var(–radius-sm);font-size:13px;display:none}
+.login-error.show{display:block}
+.login-help{margin-top:24px;padding-top:20px;border-top:1px solid var(–line);font-size:12px;color:var(–ink-3);line-height:1.6}
+.login-help code{font-family:var(–mono);background:var(–bg-soft);padding:2px 6px;border-radius:4px;font-size:11.5px}
 
-/* HEADER */
-.hdr{padding:max(env(safe-area-inset-top,0),12px) 20px 16px;display:flex;align-items:center;justify-content:space-between}
-.hdr-l .ovr{font-size:11px;letter-spacing:2px;color:var(--lbl3);text-transform:uppercase;margin-bottom:4px;font-weight:500}
-.hdr-l h1{font-size:26px;font-weight:500;letter-spacing:-.5px;line-height:1.1}
-.hdr-r{display:flex;align-items:center;gap:10px}
-.ibtn{width:38px;height:38px;border-radius:50%;background:var(--fill);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:all .15s;border:none;color:var(--lbl)}
-.ibtn:active{transform:scale(.92);background:var(--fill2)}
-.ibtn.primary{background:var(--accent);color:var(--bg)}
-.ava{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:500;font-size:13px;letter-spacing:-.3px}
+/* =====================================================================
+APP LAYOUT
+===================================================================== */
+.app{display:none;min-height:100vh;min-height:100dvh;grid-template-columns:var(–sidebar-w) 1fr;background:var(–bg)}
+.app.show{display:grid}
 
-/* SECTION */
-.sec{padding:0 20px 20px}
-.sec-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding:0 2px}
-.sec-h .lbl{font-size:11px;font-weight:500;color:var(--lbl3);letter-spacing:1.5px;text-transform:uppercase}
-.sec-h .cnt{font-size:11px;color:var(--lbl4);font-weight:500}
+.sidebar{position:sticky;top:0;height:100vh;height:100dvh;background:var(–bg-elev);border-right:1px solid var(–line);display:flex;flex-direction:column;overflow:hidden}
+.sb-brand{padding:20px 22px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(–line-2)}
+.sb-brand .mark{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#0b1220,#1a3b3a);color:#d6a37a;display:grid;place-items:center;font-weight:800;font-size:16px;font-family:var(–display)}
+.sb-brand .name{font-family:var(–display);font-weight:800;font-size:15px;letter-spacing:-.01em}
+.sb-brand .sub{font-size:11px;color:var(–ink-3);font-family:var(–mono);letter-spacing:.05em;text-transform:uppercase}
+.sb-nav{flex:1;overflow-y:auto;padding:14px 12px}
+.sb-section{font-size:10.5px;text-transform:uppercase;letter-spacing:.18em;color:var(–ink-3);padding:14px 12px 8px;font-weight:700;font-family:var(–mono)}
+.sb-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;color:var(–ink-2);font-size:14px;font-weight:500;cursor:pointer;transition:background .12s,color .12s;margin-bottom:2px;position:relative}
+.sb-item:hover{background:var(–bg-soft);color:var(–ink)}
+.sb-item.active{background:var(–ink);color:var(–bg-elev)}
+.sb-item.active .badge{background:var(–accent);color:#0b1220}
+.sb-item i{width:18px;text-align:center;font-size:14px;opacity:.85}
+.sb-item .badge{margin-left:auto;background:var(–bg-soft);color:var(–ink-2);font-size:11px;font-weight:700;padding:2px 7px;border-radius:8px;font-family:var(–mono)}
+.sb-sub{padding-left:34px;display:none}
+.sb-sub.open{display:block}
+.sb-sub .sb-item{padding:7px 12px;font-size:13px}
+.sb-foot{padding:14px;border-top:1px solid var(–line-2);display:flex;align-items:center;gap:10px}
+.sb-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#b8895a,#1a3b3a);display:grid;place-items:center;color:#fff;font-weight:700;font-size:14px;font-family:var(–display)}
+.sb-foot .who{flex:1;min-width:0}
+.sb-foot .who .nm{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-foot .who .rl{font-size:11px;color:var(–ink-3);font-family:var(–mono);text-transform:uppercase;letter-spacing:.05em}
+.sb-foot button{width:32px;height:32px;border-radius:8px;color:var(–ink-3);transition:background .12s,color .12s}
+.sb-foot button:hover{background:var(–bg-soft);color:var(–ink)}
 
-/* HERO CARD */
-.hero{background:var(--card);border:.5px solid var(--sep);border-radius:16px;padding:20px;margin-bottom:12px;box-shadow:var(--shadow);position:relative;overflow:hidden}
-.hero-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
-.hero-top-l .ovr{font-size:11px;color:var(--lbl3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px;font-weight:500}
-.hero-top-l .sub{font-size:13px;color:var(--lbl2)}
-.hero-chip{font-size:11px;padding:5px 12px;border-radius:20px;font-weight:500;letter-spacing:.2px}
-.hero-chip.up{color:var(--green-fg);background:var(--green-bg)}
-.hero-chip.down{color:var(--red-fg);background:var(--red-bg)}
-.hero-num{display:flex;align-items:baseline;gap:8px;margin-bottom:14px}
-.hero-num .n{font-size:48px;font-weight:500;letter-spacing:-2px;line-height:.95;font-variant-numeric:tabular-nums}
-.hero-num .s{font-size:18px;color:var(--lbl3);font-weight:400}
-.hero-num .t{font-size:13px;color:var(--lbl2);margin-left:auto;font-variant-numeric:tabular-nums}
-.hero-bar{height:5px;background:var(--fill);border-radius:3px;overflow:hidden;display:flex;gap:2px}
-.hero-bar > div:first-child{background:var(--teal-mid);border-radius:3px 0 0 3px}
-.hero-bar > div:last-child{background:var(--fill)}
+/* MAIN */
+.main{min-width:0;display:flex;flex-direction:column}
+.topbar{position:sticky;top:0;z-index:50;height:var(–topbar-h);background:rgba(246,245,241,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(–line);display:flex;align-items:center;gap:16px;padding:0 28px}
+[data-theme=“dark”] .topbar{background:rgba(11,18,32,.85)}
+.tb-burger{display:none;width:38px;height:38px;border-radius:10px;border:1px solid var(–line);align-items:center;justify-content:center}
+.tb-title{font-family:var(–display);font-size:20px;font-weight:800;letter-spacing:-.02em;flex:1;min-width:0}
+.tb-title .crumb{font-size:11px;font-weight:600;color:var(–ink-3);text-transform:uppercase;letter-spacing:.18em;display:block;margin-bottom:2px;font-family:var(–mono)}
+.tb-actions{display:flex;align-items:center;gap:8px}
+.tb-btn{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 14px;border-radius:10px;border:1px solid var(–line);background:var(–bg-elev);font-size:13px;font-weight:600;color:var(–ink-2);transition:all .12s}
+.tb-btn:hover{border-color:var(–ink-3);color:var(–ink)}
+.tb-btn.primary{background:var(–ink);color:var(–bg-elev);border-color:var(–ink)}
+.tb-btn.primary:hover{opacity:.9;color:var(–bg-elev)}
+.tb-icon{width:38px;height:38px;border-radius:10px;border:1px solid var(–line);background:var(–bg-elev);display:grid;place-items:center;color:var(–ink-2);transition:all .12s}
+.tb-icon:hover{color:var(–ink);border-color:var(–ink-3)}
 
-/* STAT TILES */
-.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.tile{border-radius:14px;padding:14px;cursor:pointer;transition:transform .15s;background:var(--card);border:.5px solid var(--sep)}
-.tile:active{transform:scale(.98)}
-.tile-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.tile-dot{width:8px;height:8px;border-radius:50%}
-.tile-lbl{font-size:10.5px;letter-spacing:1px;text-transform:uppercase;font-weight:500}
-.tile-n{font-size:26px;font-weight:500;letter-spacing:-1px;line-height:1;margin-bottom:2px;font-variant-numeric:tabular-nums}
-.tile-s{font-size:12px}
-.tile.coral{background:var(--coral-bg);border-color:transparent}
-.tile.coral .tile-dot{background:var(--coral-mid)}
-.tile.coral .tile-lbl{color:var(--coral-fg)}
-.tile.coral .tile-n{color:var(--coral-fg)}
-.tile.coral .tile-s{color:var(--coral-mid)}
-.tile.blue{background:var(--blue-bg);border-color:transparent}
-.tile.blue .tile-dot{background:var(--blue-mid)}
-.tile.blue .tile-lbl{color:var(--blue-fg)}
-.tile.blue .tile-n{color:var(--blue-fg)}
-.tile.blue .tile-s{color:var(--blue-mid)}
-.tile.purple{background:var(--purple-bg);border-color:transparent}
-.tile.purple .tile-dot{background:var(--purple-mid)}
-.tile.purple .tile-lbl{color:var(--purple-fg)}
-.tile.purple .tile-n{color:var(--purple-fg)}
-.tile.purple .tile-s{color:var(--purple-mid)}
-.tile.teal{background:var(--teal-bg);border-color:transparent}
-.tile.teal .tile-dot{background:var(--teal-mid)}
-.tile.teal .tile-lbl{color:var(--teal-fg)}
-.tile.teal .tile-n{color:var(--teal-fg)}
-.tile.teal .tile-s{color:var(--teal-mid)}
+.page{padding:28px;max-width:1600px;margin:0 auto;width:100%}
+.page-head{margin-bottom:28px}
+.page-head h1{font-family:var(–display);font-size:32px;font-weight:800;letter-spacing:-.025em;margin:0 0 6px;line-height:1.1}
+.page-head p{color:var(–ink-3);margin:0;font-size:14.5px;max-width:680px}
 
-/* TASK LIST CONTAINER */
-.tlist{background:var(--card);border:.5px solid var(--sep);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
+/* =====================================================================
+DASHBOARD
+===================================================================== */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:24px}
+.kpi{background:var(–bg-elev);border:1px solid var(–line);border-radius:var(–radius);padding:18px 20px;position:relative;overflow:hidden;transition:transform .15s,box-shadow .15s}
+.kpi:hover{transform:translateY(-2px);box-shadow:var(–shadow)}
+.kpi .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.15em;color:var(–ink-3);font-weight:700;font-family:var(–mono);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.kpi .lbl i{font-size:11px}
+.kpi .val{font-family:var(–display);font-size:36px;font-weight:800;letter-spacing:-.03em;line-height:1}
+.kpi .delta{font-size:12px;color:var(–ink-3);margin-top:6px}
+.kpi.k-open .lbl i{color:var(–info)}
+.kpi.k-progress .lbl i{color:var(–accent)}
+.kpi.k-done .lbl i{color:var(–ok)}
+.kpi.k-late{background:linear-gradient(135deg,#fff,#fdf4f0)}
+[data-theme=“dark”] .kpi.k-late{background:linear-gradient(135deg,#111a2c,#1f1518)}
+.kpi.k-late .lbl i{color:var(–err)}
+.kpi.k-late .val{color:var(–err)}
 
-/* TASK ROW */
-.trow{padding:14px 16px;border-bottom:.5px solid var(--sep);cursor:pointer;transition:background .12s;border-left:3px solid transparent}
-.trow:last-child{border-bottom:none}
-.trow:active{background:var(--press)}
-.trow-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:6px}
-.trow-title{font-size:15px;font-weight:500;letter-spacing:-.1px;line-height:1.3;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
-.trow-title.done{color:var(--lbl3);text-decoration:line-through}
-.pri-chip{font-size:10px;padding:3px 9px;border-radius:5px;font-weight:500;letter-spacing:.4px;white-space:nowrap;flex-shrink:0}
-.trow-meta{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--lbl2);flex-wrap:wrap}
-.trow-meta .dot{color:var(--lbl4)}
-.trow-pbar{display:flex;align-items:center;gap:10px;margin-top:10px}
-.trow-pbar-bar{flex:1;height:3px;background:var(--fill);border-radius:2px;overflow:hidden}
-.trow-pbar-bar > div{height:100%;background:var(--teal-mid);border-radius:2px;transition:width .4s}
-.trow-pbar-n{font-size:11px;color:var(--lbl3);font-variant-numeric:tabular-nums;font-weight:500}
-.trow-bot{display:flex;align-items:center;justify-content:space-between;margin-top:8px}
+.dash-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:14px;margin-bottom:24px}
+.card{background:var(–bg-elev);border:1px solid var(–line);border-radius:var(–radius);padding:22px}
+.card-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;gap:12px}
+.card-head h3{font-family:var(–display);font-size:16px;font-weight:700;letter-spacing:-.01em;margin:0}
+.card-head p{color:var(–ink-3);font-size:12.5px;margin:2px 0 0}
+.card-head .act{display:flex;gap:6px}
+.tag{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:8px;font-size:11.5px;font-weight:600;background:var(–bg-soft);color:var(–ink-2);font-family:var(–mono);text-transform:uppercase;letter-spacing:.05em}
 
-/* CHIPS */
-.chip-critical{background:var(--red-bg);color:var(--red-fg)}
-.chip-high{background:var(--amber-bg);color:var(--amber-fg)}
-.chip-medium{background:var(--blue-bg);color:var(--blue-fg)}
-.chip-low{background:var(--green-bg);color:var(--green-fg)}
-.chip-todo{background:var(--gray-bg);color:var(--gray-fg)}
-.chip-inprogress{background:var(--blue-bg);color:var(--blue-fg)}
-.chip-review{background:var(--purple-bg);color:var(--purple-fg)}
-.chip-done{background:var(--teal-bg);color:var(--teal-fg)}
+.chart-bars{display:flex;flex-direction:column;gap:14px}
+.bar-row{display:grid;grid-template-columns:130px 1fr 50px;gap:12px;align-items:center;font-size:13px}
+.bar-row .nm{font-weight:600;color:var(–ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-row .num{font-family:var(–mono);font-weight:600;color:var(–ink-3);text-align:right;font-size:12px}
+.bar-track{height:10px;background:var(–bg-soft);border-radius:6px;overflow:hidden;position:relative}
+.bar-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(–accent-2),var(–accent));transition:width .6s cubic-bezier(.4,0,.2,1)}
 
-/* TABBAR */
-.tabbar{flex-shrink:0;background:var(--bg);border-top:.5px solid var(--sep);display:flex;justify-content:space-around;padding:8px 0 calc(env(safe-area-inset-bottom,8px) + 6px);position:relative;z-index:50}
-.tab-btn{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;color:var(--lbl3);font-size:10px;font-weight:500;cursor:pointer;padding:4px 14px;min-width:50px;transition:color .2s;letter-spacing:.3px}
-.tab-btn.active{color:var(--accent)}
-.tab-btn svg{width:22px;height:22px;stroke-width:1.8}
+.donut-wrap{display:flex;align-items:center;gap:24px}
+.donut{width:160px;height:160px;flex-shrink:0;position:relative}
+.donut svg{transform:rotate(-90deg)}
+.donut .center{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
+.donut .center .v{font-family:var(–display);font-size:28px;font-weight:800;letter-spacing:-.02em;line-height:1}
+.donut .center .l{font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:var(–ink-3);font-weight:700;margin-top:4px;font-family:var(–mono)}
+.legend{flex:1;min-width:0}
+.lg-row{display:flex;align-items:center;gap:10px;padding:6px 0;font-size:13px;border-bottom:1px dashed var(–line-2)}
+.lg-row:last-child{border-bottom:none}
+.lg-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.lg-row .nm{flex:1;color:var(–ink-2);font-weight:500}
+.lg-row .num{font-family:var(–mono);font-weight:700;color:var(–ink)}
 
-/* FAB */
-.fab{position:fixed;bottom:74px;right:16px;z-index:400;width:52px;height:52px;border-radius:50%;background:var(--accent);color:var(--bg);border:none;font-size:22px;font-weight:300;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.15);display:flex;align-items:center;justify-content:center;transition:transform .15s}
-.fab:active{transform:scale(.9)}
+.spark-wrap{margin-top:8px}
+.spark-stats{display:flex;gap:24px;margin-bottom:16px}
+.spark-stats div{font-size:12px;color:var(–ink-3);text-transform:uppercase;letter-spacing:.1em;font-family:var(–mono)}
+.spark-stats div b{display:block;font-family:var(–display);font-size:24px;font-weight:800;color:var(–ink);letter-spacing:-.02em;margin-top:4px;text-transform:none}
 
-/* SEARCH */
-.search{display:flex;align-items:center;gap:10px;background:var(--card);border:.5px solid var(--sep);border-radius:12px;padding:10px 14px;margin-bottom:12px;box-shadow:var(--shadow)}
-.search input{flex:1;font-size:15px;color:var(--lbl)}
-.search input::placeholder{color:var(--lbl3)}
-.search svg{flex-shrink:0;color:var(--lbl3)}
-.search .clr{background:var(--fill);border:none;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--lbl3);font-size:10px;flex-shrink:0}
+/* =====================================================================
+GÖREVLER LISTE
+===================================================================== */
+.toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:16px;padding:14px;background:var(–bg-elev);border:1px solid var(–line);border-radius:var(–radius)}
+.search-box{position:relative;flex:1;min-width:220px;max-width:340px}
+.search-box i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(–ink-3);font-size:13px}
+.search-box input{width:100%;padding:9px 12px 9px 36px;border:1px solid var(–line);background:var(–bg);border-radius:9px;outline:none}
+.search-box input:focus{border-color:var(–ink-3)}
+.toolbar select{padding:9px 32px 9px 12px;border:1px solid var(–line);background:var(–bg);border-radius:9px;outline:none;font-size:13px;font-weight:500;color:var(–ink-2);appearance:none;background-image:url(“data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='%236b7385' d='M0 0l5 6 5-6z'/></svg>”);background-repeat:no-repeat;background-position:right 12px center}
+.toolbar select:focus{border-color:var(–ink-3)}
 
-/* SEG */
-.seg{display:flex;background:var(--fill);border-radius:10px;padding:3px;gap:0;margin-bottom:12px}
-.seg button{flex:1;padding:8px 4px;border-radius:8px;border:none;background:transparent;color:var(--lbl2);font-size:12px;cursor:pointer;white-space:nowrap;transition:all .2s;font-weight:500;letter-spacing:.1px}
-.seg button.active{background:var(--card);color:var(--accent);font-weight:500;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.task-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
+.task-card{background:var(–bg-elev);border:1px solid var(–line);border-radius:var(–radius);padding:16px;cursor:pointer;transition:transform .15s,box-shadow .15s,border-color .15s;position:relative;overflow:hidden}
+.task-card:hover{transform:translateY(-2px);box-shadow:var(–shadow);border-color:var(–ink-3)}
+.task-card::before{content:””;position:absolute;left:0;top:0;bottom:0;width:4px;background:var(–accent)}
+.task-card.p-low::before{background:#94a3b8}
+.task-card.p-normal::before{background:#3b82f6}
+.task-card.p-high::before{background:#f59e0b}
+.task-card.p-critical::before{background:#dc2626}
+.task-card.late{background:linear-gradient(135deg,var(–bg-elev),#fef2f2)}
+[data-theme=“dark”] .task-card.late{background:linear-gradient(135deg,var(–bg-elev),#2a1518)}
+.tc-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px}
+.tc-title{font-family:var(–display);font-weight:700;font-size:15px;letter-spacing:-.01em;line-height:1.3;flex:1}
+.tc-desc{font-size:13px;color:var(–ink-3);line-height:1.5;margin-bottom:12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tc-meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.chip{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:7px;font-size:11.5px;font-weight:600;background:var(–bg-soft);color:var(–ink-2);font-family:var(–mono);text-transform:uppercase;letter-spacing:.04em}
+.chip i{font-size:10px}
+.chip.s-yeni{background:#dbeafe;color:#1e40af}
+.chip.s-devam{background:#fef3c7;color:#92400e}
+.chip.s-bekleme{background:#e0e7ff;color:#4338ca}
+.chip.s-tamam{background:#d1fae5;color:#065f46}
+.chip.s-iptal{background:#fee2e2;color:#991b1b}
+[data-theme=“dark”] .chip.s-yeni{background:#1e3a8a;color:#dbeafe}
+[data-theme=“dark”] .chip.s-devam{background:#78350f;color:#fef3c7}
+[data-theme=“dark”] .chip.s-bekleme{background:#312e81;color:#e0e7ff}
+[data-theme=“dark”] .chip.s-tamam{background:#064e3b;color:#d1fae5}
+[data-theme=“dark”] .chip.s-iptal{background:#7f1d1d;color:#fee2e2}
+.chip.p-low{background:#f1f5f9;color:#475569}
+.chip.p-normal{background:#dbeafe;color:#1e40af}
+.chip.p-high{background:#ffedd5;color:#9a3412}
+.chip.p-critical{background:#fee2e2;color:#991b1b}
+[data-theme=“dark”] .chip.p-low{background:#1e293b;color:#cbd5e1}
+[data-theme=“dark”] .chip.p-normal{background:#1e3a8a;color:#dbeafe}
+[data-theme=“dark”] .chip.p-high{background:#7c2d12;color:#ffedd5}
+[data-theme=“dark”] .chip.p-critical{background:#7f1d1d;color:#fee2e2}
+.tc-foot{display:flex;align-items:center;gap:10px;padding-top:12px;border-top:1px dashed var(–line-2);font-size:12px;color:var(–ink-3)}
+.tc-foot .ass{display:flex;align-items:center;gap:7px;flex:1;min-width:0}
+.tc-avatar{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#b8895a,#1a3b3a);color:#fff;display:grid;place-items:center;font-size:10px;font-weight:700;font-family:var(–display);flex-shrink:0}
+.tc-foot .due{font-family:var(–mono);font-weight:600}
+.tc-foot .due.late{color:var(–err)}
+.tc-foot .due.soon{color:var(–warn)}
+.tc-progress{height:5px;background:var(–bg-soft);border-radius:3px;overflow:hidden;margin-top:10px}
+.tc-progress-fill{height:100%;background:linear-gradient(90deg,var(–accent-2),var(–accent));border-radius:3px;transition:width .4s}
 
-/* BOARD */
-.board{display:flex;gap:14px;padding:0 20px 100px;overflow-x:auto;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory}
-.bcol{min-width:260px;flex:0 0 260px;scroll-snap-align:start}
-.bcol-h{display:flex;align-items:center;justify-content:space-between;padding:4px 2px 12px}
-.bcol-h-l{display:flex;align-items:center;gap:8px}
-.bcol-dot{width:8px;height:8px;border-radius:50%}
-.bcol-t{font-size:12px;font-weight:500;letter-spacing:1px;text-transform:uppercase}
-.bcol-n{font-size:11px;font-weight:500;padding:2px 8px;border-radius:10px;min-width:22px;text-align:center}
-.bcard{background:var(--card);border:.5px solid var(--sep);border-radius:12px;padding:14px;cursor:pointer;margin-bottom:8px;border-left:3px solid transparent;transition:transform .15s;box-shadow:var(--shadow)}
-.bcard:active{transform:scale(.98)}
-.bcard-t{font-size:14px;font-weight:500;margin-bottom:8px;line-height:1.35;letter-spacing:-.1px}
+.empty{padding:60px 20px;text-align:center;color:var(–ink-3)}
+.empty i{font-size:42px;color:var(–line);margin-bottom:14px;display:block}
+.empty h4{font-family:var(–display);font-weight:700;color:var(–ink-2);margin:0 0 6px;font-size:17px}
 
-/* SHEET */
-.sbg{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center;animation:fi .25s;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
-.sht{background:var(--bg);width:100%;max-width:600px;border-radius:20px 20px 0 0;max-height:92vh;overflow:hidden;display:flex;flex-direction:column;animation:su .4s cubic-bezier(.32,.72,0,1)}
-.sht-bar{display:flex;justify-content:center;padding:10px 0 0}
-.sht-bar div{width:36px;height:4px;border-radius:2px;background:var(--lbl4)}
-.sht-hd{display:flex;align-items:center;justify-content:space-between;padding:14px 20px 16px;border-bottom:.5px solid var(--sep)}
-.sht-hd button{background:none;border:none;color:var(--lbl2);font-size:15px;cursor:pointer;min-width:60px;padding:0;font-weight:500}
-.sht-hd .sv{color:var(--accent);font-weight:500;text-align:right}
-.sht-hd .sv:disabled{color:var(--lbl4);cursor:default}
-.sht-hd .tt{font-size:15px;font-weight:500;letter-spacing:-.1px}
-.sht-ct{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 0 32px}
+/* =====================================================================
+KANBAN
+===================================================================== */
+.kanban{display:grid;grid-template-columns:repeat(5,minmax(260px,1fr));gap:14px;overflow-x:auto;padding-bottom:8px}
+.kb-col{background:var(–bg-soft);border-radius:var(–radius);padding:12px;min-height:200px}
+.kb-col-head{display:flex;align-items:center;justify-content:space-between;padding:6px 8px 12px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(–ink-2);font-family:var(–mono)}
+.kb-col-head .count{background:var(–bg-elev);color:var(–ink);padding:2px 8px;border-radius:8px;font-family:var(–mono)}
+.kb-list{display:flex;flex-direction:column;gap:8px}
 
-/* FORM SHEET */
-.grp{margin:0 20px 18px}
-.grp-h{font-size:11px;color:var(--lbl3);text-transform:uppercase;padding:0 16px 8px;letter-spacing:1.2px;font-weight:500}
-.grp-b{background:var(--card);border:.5px solid var(--sep);border-radius:12px;overflow:hidden}
-.cell{display:flex;align-items:center;gap:14px;padding:13px 16px;min-height:44px;border-bottom:.5px solid var(--sep);cursor:pointer;transition:background .12s}
-.cell:last-child{border-bottom:none}
-.cell:active{background:var(--press)}
-.cell-ic{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
-.cell-b{flex:1;min-width:0}
-.cell-t{font-size:15px;letter-spacing:-.1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.cell-sub{font-size:12px;color:var(--lbl3);margin-top:2px}
-.cell-v{font-size:14px;color:var(--lbl2);font-variant-numeric:tabular-nums}
-.cell-arr{color:var(--lbl4);font-size:18px;margin-left:2px}
-.cell.dest .cell-t{color:var(--red-mid)}
+/* =====================================================================
+TAKVİM
+===================================================================== */
+.cal-head{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.cal-nav{display:flex;align-items:center;gap:4px;background:var(–bg-elev);border:1px solid var(–line);border-radius:10px;padding:4px}
+.cal-nav button{width:32px;height:32px;border-radius:6px;color:var(–ink-2);transition:background .12s}
+.cal-nav button:hover{background:var(–bg-soft)}
+.cal-title{font-family:var(–display);font-size:22px;font-weight:800;letter-spacing:-.02em;flex:1}
+.cal-views{display:flex;background:var(–bg-elev);border:1px solid var(–line);border-radius:10px;padding:4px;gap:2px}
+.cal-views button{padding:6px 14px;border-radius:6px;font-size:13px;font-weight:600;color:var(–ink-3);transition:all .12s}
+.cal-views button.active{background:var(–ink);color:var(–bg-elev)}
 
-.ff{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;min-height:44px;border-bottom:.5px solid var(--sep);gap:12px}
-.ff:last-child{border-bottom:none}
-.ff label{font-size:15px;flex-shrink:0;font-weight:500}
-.ff input,.ff textarea,.ff select{font-size:15px;width:100%;color:var(--lbl)}
-.ff input[type="date"]{color:var(--blue-mid);text-align:right;font-weight:500}
-.ff select{color:var(--blue-mid);-webkit-appearance:none;appearance:none;direction:rtl;cursor:pointer;max-width:220px;padding-right:0;font-weight:500}
-.ff textarea{text-align:left;resize:none;min-height:78px;line-height:1.5}
-.ff .right{text-align:right}
+.cal-grid{background:var(–bg-elev);border:1px solid var(–line);border-radius:var(–radius);overflow:hidden}
+.cal-week-head{display:grid;grid-template-columns:repeat(7,1fr);background:var(–bg-soft);border-bottom:1px solid var(–line)}
+.cal-week-head div{padding:10px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(–ink-3);font-family:var(–mono)}
+.cal-month{display:grid;grid-template-columns:repeat(7,1fr);grid-auto-rows:minmax(110px,1fr)}
+.cal-day{border-right:1px solid var(–line-2);border-bottom:1px solid var(–line-2);padding:8px;display:flex;flex-direction:column;gap:4px;min-height:100px;cursor:pointer;transition:background .12s;position:relative}
+.cal-day:hover{background:var(–bg-soft)}
+.cal-day.other{background:var(–bg-soft);opacity:.5}
+.cal-day.today{background:linear-gradient(135deg,#fff8ed,#fff)}
+[data-theme=“dark”] .cal-day.today{background:linear-gradient(135deg,#1f1815,#111a2c)}
+.cal-day .num{font-family:var(–display);font-size:13px;font-weight:700;color:var(–ink-2);margin-bottom:2px}
+.cal-day.today .num{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(–ink);color:var(–bg-elev)}
+.cal-event{font-size:11px;padding:2px 6px;border-radius:4px;background:var(–accent);color:#fff;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.cal-event.s-yeni{background:#3b82f6}
+.cal-event.s-devam{background:#f59e0b;color:#fff}
+.cal-event.s-bekleme{background:#6366f1}
+.cal-event.s-tamam{background:#10b981}
+.cal-event.s-iptal{background:#94a3b8}
+.cal-event.late{background:#dc2626;color:#fff;animation:pulse-late 2s ease-in-out infinite}
+@keyframes pulse-late{0%,100%{opacity:1}50%{opacity:.7}}
+.cal-more{font-size:10.5px;color:var(–ink-3);font-weight:700;font-family:var(–mono);padding:0 6px}
 
-/* DETAIL SHEET */
-.dh{padding:6px 20px 22px}
-.dh h2{font-size:22px;font-weight:500;letter-spacing:-.4px;line-height:1.25;margin-bottom:8px}
-.dh p{font-size:14px;color:var(--lbl2);line-height:1.55}
+/* =====================================================================
+TABLO (Parametreler / Raporlar)
+===================================================================== */
+.tbl-wrap{background:var(–bg-elev);border:1px solid var(–line);border-radius:var(–radius);overflow:hidden}
+.tbl{width:100%;border-collapse:collapse;font-size:13.5px}
+.tbl thead th{background:var(–bg-soft);font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(–ink-3);font-weight:700;padding:12px 16px;text-align:left;border-bottom:1px solid var(–line);font-family:var(–mono);white-space:nowrap}
+.tbl tbody td{padding:14px 16px;border-bottom:1px solid var(–line-2);color:var(–ink-2);vertical-align:middle}
+.tbl tbody tr:last-child td{border-bottom:none}
+.tbl tbody tr:hover{background:var(–bg-soft)}
+.tbl .row-act{display:flex;gap:4px;justify-content:flex-end}
+.tbl .row-act button{width:30px;height:30px;border-radius:6px;color:var(–ink-3);transition:background .12s,color .12s}
+.tbl .row-act button:hover{background:var(–bg-soft);color:var(–ink)}
+.tbl .row-act button.danger:hover{background:rgba(185,28,28,.1);color:var(–err)}
+.status-dot{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600}
+.status-dot::before{content:””;width:7px;height:7px;border-radius:50%;background:var(–ok)}
+.status-dot.off::before{background:var(–ink-3)}
 
-/* SUB ROW */
-.sub-row{display:flex;align-items:center;gap:14px;padding:13px 16px;border-bottom:.5px solid var(--sep);transition:background .1s}
-.sub-row:last-child{border-bottom:none}
-.sub-row .sub-text{flex:1;font-size:15px;line-height:1.35}
-.sub-row.done .sub-text{color:var(--lbl3);text-decoration:line-through}
-.del-btn{background:none;border:none;color:var(--red-mid);font-size:20px;cursor:pointer;padding:0 6px;line-height:1;font-weight:300}
+/* =====================================================================
+MODAL
+===================================================================== */
+.modal-bg{position:fixed;inset:0;background:rgba(11,18,32,.5);backdrop-filter:blur(4px);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;animation:fadein .15s}
+.modal-bg.show{display:flex}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+.modal{background:var(–bg-elev);border-radius:var(–radius-lg);box-shadow:var(–shadow-lg);width:100%;max-width:680px;max-height:92vh;overflow:hidden;display:flex;flex-direction:column;animation:slideup .2s cubic-bezier(.16,1,.3,1)}
+@keyframes slideup{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal.lg{max-width:880px}
+.modal.sm{max-width:440px}
+.modal-head{padding:20px 24px;border-bottom:1px solid var(–line);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.modal-head h3{font-family:var(–display);font-size:18px;font-weight:800;letter-spacing:-.02em;margin:0}
+.modal-head p{font-size:12.5px;color:var(–ink-3);margin:2px 0 0}
+.modal-close{width:34px;height:34px;border-radius:8px;color:var(–ink-3);transition:background .12s,color .12s}
+.modal-close:hover{background:var(–bg-soft);color:var(–ink)}
+.modal-body{padding:24px;overflow-y:auto;flex:1}
+.modal-foot{padding:16px 24px;border-top:1px solid var(–line);display:flex;justify-content:flex-end;gap:8px;background:var(–bg-soft)}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 16px;border-radius:9px;font-weight:600;font-size:13.5px;border:1px solid transparent;transition:all .12s}
+.btn.ghost{border-color:var(–line);background:var(–bg-elev);color:var(–ink-2)}
+.btn.ghost:hover{border-color:var(–ink-3);color:var(–ink)}
+.btn.solid{background:var(–ink);color:var(–bg-elev)}
+.btn.solid:hover{opacity:.9}
+.btn.danger{background:var(–err);color:#fff}
+.btn.danger:hover{opacity:.9}
 
-/* CHECK */
-.chk{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-size:13px;padding:0;transition:all .15s}
-.chk-off{border:1.5px solid var(--lbl4);background:transparent}
-.chk-on{border:none;background:var(--teal-mid);color:#fff}
-.chk:active{transform:scale(.88)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-grid .full{grid-column:1/-1}
+.form-row{display:flex;flex-direction:column;gap:6px}
+.form-row label{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(–ink-3);font-family:var(–mono)}
+.form-row label .req{color:var(–err)}
+.form-row input,.form-row select,.form-row textarea{padding:10px 12px;border:1.5px solid var(–line);background:var(–bg);border-radius:9px;outline:none;transition:border-color .12s;font-size:14px}
+.form-row input:focus,.form-row select:focus,.form-row textarea:focus{border-color:var(–ink)}
+.form-row textarea{min-height:80px;resize:vertical;font-family:inherit}
+.form-row select{appearance:none;background-image:url(“data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='%236b7385' d='M0 0l5 6 5-6z'/></svg>”);background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
 
-/* TOGGLE */
-.toggle{width:46px;height:28px;border-radius:15px;padding:2px;cursor:pointer;transition:background .25s;flex-shrink:0;background:var(--fill2)}
-.toggle.on{background:var(--teal-mid)}
-.toggle-k{width:24px;height:24px;border-radius:50%;background:#fff;transition:transform .25s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
-.toggle.on .toggle-k{transform:translateX(18px)}
+/* TASK DETAY MODAL */
+.td-tabs{display:flex;gap:4px;padding:0 24px;border-bottom:1px solid var(–line);background:var(–bg-soft)}
+.td-tabs button{padding:12px 16px;font-size:13px;font-weight:600;color:var(–ink-3);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .12s}
+.td-tabs button.active{color:var(–ink);border-bottom-color:var(–ink)}
+.td-info{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px;padding:14px 16px;background:var(–bg-soft);border-radius:var(–radius-sm)}
+.td-info .item{font-size:12.5px}
+.td-info .item .l{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(–ink-3);font-weight:700;font-family:var(–mono);margin-bottom:3px}
+.td-info .item .v{color:var(–ink);font-weight:600}
+.td-progress-wrap{margin-bottom:18px}
+.td-progress-wrap .l{font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(–ink-3);font-weight:700;font-family:var(–mono);margin-bottom:8px;display:flex;justify-content:space-between}
+.td-progress-bar{height:10px;background:var(–bg-soft);border-radius:5px;overflow:hidden}
+.td-progress-bar div{height:100%;background:linear-gradient(90deg,var(–accent-2),var(–accent));border-radius:5px;transition:width .4s}
+.td-progress-input{display:flex;align-items:center;gap:10px;margin-top:8px}
+.td-progress-input input[type=range]{flex:1}
+.td-progress-input span{font-family:var(–mono);font-weight:700;min-width:42px;text-align:right}
+.td-log{padding:12px 14px;border-left:3px solid var(–line);margin-left:6px;margin-bottom:10px;font-size:13px}
+.td-log .when{font-size:11px;color:var(–ink-3);font-family:var(–mono);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.td-log .who{font-weight:700;color:var(–ink)}
+.td-log .what{color:var(–ink-2);margin-top:2px}
+.td-log.add{border-left-color:var(–ok)}
+.td-log.update{border-left-color:var(–accent)}
+.td-log.note{border-left-color:var(–info)}
 
-/* CONN */
-.conn-strip{display:flex;align-items:center;gap:8px;padding:0 20px 12px;font-size:12px;color:var(--lbl3);font-weight:500;letter-spacing:.1px}
-.conn-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.note-add{display:flex;gap:8px;margin-top:14px}
+.note-add textarea{flex:1;padding:9px 12px;border:1.5px solid var(–line);border-radius:9px;background:var(–bg);min-height:60px;outline:none;font-family:inherit;font-size:13.5px}
+.note-add textarea:focus{border-color:var(–ink)}
 
-/* EMPTY */
-.empty{padding:50px 24px;text-align:center}
-.empty-ic{font-size:42px;margin-bottom:14px;opacity:.4}
-.empty-t{font-size:15px;font-weight:500;margin-bottom:6px}
-.empty-s{font-size:13px;color:var(--lbl3)}
+/* TOAST */
+.toast-wrap{position:fixed;bottom:24px;right:24px;z-index:2000;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{background:var(–ink);color:var(–bg-elev);padding:12px 16px;border-radius:10px;box-shadow:var(–shadow-lg);font-size:13.5px;font-weight:500;display:flex;align-items:center;gap:10px;min-width:240px;max-width:380px;animation:tslide .25s cubic-bezier(.16,1,.3,1);pointer-events:auto}
+@keyframes tslide{from{transform:translateX(20px);opacity:0}to{transform:translateX(0);opacity:1}}
+.toast.ok{background:var(–ok)}
+.toast.err{background:var(–err)}
+.toast.warn{background:var(–warn)}
 
-/* PROGRESS (DETAIL) */
-.pbar-lg{height:6px;background:var(--fill);border-radius:3px;overflow:hidden}
-.pbar-f{height:100%;background:var(--teal-mid);border-radius:3px;transition:width .4s}
+/* SETTINGS */
+.set-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.set-card{background:var(–bg-elev);border:1px solid var(–line);border-radius:var(–radius);padding:20px}
+.set-card h4{font-family:var(–display);font-weight:700;font-size:15px;letter-spacing:-.01em;margin:0 0 4px}
+.set-card p{font-size:12.5px;color:var(–ink-3);margin:0 0 14px;line-height:1.5}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-top:1px solid var(–line-2);font-size:13.5px;font-weight:500}
+.toggle-row:first-of-type{border-top:none;padding-top:0}
+.switch{position:relative;width:42px;height:24px;background:var(–line);border-radius:14px;cursor:pointer;transition:background .15s}
+.switch::after{content:””;position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .2s}
+.switch.on{background:var(–ink)}
+.switch.on::after{transform:translateX(18px)}
 
-/* BUTTON PRIMARY */
-.btn-p{width:100%;padding:14px;border-radius:12px;border:none;background:var(--accent);color:var(--bg);font-size:15px;font-weight:500;cursor:pointer;transition:all .15s;letter-spacing:-.1px}
-.btn-p:active{transform:scale(.98)}
-.btn-p:disabled{background:var(--fill);color:var(--lbl4);cursor:default;transform:none}
+/* =====================================================================
+RESPONSIVE
+===================================================================== */
+@media (max-width:1100px){
+.dash-grid{grid-template-columns:1fr}
+.login-wrap{grid-template-columns:1fr}
+.login-art{display:none}
+}
+@media (max-width:880px){
+.app{grid-template-columns:1fr}
+.sidebar{position:fixed;left:-100%;top:0;width:88%;max-width:320px;z-index:200;transition:left .25s cubic-bezier(.16,1,.3,1);box-shadow:var(–shadow-lg)}
+.sidebar.open{left:0}
+.sb-overlay{display:none;position:fixed;inset:0;background:rgba(11,18,32,.4);backdrop-filter:blur(2px);z-index:150}
+.sb-overlay.show{display:block}
+.tb-burger{display:flex}
+.topbar{padding:0 16px;gap:10px}
+.tb-title{font-size:17px}
+.tb-btn span{display:none}
+.tb-btn{padding:0;width:38px;justify-content:center}
+.tb-btn.primary span{display:inline}
+.tb-btn.primary{padding:0 14px;width:auto}
+.page{padding:18px 16px}
+.page-head h1{font-size:24px}
+.form-grid{grid-template-columns:1fr}
+.td-info{grid-template-columns:1fr}
+.kanban{grid-template-columns:repeat(5,260px)}
+.cal-month{grid-auto-rows:minmax(80px,auto)}
+.cal-day{min-height:80px;font-size:11px}
+.cal-event{font-size:9.5px;padding:1px 4px}
+}
+@media (max-width:560px){
+.kpi-grid{grid-template-columns:repeat(2,1fr)}
+.kpi .val{font-size:28px}
+.toolbar{padding:10px}
+.search-box{max-width:100%}
+.modal-foot{flex-direction:column-reverse}
+.modal-foot .btn{width:100%;justify-content:center}
+.donut-wrap{flex-direction:column;align-items:flex-start}
+.donut{margin:0 auto}
+.toast-wrap{left:16px;right:16px;bottom:16px}
+.toast{min-width:0;width:100%}
+}
+@supports (padding:env(safe-area-inset-bottom)){
+body{padding-bottom:env(safe-area-inset-bottom)}
+}
 
-/* ADD ROW */
-.add-row{display:flex;align-items:center;gap:10px;padding:11px 16px}
-.add-row input{flex:1;font-size:15px;color:var(--lbl)}
-.add-row button{background:var(--accent);color:var(--bg);border:none;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;font-weight:300;flex-shrink:0;transition:transform .1s}
-.add-row button:active{transform:scale(.88)}
-
-/* BADGES */
-.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500;letter-spacing:.2px}
-
-@keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}}
-@keyframes fi{from{opacity:0}to{opacity:1}}
+/* PRINT */
+@media print{
+.sidebar,.topbar,.toolbar,.tb-actions{display:none!important}
+.app{display:block!important}
+.page{padding:0;max-width:100%}
+}
 </style>
+
 </head>
 <body>
-<div class="content" id="content"></div>
-<div class="tabbar" id="tabbar"></div>
-<button class="fab" data-action="new-task">＋</button>
-<div id="sroot"></div>
 
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-<script>
-"use strict";
+<!-- ================= GİRİŞ EKRANI ================= -->
 
-var FC={apiKey:"",authDomain:"",projectId:"",storageBucket:"",messagingSenderId:"",appId:""};
-var db=null,fbok=false;
-try{if(FC.apiKey&&FC.apiKey.length>5){firebase.initializeApp(FC);db=firebase.firestore();fbok=true}}catch(e){console.warn(e)}
+<div class="login-wrap" id="loginWrap">
+  <aside class="login-art">
+    <div class="login-art-inner">
+      <div class="login-brand">
+        <div class="login-brand-mark">H</div>
+        <div>
+          Halk Faktoring<br>
+          <span style="font-size:11px;font-weight:500;opacity:.7;font-family:var(--mono);letter-spacing:.15em;text-transform:uppercase">IT Operasyonları</span>
+        </div>
+      </div>
+      <div class="login-hero">
+        Görev<em>net.</em>
+        <small>Bilgi teknolojileri biriminin görev, proje ve operasyonel takip için tasarlanmış kurumsal çalışma alanı. Atamalar, takvim, parametreler ve raporlama; tek bir merkezde, tek bir akışta.</small>
+      </div>
+      <div class="login-meta">
+        <span>v1.0</span>
+        <span>· Firebase</span>
+        <span>· Maslak</span>
+      </div>
+    </div>
+  </aside>
+  <div class="login-form-wrap">
+    <form class="login-form" id="loginForm" autocomplete="on">
+      <h2>Hoş geldiniz</h2>
+      <p class="sub">Portala devam etmek için kurumsal hesabınızla giriş yapın.</p>
+      <div class="field">
+        <label>Kullanıcı Adı / E-posta</label>
+        <div class="field-icon">
+          <i class="fa-regular fa-user"></i>
+          <input type="text" id="loginEmail" required placeholder="cengiz veya [email protected]" autocomplete="username" />
+        </div>
+      </div>
+      <div class="field">
+        <label>Şifre</label>
+        <div class="field-icon">
+          <i class="fa-solid fa-lock"></i>
+          <input type="password" id="loginPass" required placeholder="••••••••" />
+        </div>
+      </div>
+      <button type="submit" class="btn-primary" id="loginBtn">
+        <span>Giriş Yap</span>
+        <i class="fa-solid fa-arrow-right"></i>
+      </button>
+      <div class="login-error" id="loginErr"></div>
+      <div class="login-help">
+        <strong>Demo Modu:</strong> Firebase yapılandırması girilmediği takdirde uygulama yerel demo verisiyle çalışır.<br>
+        Admin: <code>cengiz</code> / <code>admin123</code> &nbsp;·&nbsp; Personel: <code>ali</code>, <code>ayse</code>, <code>mehmet</code> / <code>user123</code>
+      </div>
+    </form>
+  </div>
+</div>
 
-var P={
-  critical:{l:"Kritik",lu:"KRİTİK",s:0},
-  high:{l:"Yüksek",lu:"YÜKSEK",s:1},
-  medium:{l:"Orta",lu:"ORTA",s:2},
-  low:{l:"Düşük",lu:"DÜŞÜK",s:3}
+<!-- ================= ANA UYGULAMA ================= -->
+
+<div class="app" id="app">
+  <div class="sb-overlay" id="sbOverlay"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-brand">
+      <div class="mark">H</div>
+      <div>
+        <div class="name">Halk Faktoring</div>
+        <div class="sub">IT · Görev Portalı</div>
+      </div>
+    </div>
+    <nav class="sb-nav" id="sbNav">
+      <div class="sb-section">Ana Görünüm</div>
+      <div class="sb-item active" data-view="dashboard"><i class="fa-solid fa-chart-pie"></i>Dashboard</div>
+      <div class="sb-item" data-view="my-tasks"><i class="fa-solid fa-list-check"></i>Görevlerim<span class="badge" id="myTaskBadge">0</span></div>
+      <div class="sb-item admin-only" data-view="all-tasks"><i class="fa-solid fa-layer-group"></i>Tüm Görevler</div>
+      <div class="sb-item admin-only" data-view="kanban"><i class="fa-solid fa-table-columns"></i>Kanban Pano</div>
+      <div class="sb-item" data-view="calendar"><i class="fa-regular fa-calendar"></i>Takvim</div>
+      <div class="sb-item admin-only" data-view="projects"><i class="fa-solid fa-diagram-project"></i>Projeler</div>
+      <div class="sb-item admin-only" data-view="reports"><i class="fa-solid fa-chart-line"></i>Raporlar</div>
+
+```
+  <div class="sb-section admin-only">Parametreler</div>
+  <div class="sb-item admin-only" data-view="param-users"><i class="fa-solid fa-users"></i>Personeller</div>
+  <div class="sb-item admin-only" data-view="param-categories"><i class="fa-solid fa-tags"></i>Görev Konuları</div>
+  <div class="sb-item admin-only" data-view="param-projects"><i class="fa-solid fa-folder-open"></i>Proje Tanımları</div>
+  <div class="sb-item admin-only" data-view="param-statuses"><i class="fa-solid fa-flag"></i>Durumlar</div>
+  <div class="sb-item admin-only" data-view="param-priorities"><i class="fa-solid fa-bolt"></i>Öncelikler</div>
+  <div class="sb-item admin-only" data-view="param-departments"><i class="fa-solid fa-sitemap"></i>Departmanlar</div>
+
+  <div class="sb-section">Sistem</div>
+  <div class="sb-item" data-view="settings"><i class="fa-solid fa-gear"></i>Ayarlar</div>
+</nav>
+<div class="sb-foot">
+  <div class="sb-avatar" id="sbAvatar">CG</div>
+  <div class="who">
+    <div class="nm" id="sbName">—</div>
+    <div class="rl" id="sbRole">—</div>
+  </div>
+  <button title="Çıkış" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i></button>
+</div>
+```
+
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <button class="tb-burger" id="burger"><i class="fa-solid fa-bars"></i></button>
+      <div class="tb-title">
+        <span class="crumb" id="crumb">Görünüm</span>
+        <span id="topTitle">Dashboard</span>
+      </div>
+      <div class="tb-actions">
+        <button class="tb-icon" id="themeBtn" title="Tema"><i class="fa-solid fa-moon"></i></button>
+        <button class="tb-btn primary admin-only" id="newTaskBtn"><i class="fa-solid fa-plus"></i><span>Yeni Görev</span></button>
+      </div>
+    </header>
+
+```
+<main class="page" id="page"></main>
+```
+
+  </div>
+</div>
+
+<!-- TOAST -->
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- ================= MODAL: TASK FORM ================= -->
+
+<div class="modal-bg" id="taskModal">
+  <div class="modal lg">
+    <div class="modal-head">
+      <div>
+        <h3 id="taskModalTitle">Yeni Görev</h3>
+        <p>Görevin tüm detaylarını girip ilgili personele atayın.</p>
+      </div>
+      <button class="modal-close" data-close="taskModal"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <form id="taskForm" autocomplete="off">
+        <input type="hidden" id="tfId" />
+        <div class="form-grid">
+          <div class="form-row full">
+            <label>Görev Başlığı <span class="req">*</span></label>
+            <input type="text" id="tfTitle" required placeholder="Örn. Veeam v13 yedekleme testi" />
+          </div>
+          <div class="form-row full">
+            <label>Açıklama</label>
+            <textarea id="tfDesc" placeholder="Görev kapsamı, beklentiler, teslim kriterleri..."></textarea>
+          </div>
+          <div class="form-row">
+            <label>Konu</label>
+            <select id="tfCategory"></select>
+          </div>
+          <div class="form-row">
+            <label>Proje</label>
+            <select id="tfProject"></select>
+          </div>
+          <div class="form-row">
+            <label>Atanan Personel <span class="req">*</span></label>
+            <select id="tfAssignee" required></select>
+          </div>
+          <div class="form-row">
+            <label>Öncelik <span class="req">*</span></label>
+            <select id="tfPriority" required>
+              <option value="low">Düşük</option>
+              <option value="normal" selected>Normal</option>
+              <option value="high">Yüksek</option>
+              <option value="critical">Kritik</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label>Durum</label>
+            <select id="tfStatus">
+              <option value="yeni" selected>Yeni</option>
+              <option value="devam">Devam Ediyor</option>
+              <option value="bekleme">Beklemede</option>
+              <option value="tamam">Tamamlandı</option>
+              <option value="iptal">İptal Edildi</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label>İlerleme (%)</label>
+            <input type="number" id="tfProgress" min="0" max="100" value="0" />
+          </div>
+          <div class="form-row">
+            <label>Başlangıç Tarihi <span class="req">*</span></label>
+            <input type="date" id="tfStart" required />
+          </div>
+          <div class="form-row">
+            <label>Bitiş / Hedef Tarihi <span class="req">*</span></label>
+            <input type="date" id="tfDue" required />
+          </div>
+          <div class="form-row full">
+            <label>Bağlantılar / Doküman URL</label>
+            <input type="text" id="tfLinks" placeholder="https://... (birden fazla için virgül kullanın)" />
+          </div>
+          <div class="form-row full">
+            <label>Notlar</label>
+            <textarea id="tfNotes" placeholder="Ek notlar..."></textarea>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" data-close="taskModal">Vazgeç</button>
+      <button class="btn solid" id="taskSave"><i class="fa-solid fa-check"></i>Kaydet</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MODAL: TASK DETAIL ================= -->
+
+<div class="modal-bg" id="detailModal">
+  <div class="modal lg">
+    <div class="modal-head">
+      <div>
+        <h3 id="dmTitle">Görev</h3>
+        <p id="dmSub">—</p>
+      </div>
+      <button class="modal-close" data-close="detailModal"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="td-tabs">
+      <button class="active" data-tab="info">Bilgiler</button>
+      <button data-tab="logs">Süreç & Notlar</button>
+    </div>
+    <div class="modal-body" id="dmBody"></div>
+    <div class="modal-foot">
+      <button class="btn ghost admin-only" id="dmEdit"><i class="fa-solid fa-pen"></i>Düzenle</button>
+      <button class="btn danger admin-only" id="dmDel"><i class="fa-solid fa-trash"></i>Sil</button>
+      <button class="btn solid" data-close="detailModal">Kapat</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MODAL: PARAM FORM ================= -->
+
+<div class="modal-bg" id="paramModal">
+  <div class="modal sm">
+    <div class="modal-head">
+      <div>
+        <h3 id="pmTitle">Kayıt</h3>
+        <p id="pmSub">—</p>
+      </div>
+      <button class="modal-close" data-close="paramModal"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body" id="pmBody"></div>
+    <div class="modal-foot">
+      <button class="btn ghost" data-close="paramModal">Vazgeç</button>
+      <button class="btn solid" id="pmSave"><i class="fa-solid fa-check"></i>Kaydet</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MODAL: CONFIRM ================= -->
+
+<div class="modal-bg" id="confirmModal">
+  <div class="modal sm">
+    <div class="modal-head">
+      <div>
+        <h3 id="cmTitle">Onay</h3>
+        <p id="cmText">Emin misiniz?</p>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" data-close="confirmModal">Vazgeç</button>
+      <button class="btn danger" id="cmYes">Evet, devam et</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+                      FIREBASE & APP LOGIC
+============================================================ -->
+
+<script type="module">
+/* ===========================================================
+ * FIREBASE BAĞLANTI YAPILANDIRMASI
+ * -----------------------------------------------------------
+ * Aşağıdaki firebaseConfig boş bırakılırsa uygulama LocalStorage
+ * tabanlı DEMO MODU ile çalışır. Kendi Firebase projenizi
+ * eklemek için config alanlarını doldurun.
+ *
+ * Adımlar:
+ * 1) https://console.firebase.google.com → Yeni proje oluşturun
+ * 2) Authentication → Sign-in method → Email/Password etkinleştirin
+ * 3) Firestore Database → Üretim modunda oluşturun
+ * 4) Project Settings → Web App ekleyin → config'i kopyalayın
+ * 5) Aşağıdaki firebaseConfig nesnesine yapıştırın
+ * 6) Firestore Rules için bu dosyanın altındaki örnek kuralları
+ *    Firebase Console → Firestore → Rules sekmesine yapıştırın
+ *
+ * Mail bildirimi için Firebase Cloud Functions kullanın
+ * (bu dosyanın sonundaki "MAIL ENTEGRASYONU" yorum bloğuna bakın).
+ * =========================================================== */
+const firebaseConfig = {
+  // apiKey: "AIzaSy...",
+  // authDomain: "halkfaktoring-portal.firebaseapp.com",
+  // projectId: "halkfaktoring-portal",
+  // storageBucket: "halkfaktoring-portal.appspot.com",
+  // messagingSenderId: "1234567890",
+  // appId: "1:1234567890:web:abc123"
 };
-var S={
-  todo:{l:"Bekliyor"},
-  inprogress:{l:"Devam"},
-  review:{l:"İnceleme"},
-  done:{l:"Tamamlandı"}
-};
-var CATS=["Sunucu & Altyapı","Veritabanı","Yazılım","Ağ & Güvenlik","Kullanıcı Destek","BDDK & Raporlama","Dijitalleşme","Diğer"];
 
-function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
-function lg(k,f){try{var v=localStorage.getItem(k);return v?JSON.parse(v):f}catch(e){return f}}
-function ls(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
-function fd(d){if(!d)return"";try{return new Date(d).toLocaleDateString("tr-TR",{day:"numeric",month:"short"})}catch(e){return""}}
-function fl(d){if(!d)return"";try{return new Date(d).toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric",weekday:"long"})}catch(e){return""}}
-function dl(d){if(!d)return null;var t=new Date();t.setHours(0,0,0,0);var x=new Date(d);x.setHours(0,0,0,0);return Math.ceil((x-t)/864e5)}
-function rd(d){var x=dl(d);if(x===null)return"";if(x<-1)return Math.abs(x)+" gün gecikti";if(x===-1)return"Dün gecikti";if(x===0)return"Bugün";if(x===1)return"Yarın";if(x<=7)return x+" gün";return fd(d)}
-function dueColor(d){if(d===null||d===undefined)return"var(--lbl3)";var x=dl(d);if(x===null)return"var(--lbl3)";if(x<0)return"var(--red-mid)";if(x<=2)return"var(--amber-mid)";return"var(--lbl2)"}
-function esc(s){if(s===null||s===undefined)return"";var d=document.createElement("div");d.textContent=String(s);return d.innerHTML}
-function abg(n){var h=0;for(var i=0;i<n.length;i++)h+=n.charCodeAt(i);h%=360;return"linear-gradient(135deg,hsl("+h+",48%,52%),hsl("+((h+35)%360)+",52%,40%))"}
-function ini(n){var p=n.split(" ").filter(Boolean);if(p.length>=2)return(p[0][0]+p[p.length-1][0]).toUpperCase();return n.slice(0,2).toUpperCase()}
-function avH(n,z){z=z||40;return'<div class="ava" style="width:'+z+'px;height:'+z+'px;font-size:'+Math.round(z*.34)+'px;background:'+abg(n)+'">'+esc(ini(n))+'</div>'}
+const USE_FIREBASE = !!firebaseConfig.apiKey;
 
-// Greeting based on time of day
-function greeting(){var h=new Date().getHours();if(h<6)return"İyi geceler";if(h<12)return"Günaydın";if(h<18)return"İyi günler";return"İyi akşamlar"}
+let fbApp, fbAuth, fbDb;
+let signInFn, signOutFn, onAuthChangedFn;
+let collFn, docFn, getDocsFn, getDocFn, setDocFn, addDocFn, updateDocFn, deleteDocFn, queryFn, whereFn, orderByFn, onSnapshotFn, serverTsFn;
 
-var tasks=lg("hfit-tasks",[
-{id:"s1",title:"BDDK Aylık Rapor Hazırlığı",description:"Regülatif raporların kontrol edilmesi ve BDDK portalına yüklenmesi",priority:"critical",status:"inprogress",category:"BDDK & Raporlama",assignee:"1",dueDate:"2026-04-22",createdAt:new Date().toISOString(),subtasks:[{id:"a1",text:"Verilerin doğrulanması",done:true},{id:"a2",text:"Rapor formatının kontrolü",done:false},{id:"a3",text:"BDDK portalına yükleme",done:false}]},
-{id:"s2",title:"SQL Server Yedekleme Kontrolü",description:"dbfactoring ve dbfactoring_log veritabanlarının yedekleme doğrulaması",priority:"high",status:"todo",category:"Veritabanı",assignee:"1",dueDate:"2026-04-21",createdAt:new Date().toISOString(),subtasks:[]},
-{id:"s3",title:"Mobil Uygulama Test Senaryoları",description:"QR → Infact → RatingPro → PowerCurve akışının test ortamında doğrulanması",priority:"high",status:"review",category:"Yazılım",assignee:"1",dueDate:"2026-04-25",createdAt:new Date().toISOString(),subtasks:[{id:"b1",text:"QR scan testi",done:true},{id:"b2",text:"RatingPro entegrasyonu",done:true},{id:"b3",text:"PowerCurve karar motoru",done:false}]},
-{id:"s4",title:"Hyper-V Cluster Bakımı",description:"Sanal sunucuların performans kontrolü ve firmware güncellemeleri",priority:"medium",status:"todo",category:"Sunucu & Altyapı",assignee:"",dueDate:"2026-04-28",createdAt:new Date().toISOString(),subtasks:[]},
-{id:"s5",title:"Dijital Mizan Nihai Rapor",description:"Prometeia projesi kapanış belgelerinin tamamlanması",priority:"low",status:"done",category:"Dijitalleşme",assignee:"1",dueDate:"2026-04-15",createdAt:new Date().toISOString(),subtasks:[]},
-{id:"s6",title:"E-Defter Tebliği Uyum",description:"1 Temmuz 2025 tebliği kapsamında gerekli aksiyonların planlanması",priority:"medium",status:"inprogress",category:"Dijitalleşme",assignee:"1",dueDate:"2026-05-01",createdAt:new Date().toISOString(),subtasks:[{id:"c1",text:"Tebliğ gereksinimlerinin analizi",done:true},{id:"c2",text:"BIS Infact entegrasyonu",done:false}]},
-{id:"s7",title:"Veeam v13 Lisans Yenileme",description:"Eylül 2026 öncesi Veeam Instance lisanslarının yenilenmesi",priority:"medium",status:"todo",category:"Sunucu & Altyapı",assignee:"",dueDate:"2026-09-15",createdAt:new Date().toISOString(),subtasks:[]}
-]);
-var team=lg("hfit-team",[{id:"1",name:"Cengiz Gülcan",role:"IT Yönetici"}]);
-var tab="dash",dark=lg("hfit-dark",false),sfilt="all",formData=null;
-
-function sv(){ls("hfit-tasks",tasks);ls("hfit-team",team)}
-function fm(id){if(!id)return null;for(var i=0;i<team.length;i++)if(team[i].id===id)return team[i];return null}
-function findTask(id){for(var i=0;i<tasks.length;i++)if(tasks[i].id===id)return tasks[i];return null}
-function gs(){var o={total:tasks.length,todo:0,ip:0,rv:0,done:0,ov:0,today:0,critical:0};tasks.forEach(function(t){if(t.status==="todo")o.todo++;if(t.status==="inprogress")o.ip++;if(t.status==="review")o.rv++;if(t.status==="done")o.done++;if(t.priority==="critical"&&t.status!=="done")o.critical++;var d=dl(t.dueDate);if(d!==null&&d<0&&t.status!=="done")o.ov++;if(d===0&&t.status!=="done")o.today++});o.pct=o.total?Math.round(o.done/o.total*100):0;o.active=o.total-o.done;return o}
-
-// Priority chip
-function priChip(priority){var p=P[priority]||P.medium;return'<span class="pri-chip chip-'+priority+'">'+p.lu+'</span>'}
-// Status chip (used in detail seg)
-function statusName(status){return(S[status]||S.todo).l}
-
-function trowH(t){
-var p=P[t.priority]||P.medium,s=S[t.status]||S.todo;
-var d=dl(t.dueDate),a=fm(t.assignee);
-var su=t.subtasks||[],sd=su.filter(function(x){return x.done}).length,st=su.length;
-var priColor={critical:"var(--red-mid)",high:"var(--amber-mid)",medium:"var(--blue-mid)",low:"var(--green-mid)"}[t.priority]||"var(--blue-mid)";
-var h='<div class="trow" data-action="detail" data-id="'+esc(t.id)+'" style="border-left-color:'+priColor+'">';
-h+='<div class="trow-top">';
-h+='<div class="trow-title'+(t.status==="done"?" done":"")+'">'+esc(t.title)+'</div>';
-h+=priChip(t.priority);
-h+='</div>';
-h+='<div class="trow-meta">';
-h+='<span>'+esc(s.l)+'</span>';
-h+='<span class="dot">·</span>';
-h+='<span>'+esc(t.category)+'</span>';
-if(t.dueDate){h+='<span class="dot">·</span><span style="color:'+dueColor(t.dueDate)+';font-weight:500">'+esc(rd(t.dueDate))+'</span>'}
-h+='</div>';
-if(st>0){
-h+='<div class="trow-pbar"><div class="trow-pbar-bar"><div style="width:'+(sd/st*100)+'%"></div></div><span class="trow-pbar-n">'+sd+'/'+st+'</span></div>';
-}
-return h+'</div>';
+if(USE_FIREBASE){
+  try{
+    const app = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
+    const auth = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js");
+    const fs = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+    fbApp = app.initializeApp(firebaseConfig);
+    fbAuth = auth.getAuth(fbApp);
+    fbDb = fs.getFirestore(fbApp);
+    signInFn = auth.signInWithEmailAndPassword;
+    signOutFn = auth.signOut;
+    onAuthChangedFn = auth.onAuthStateChanged;
+    collFn=fs.collection; docFn=fs.doc; getDocsFn=fs.getDocs; getDocFn=fs.getDoc;
+    setDocFn=fs.setDoc; addDocFn=fs.addDoc; updateDocFn=fs.updateDoc; deleteDocFn=fs.deleteDoc;
+    queryFn=fs.query; whereFn=fs.where; orderByFn=fs.orderBy; onSnapshotFn=fs.onSnapshot; serverTsFn=fs.serverTimestamp;
+  }catch(e){
+    console.warn("Firebase yüklenemedi, demo moda geçiliyor:", e);
+  }
 }
 
-// HEADER - universal
-function headerH(title,sub){
-var dmi=dark?"☀":"◐";
-return'<div class="hdr"><div class="hdr-l">'+
-(sub?'<div class="ovr">'+esc(sub)+'</div>':'')+
-'<h1>'+esc(title)+'</h1></div>'+
-'<div class="hdr-r">'+
-'<button class="ibtn" data-action="toggle-dark" title="Tema">'+dmi+'</button>'+
-avH("Cengiz Gülcan",40)+
-'</div></div>';
-}
-
-// ═══ DASHBOARD ═══
-function vDash(){
-var s=gs();
-var uname=team[0]?team[0].name.split(" ")[0]:"Cengiz";
-var h='<div class="hdr"><div class="hdr-l"><div class="ovr">Halk Faktoring · IT</div><h1>'+esc(greeting())+', '+esc(uname)+'</h1></div><div class="hdr-r"><button class="ibtn" data-action="toggle-dark">'+(dark?"☀":"◐")+'</button>'+avH("Cengiz Gülcan",40)+'</div></div>';
-
-h+='<div class="conn-strip"><div class="conn-dot" style="background:'+(fbok?"var(--teal-mid)":"var(--amber-mid)")+'"></div>'+(fbok?"Firebase bağlı — canlı senkron":"Yerel depolama · bu cihazda")+'</div>';
-
-h+='<div class="sec">';
-// Hero card - completion
-h+='<div class="hero"><div class="hero-top"><div class="hero-top-l"><div class="ovr">Bu hafta</div><div class="sub">'+s.active+' aktif · '+s.critical+' kritik</div></div>';
-h+='<div class="hero-chip '+(s.pct>=50?"up":"down")+'">'+(s.pct>=50?"↑":"↓")+' %'+s.pct+'</div></div>';
-h+='<div class="hero-num"><span class="n">'+s.pct+'</span><span class="s">%</span><span class="t">'+s.done+' / '+s.total+' tamam</span></div>';
-h+='<div class="hero-bar"><div style="flex:'+s.pct+'"></div><div style="flex:'+(100-s.pct)+'"></div></div>';
-h+='</div>';
-
-// Stat tiles - 2x2
-h+='<div class="tiles">';
-h+='<div class="tile coral"><div class="tile-row"><div class="tile-dot"></div><span class="tile-lbl">Gecikmiş</span></div><div class="tile-n">'+s.ov+'</div><div class="tile-s">'+(s.ov===0?"hepsi zamanında":"acil müdahale")+'</div></div>';
-h+='<div class="tile blue"><div class="tile-row"><div class="tile-dot"></div><span class="tile-lbl">Devam</span></div><div class="tile-n">'+s.ip+'</div><div class="tile-s">aktif görev</div></div>';
-h+='<div class="tile purple"><div class="tile-row"><div class="tile-dot"></div><span class="tile-lbl">Bugün</span></div><div class="tile-n">'+s.today+'</div><div class="tile-s">bugün biter</div></div>';
-h+='<div class="tile teal"><div class="tile-row"><div class="tile-dot"></div><span class="tile-lbl">Tamamlandı</span></div><div class="tile-n">'+s.done+'</div><div class="tile-s">bu dönem</div></div>';
-h+='</div></div>';
-
-// Overdue section
-var ov=tasks.filter(function(t){var d=dl(t.dueDate);return d!==null&&d<0&&t.status!=="done"});
-if(ov.length){
-h+='<div class="sec"><div class="sec-h"><span class="lbl" style="color:var(--red-fg)">Gecikmiş</span><span class="cnt">'+ov.length+' görev</span></div><div class="tlist">';
-ov.forEach(function(t){h+=trowH(t)});
-h+='</div></div>';
-}
-
-// Today
-var td=tasks.filter(function(t){return dl(t.dueDate)===0&&t.status!=="done"});
-if(td.length){
-h+='<div class="sec"><div class="sec-h"><span class="lbl" style="color:var(--purple-fg)">Bugün</span><span class="cnt">'+td.length+' görev</span></div><div class="tlist">';
-td.forEach(function(t){h+=trowH(t)});
-h+='</div></div>';
-}
-
-// Priority tasks
-h+='<div class="sec"><div class="sec-h"><span class="lbl">Öncelikliler</span><span class="cnt">'+tasks.filter(function(t){return t.status!=="done"}).length+' görev</span></div><div class="tlist">';
-if(!tasks.length){
-h+='<div class="empty"><div class="empty-ic">◯</div><div class="empty-t">Henüz görev yok</div><div class="empty-s">＋ ile başla</div></div>';
-}else{
-var pri=tasks.filter(function(t){return t.status!=="done"}).sort(function(a,b){return P[a.priority].s-P[b.priority].s}).slice(0,6);
-if(!pri.length){
-h+='<div class="empty"><div class="empty-ic">✓</div><div class="empty-t">Hepsi tamam</div><div class="empty-s">harika iş!</div></div>';
-}else{
-pri.forEach(function(t){h+=trowH(t)});
-}
-}
-h+='</div></div>';
-
-return h;
-}
-
-// ═══ TASKS ═══
-function vTasks(){
-var h=headerH("Görevler",tasks.length+" kayıt");
-h+='<div class="sec">';
-h+='<div class="search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input id="qinp" placeholder="Görev, kategori ara..." autocomplete="off"><button class="clr" data-action="clear-search" style="display:none" id="clr-btn">✕</button></div>';
-h+='<div class="seg" id="sseg">';
-[{v:"all",l:"Tümü"},{v:"todo",l:"Bekliyor"},{v:"inprogress",l:"Devam"},{v:"review",l:"İnceleme"},{v:"done",l:"Bitti"}].forEach(function(o){
-h+='<button data-action="filter-status" data-val="'+o.v+'" class="'+(sfilt===o.v?"active":"")+'">'+o.l+'</button>';
-});
-h+='</div>';
-h+='<div class="tlist" id="tlist">';
-var ft=tasks.filter(function(t){return sfilt==="all"||t.status===sfilt}).sort(function(a,b){return P[a.priority].s-P[b.priority].s});
-if(!ft.length)h+='<div class="empty"><div class="empty-ic">◯</div><div class="empty-t">Görev bulunamadı</div><div class="empty-s">filtreyi değiştir</div></div>';
-else ft.forEach(function(t){h+=trowH(t)});
-h+='</div></div>';
-return h;
-}
-
-// ═══ BOARD ═══
-function vBoard(){
-var h=headerH("Pano","Kanban görünümü");
-h+='<div class="board">';
-var colors={todo:"var(--gray-mid)",inprogress:"var(--blue-mid)",review:"var(--purple-mid)",done:"var(--teal-mid)"};
-var bgs={todo:"var(--gray-bg)",inprogress:"var(--blue-bg)",review:"var(--purple-bg)",done:"var(--teal-bg)"};
-var fgs={todo:"var(--gray-fg)",inprogress:"var(--blue-fg)",review:"var(--purple-fg)",done:"var(--teal-fg)"};
-Object.keys(S).forEach(function(sk){
-var sv=S[sk],col=tasks.filter(function(t){return t.status===sk});
-h+='<div class="bcol">';
-h+='<div class="bcol-h"><div class="bcol-h-l"><div class="bcol-dot" style="background:'+colors[sk]+'"></div><span class="bcol-t">'+esc(sv.l)+'</span></div><span class="bcol-n" style="background:'+bgs[sk]+';color:'+fgs[sk]+'">'+col.length+'</span></div>';
-col.forEach(function(t){
-var priColor={critical:"var(--red-mid)",high:"var(--amber-mid)",medium:"var(--blue-mid)",low:"var(--green-mid)"}[t.priority]||"var(--blue-mid)";
-var a=fm(t.assignee);
-var su=t.subtasks||[],sd=su.filter(function(x){return x.done}).length,st=su.length;
-h+='<div class="bcard" style="border-left-color:'+priColor+'" data-action="detail" data-id="'+esc(t.id)+'">';
-h+='<div class="bcard-t">'+esc(t.title)+'</div>';
-h+='<div style="display:flex;align-items:center;gap:8px;font-size:11px;flex-wrap:wrap">'+priChip(t.priority);
-if(t.dueDate)h+='<span style="color:'+dueColor(t.dueDate)+';font-weight:500">'+esc(rd(t.dueDate))+'</span>';
-h+='</div>';
-if(st>0)h+='<div style="margin-top:10px;display:flex;align-items:center;gap:8px"><div style="flex:1;height:3px;background:var(--fill);border-radius:2px;overflow:hidden"><div style="width:'+(sd/st*100)+'%;height:100%;background:var(--teal-mid);border-radius:2px"></div></div><span style="font-size:10px;color:var(--lbl3);font-weight:500;font-variant-numeric:tabular-nums">'+sd+'/'+st+'</span></div>';
-if(a)h+='<div style="display:flex;justify-content:flex-end;margin-top:10px">'+avH(a.name,22)+'</div>';
-h+='</div>';
-});
-if(!col.length)h+='<div style="padding:24px 16px;text-align:center;color:var(--lbl4);border:1px dashed var(--sep);border-radius:12px;font-size:13px">—</div>';
-h+='</div>';
-});
-h+='</div>';
-return h;
-}
-
-// ═══ SETTINGS ═══
-function vSettings(){
-var s=gs();
-var h=headerH("Ayarlar","Tercihler ve hesap");
-
-h+='<div class="grp"><div class="grp-h">Görünüm</div><div class="grp-b">';
-h+='<div class="cell" data-action="toggle-dark"><div class="cell-ic" style="background:var(--purple-bg);color:var(--purple-fg)">'+(dark?"◑":"◐")+'</div><div class="cell-b"><div class="cell-t">Koyu Mod</div><div class="cell-sub">'+(dark?"Koyu tema aktif":"Açık tema aktif")+'</div></div><div class="toggle'+(dark?" on":"")+'"><div class="toggle-k"></div></div></div>';
-h+='</div></div>';
-
-h+='<div class="grp"><div class="grp-h">Bağlantı</div><div class="grp-b">';
-h+='<div class="cell"><div class="cell-ic" style="background:'+(fbok?"var(--teal-bg)":"var(--amber-bg)")+';color:'+(fbok?"var(--teal-fg)":"var(--amber-fg)")+'">'+(fbok?"☁":"□")+'</div><div class="cell-b"><div class="cell-t">'+(fbok?"Firebase":"Yerel")+'</div><div class="cell-sub">'+(fbok?"Tüm cihazlarda senkron":"Sadece bu cihaz")+'</div></div></div>';
-h+='</div></div>';
-
-h+='<div class="grp"><div class="grp-h">Ekip</div><div class="grp-b">';
-team.forEach(function(m){h+='<div class="cell">'+avH(m.name,34)+'<div class="cell-b"><div class="cell-t">'+esc(m.name)+'</div><div class="cell-sub">'+esc(m.role)+'</div></div></div>'});
-h+='<div class="cell" data-action="team-sheet"><div class="cell-ic" style="background:var(--blue-bg);color:var(--blue-fg)">+</div><div class="cell-b"><div class="cell-t">Ekip Yönetimi</div></div><span class="cell-arr">›</span></div>';
-h+='</div></div>';
-
-h+='<div class="grp"><div class="grp-h">İstatistikler</div><div class="grp-b">';
-h+='<div class="cell"><div class="cell-b"><div class="cell-t">Toplam görev</div></div><span class="cell-v">'+s.total+'</span></div>';
-h+='<div class="cell"><div class="cell-b"><div class="cell-t">Tamamlanan</div></div><span class="cell-v">'+s.done+'</span></div>';
-h+='<div class="cell"><div class="cell-b"><div class="cell-t">Gecikmiş</div></div><span class="cell-v" style="color:var(--red-mid)">'+s.ov+'</span></div>';
-h+='<div class="cell"><div class="cell-b"><div class="cell-t">Tamamlanma</div></div><span class="cell-v">%'+s.pct+'</span></div>';
-h+='</div></div>';
-
-h+='<div class="grp"><div class="grp-h">Veri</div><div class="grp-b">';
-h+='<div class="cell" data-action="export"><div class="cell-ic" style="background:var(--blue-bg);color:var(--blue-fg)">↓</div><div class="cell-b"><div class="cell-t">Yedek al (JSON)</div></div><span class="cell-arr">›</span></div>';
-h+='<div class="cell dest" data-action="reset"><div class="cell-ic" style="background:var(--red-bg);color:var(--red-fg)">×</div><div class="cell-b"><div class="cell-t">Verileri sıfırla</div></div></div>';
-h+='</div></div>';
-
-h+='<div class="grp"><div class="grp-h">Hakkında</div><div class="grp-b">';
-h+='<div class="cell"><div class="cell-b"><div class="cell-t">Kurum</div></div><span class="cell-v">Halk Faktoring</span></div>';
-h+='<div class="cell"><div class="cell-b"><div class="cell-t">Birim</div></div><span class="cell-v">IT Departmanı</span></div>';
-h+='<div class="cell"><div class="cell-b"><div class="cell-t">Versiyon</div></div><span class="cell-v">4.0 Premium</span></div>';
-h+='</div></div>';
-
-return h;
-}
-
-// Tab icons (SVG inline)
-var TAB_IC={
-dash:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>',
-tasks:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12l2 2 4-4"/></svg>',
-board:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="13" rx="1"/></svg>',
-settings:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 004.6 15a1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6 1.65 1.65 0 0010 3.09V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09A1.65 1.65 0 0019.4 15z"/></svg>'
+/* ===========================================================
+ * DEMO VERİTABANI (LocalStorage)
+ * =========================================================== */
+const LS_KEY="halkfaktoring_portal_v1";
+const DEMO={
+  users:[
+    {id:"u1",fullName:"Cengiz Gülcan",email:"[email protected]",role:"admin",department:"Bilgi Teknolojileri",title:"IT Yönetmeni",phone:"+90 212 ...",isActive:true,pass:"admin123"},
+    {id:"u2",fullName:"Ali Demir",email:"[email protected]",role:"personel",department:"Bilgi Teknolojileri",title:"Sistem Uzmanı",phone:"",isActive:true,pass:"user123"},
+    {id:"u3",fullName:"Ayşe Yılmaz",email:"[email protected]",role:"personel",department:"Bilgi Teknolojileri",title:"Yazılım Uzmanı",phone:"",isActive:true,pass:"user123"},
+    {id:"u4",fullName:"Mehmet Kara",email:"[email protected]",role:"personel",department:"Bilgi Teknolojileri",title:"DBA",phone:"",isActive:true,pass:"user123"}
+  ],
+  categories:[
+    {id:"c1",categoryName:"Sunucu / Altyapı",description:"Hyper-V, fiziksel sunucular, ağ",isActive:true},
+    {id:"c2",categoryName:"Veritabanı",description:"SQL Server bakım & geliştirme",isActive:true},
+    {id:"c3",categoryName:"Uygulama Geliştirme",description:"Web, mobil, dahili araçlar",isActive:true},
+    {id:"c4",categoryName:"Regülasyon & Entegrasyon",description:"BDDK, KKB, Risk Merkezi",isActive:true},
+    {id:"c5",categoryName:"Yedekleme & Felaket Kurtarma",description:"Veeam, replikasyon",isActive:true}
+  ],
+  projects:[
+    {id:"p1",projectName:"Halk Faktoring Mobil Uygulama",description:"BIS Çözüm A.Ş. ile yürütülen mobil çek okutma projesi",startDate:"2026-02-01",targetEndDate:"2026-08-30",isActive:true},
+    {id:"p2",projectName:"Datacenter Migrasyonu",description:"Hyper-V cluster yeniden yapılandırma & Veeam v13",startDate:"2026-02-15",targetEndDate:"2026-05-30",isActive:true},
+    {id:"p3",projectName:"Görev Takip Portalı",description:"IT içi görev yönetim çözümü",startDate:"2026-03-01",targetEndDate:"2026-05-15",isActive:true},
+    {id:"p4",projectName:"Dijital Mizan",description:"Prometeia entegrasyonu - aktif takip",startDate:"2023-10-01",targetEndDate:"2024-08-30",isActive:false}
+  ],
+  departments:[
+    {id:"d1",name:"Bilgi Teknolojileri",isActive:true},
+    {id:"d2",name:"Operasyon",isActive:true},
+    {id:"d3",name:"Risk Yönetimi",isActive:true},
+    {id:"d4",name:"İç Denetim",isActive:true}
+  ],
+  tasks:[
+    {id:"t1",title:"Veeam v13 instance lisans yenileme planı",description:"Eylül 2026 dönemine kadar yenileme süreci planlanmalı, fiyatlandırma alınmalı",projectId:"p2",categoryId:"c5",assignedToUserId:"u4",priority:"high",status:"devam",progress:35,startDate:"2026-04-15",dueDate:"2026-06-15",completedDate:null,createdBy:"u1",createdAt:"2026-04-15T09:00:00Z",updatedAt:"2026-04-22T14:30:00Z",notes:"Fiyat teklifi alındı, finansal onay bekleniyor",links:"",isDeleted:false},
+    {id:"t2",title:"KKB ODM replikasyon erişim sorunu",description:"Datacenter taşınması sonrası replikasyon erişiminde sorun var, ağ ekibiyle koordinasyon",projectId:"p2",categoryId:"c4",assignedToUserId:"u2",priority:"critical",status:"devam",progress:60,startDate:"2026-04-01",dueDate:"2026-05-05",completedDate:null,createdBy:"u1",createdAt:"2026-04-01T10:00:00Z",updatedAt:"2026-04-25T11:00:00Z",notes:"Firewall kuralları gözden geçirildi",links:"",isDeleted:false},
+    {id:"t3",title:"Mobil uygulama PowerCurve karar destek testi",description:"Yeni müşteri akışı için fiyatlı ön onay senaryolarının test edilmesi",projectId:"p1",categoryId:"c3",assignedToUserId:"u3",priority:"high",status:"yeni",progress:0,startDate:"2026-04-29",dueDate:"2026-05-15",completedDate:null,createdBy:"u1",createdAt:"2026-04-28T09:00:00Z",updatedAt:"2026-04-28T09:00:00Z",notes:"",links:"",isDeleted:false},
+    {id:"t4",title:"dbfactoring DML log analizi",description:"Aylık log raporlama ve anormal işlem tespiti",projectId:null,categoryId:"c2",assignedToUserId:"u4",priority:"normal",status:"tamam",progress:100,startDate:"2026-04-01",dueDate:"2026-04-25",completedDate:"2026-04-24T16:00:00Z",createdBy:"u1",createdAt:"2026-04-01T08:00:00Z",updatedAt:"2026-04-24T16:00:00Z",notes:"Rapor hazırlandı, denetim arşivine eklendi",links:"",isDeleted:false},
+    {id:"t5",title:"Sunucu donanım iyileştirme analizi",description:"Datacenter sonrası 3 aksiyon kaleminden biri, kapasite analizi yapılacak",projectId:"p2",categoryId:"c1",assignedToUserId:"u2",priority:"normal",status:"bekleme",progress:15,startDate:"2026-04-10",dueDate:"2026-04-20",completedDate:null,createdBy:"u1",createdAt:"2026-04-10T09:00:00Z",updatedAt:"2026-04-15T10:00:00Z",notes:"Tedarikçi teklifleri bekleniyor",links:"",isDeleted:false},
+    {id:"t6",title:"Görev portalı PWA & dark mode iyileştirmesi",description:"iOS native dokunuşlar, tema desteği",projectId:"p3",categoryId:"c3",assignedToUserId:"u3",priority:"normal",status:"devam",progress:75,startDate:"2026-04-20",dueDate:"2026-05-10",completedDate:null,createdBy:"u1",createdAt:"2026-04-20T09:00:00Z",updatedAt:"2026-04-27T15:00:00Z",notes:"",links:"",isDeleted:false},
+    {id:"t7",title:"Mobil uygulama kurumsal mail şablonu",description:"Promosyon banner tasarımı ve kurumsal mail HTML şablonu",projectId:"p1",categoryId:"c3",assignedToUserId:"u3",priority:"low",status:"tamam",progress:100,startDate:"2026-03-15",dueDate:"2026-04-15",completedDate:"2026-04-14T10:00:00Z",createdBy:"u1",createdAt:"2026-03-15T09:00:00Z",updatedAt:"2026-04-14T10:00:00Z",notes:"",links:"",isDeleted:false},
+    {id:"t8",title:"BIS Infact analiz dokümanı revizyonu",description:"Yeni özellik talepleri için süreç akış güncellemesi",projectId:"p1",categoryId:"c3",assignedToUserId:"u1",priority:"high",status:"devam",progress:50,startDate:"2026-04-15",dueDate:"2026-05-02",completedDate:null,createdBy:"u1",createdAt:"2026-04-15T09:00:00Z",updatedAt:"2026-04-26T17:00:00Z",notes:"BIS firmasıyla toplantı 30 Nisan'da",links:"",isDeleted:false}
+  ],
+  taskLogs:[
+    {id:"l1",taskId:"t2",actionType:"create",description:"Görev oluşturuldu",updatedBy:"u1",updatedAt:"2026-04-01T10:00:00Z"},
+    {id:"l2",taskId:"t2",actionType:"update",description:"Durum 'Yeni' → 'Devam Ediyor' olarak güncellendi",updatedBy:"u2",updatedAt:"2026-04-10T14:00:00Z"},
+    {id:"l3",taskId:"t2",actionType:"note",description:"Firewall kuralları gözden geçirildi, NAT kayıtları kontrol edildi.",updatedBy:"u2",updatedAt:"2026-04-25T11:00:00Z"},
+    {id:"l4",taskId:"t1",actionType:"create",description:"Görev oluşturuldu",updatedBy:"u1",updatedAt:"2026-04-15T09:00:00Z"},
+    {id:"l5",taskId:"t1",actionType:"note",description:"Veeam'den fiyat teklifi alındı, finans biriminin onayı bekleniyor.",updatedBy:"u4",updatedAt:"2026-04-22T14:30:00Z"}
+  ]
 };
 
-function render(){
-document.body.classList.toggle("dark",dark);
-document.querySelector('meta[name="theme-color"]').setAttribute("content",dark?"#0c0c0c":"#fafaf7");
-var c=document.getElementById("content");
-if(tab==="dash")c.innerHTML=vDash();
-else if(tab==="tasks")c.innerHTML=vTasks();
-else if(tab==="board")c.innerHTML=vBoard();
-else c.innerHTML=vSettings();
+const PRIORITY_LABELS={low:"Düşük",normal:"Normal",high:"Yüksek",critical:"Kritik"};
+const STATUS_LABELS={yeni:"Yeni",devam:"Devam Ediyor",bekleme:"Beklemede",tamam:"Tamamlandı",iptal:"İptal Edildi"};
+const STATUS_ORDER=["yeni","devam","bekleme","tamam","iptal"];
 
-var tb=document.getElementById("tabbar");
-tb.innerHTML=[{id:"dash",l:"Özet"},{id:"tasks",l:"Görevler"},{id:"board",l:"Pano"},{id:"settings",l:"Ayarlar"}].map(function(t){return'<button class="tab-btn'+(tab===t.id?" active":"")+'" data-action="tab" data-val="'+t.id+'">'+TAB_IC[t.id]+'<span>'+t.l+'</span></button>'}).join("");
+/* ===========================================================
+ * STORE
+ * =========================================================== */
+const Store={
+  data:null,
+  user:null,
+  load(){
+    if(this.data) return this.data;
+    try{
+      const raw=localStorage.getItem(LS_KEY);
+      if(raw){this.data=JSON.parse(raw);return this.data;}
+    }catch(e){}
+    this.data=JSON.parse(JSON.stringify(DEMO));
+    this.save();
+    return this.data;
+  },
+  save(){try{localStorage.setItem(LS_KEY,JSON.stringify(this.data));}catch(e){}},
+  reset(){localStorage.removeItem(LS_KEY);this.data=null;this.load();},
+  user_set(u){this.user=u;try{sessionStorage.setItem(LS_KEY+"_user",JSON.stringify(u));}catch(e){}},
+  user_get(){
+    if(this.user)return this.user;
+    try{const r=sessionStorage.getItem(LS_KEY+"_user");if(r){this.user=JSON.parse(r);return this.user;}}catch(e){}
+    return null;
+  },
+  user_clear(){this.user=null;try{sessionStorage.removeItem(LS_KEY+"_user");}catch(e){}},
 
-if(tab==="tasks"){
-var inp=document.getElementById("qinp");
-if(inp){
-inp.addEventListener("input",doFilter);
-inp.addEventListener("input",function(){var b=document.getElementById("clr-btn");if(b)b.style.display=inp.value?"flex":"none"});
-}
-}
-}
+  // CRUD helpers
+  uid(){return"_"+Math.random().toString(36).slice(2,11)+Date.now().toString(36)},
+  list(coll,filter){
+    const arr=this.data[coll]||[];
+    return filter?arr.filter(filter):arr.slice();
+  },
+  get(coll,id){return(this.data[coll]||[]).find(x=>x.id===id);},
+  add(coll,obj){
+    obj.id=obj.id||this.uid();
+    this.data[coll].push(obj);
+    this.save();
+    return obj;
+  },
+  update(coll,id,patch){
+    const arr=this.data[coll];const i=arr.findIndex(x=>x.id===id);
+    if(i>=0){arr[i]={...arr[i],...patch};this.save();return arr[i];}
+    return null;
+  },
+  remove(coll,id){
+    this.data[coll]=this.data[coll].filter(x=>x.id!==id);
+    this.save();
+  },
+  softDelete(coll,id){return this.update(coll,id,{isDeleted:true,isActive:false});}
+};
 
-function doFilter(){
-var q=(document.getElementById("qinp")||{}).value||"";q=q.toLowerCase();
-var el=document.getElementById("tlist");if(!el)return;
-var ft=tasks.filter(function(t){
-if(sfilt!=="all"&&t.status!==sfilt)return false;
-if(q&&t.title.toLowerCase().indexOf(q)===-1&&t.category.toLowerCase().indexOf(q)===-1&&(t.description||"").toLowerCase().indexOf(q)===-1)return false;
-return true;
-}).sort(function(a,b){return P[a.priority].s-P[b.priority].s});
-var h="";
-if(!ft.length)h='<div class="empty"><div class="empty-ic">◯</div><div class="empty-t">Görev bulunamadı</div><div class="empty-s">farklı anahtar kelime dene</div></div>';
-else ft.forEach(function(t){h+=trowH(t)});
-el.innerHTML=h;
-}
+/* ===========================================================
+ * UTILITIES
+ * =========================================================== */
+const $=s=>document.querySelector(s);
+const $$=s=>document.querySelectorAll(s);
+const fmtDate=(d)=>{if(!d)return"—";const dt=typeof d==="string"?new Date(d):d;if(isNaN(dt))return"—";return dt.toLocaleDateString("tr-TR",{day:"2-digit",month:"short",year:"numeric"});};
+const fmtDateTime=(d)=>{if(!d)return"—";const dt=typeof d==="string"?new Date(d):d;if(isNaN(dt))return"—";return dt.toLocaleString("tr-TR",{day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"});};
+const fmtDateInput=(d)=>{if(!d)return"";const dt=typeof d==="string"?new Date(d):d;if(isNaN(dt))return"";return dt.toISOString().slice(0,10);};
+const today=()=>new Date(new Date().toDateString());
+const isLate=(t)=>t.status!=="tamam"&&t.status!=="iptal"&&new Date(t.dueDate)<today();
+const initials=(name)=>name.split(" ").filter(Boolean).slice(0,2).map(s=>s[0]).join("").toUpperCase();
+const escapeHTML=(s)=>String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
 
-function closeSheet(){var r=document.getElementById("sroot");r.innerHTML="";formData=null}
-
-function openDetail(id){
-var t=findTask(id);if(!t)return;
-var p=P[t.priority]||P.medium,a=fm(t.assignee),d=dl(t.dueDate);
-var su=t.subtasks||[],sd=su.filter(function(x){return x.done}).length,st=su.length;
-var priColor={critical:"var(--red-mid)",high:"var(--amber-mid)",medium:"var(--blue-mid)",low:"var(--green-mid)"}[t.priority];
-
-var h='<div class="sbg" data-action="close-sheet"><div class="sht" data-stop="1"><div class="sht-bar"><div></div></div>';
-h+='<div class="sht-hd"><button data-action="close-sheet">Kapat</button><span class="tt">Görev Detayı</span><button class="sv" data-action="edit-task" data-id="'+esc(t.id)+'">Düzenle</button></div>';
-h+='<div class="sht-ct">';
-h+='<div class="dh"><div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">'+priChip(t.priority)+'<span style="font-size:12px;color:var(--lbl3)">'+esc(t.category)+'</span></div>';
-h+='<h2>'+esc(t.title)+'</h2>';
-if(t.description)h+='<p>'+esc(t.description)+'</p>';
-h+='</div>';
-
-h+='<div style="padding:0 20px 20px"><div style="font-size:11px;color:var(--lbl3);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:10px;padding:0 4px;font-weight:500">Durum</div>';
-h+='<div class="seg">';
-Object.keys(S).forEach(function(k){h+='<button data-action="change-status" data-id="'+esc(t.id)+'" data-val="'+k+'" class="'+(t.status===k?"active":"")+'">'+S[k].l+'</button>'});
-h+='</div></div>';
-
-h+='<div class="grp"><div class="grp-h">Bilgiler</div><div class="grp-b">';
-if(a){h+='<div class="cell">'+avH(a.name,32)+'<div class="cell-b"><div class="cell-t">Atanan</div><div class="cell-sub">'+esc(a.name)+'</div></div></div>'}
-if(t.dueDate){
-h+='<div class="cell"><div class="cell-ic" style="background:'+(d!==null&&d<0?"var(--red-bg);color:var(--red-fg)":d!==null&&d<=2?"var(--amber-bg);color:var(--amber-fg)":"var(--teal-bg);color:var(--teal-fg)")+'">◷</div><div class="cell-b"><div class="cell-t">Son Tarih</div><div class="cell-sub">'+esc(fl(t.dueDate))+'</div></div>';
-if(d!==null&&d<0)h+='<span class="badge" style="background:var(--red-bg);color:var(--red-fg)">Gecikti</span>';
-else if(d===0)h+='<span class="badge" style="background:var(--amber-bg);color:var(--amber-fg)">Bugün</span>';
-else if(d===1)h+='<span class="badge" style="background:var(--blue-bg);color:var(--blue-fg)">Yarın</span>';
-h+='</div>';
-}
-h+='<div class="cell"><div class="cell-ic" style="background:var(--fill);color:var(--lbl3)">◉</div><div class="cell-b"><div class="cell-t">Oluşturulma</div><div class="cell-sub">'+esc(fd(t.createdAt))+'</div></div></div>';
-h+='</div></div>';
-
-if(st>0){
-h+='<div class="grp"><div class="grp-h">Alt Görevler · '+sd+'/'+st+'</div><div class="grp-b">';
-su.forEach(function(sub){
-h+='<div class="sub-row'+(sub.done?" done":"")+'">';
-h+='<button class="chk '+(sub.done?"chk-on":"chk-off")+'" data-action="toggle-sub" data-tid="'+esc(t.id)+'" data-sid="'+esc(sub.id)+'">'+(sub.done?"✓":"")+'</button>';
-h+='<span class="sub-text">'+esc(sub.text)+'</span>';
-h+='</div>';
-});
-h+='<div style="padding:16px"><div class="pbar-lg"><div class="pbar-f" style="width:'+(sd/st*100)+'%"></div></div><div style="display:flex;justify-content:space-between;margin-top:8px;font-size:11px;color:var(--lbl3);font-weight:500;letter-spacing:.3px;text-transform:uppercase"><span>İlerleme</span><span style="font-variant-numeric:tabular-nums">%'+Math.round(sd/st*100)+'</span></div></div>';
-h+='</div></div>';
+function toast(msg,kind=""){
+  const w=$("#toastWrap");const el=document.createElement("div");
+  el.className="toast "+kind;
+  const icon={ok:"check-circle",err:"circle-exclamation",warn:"triangle-exclamation"}[kind]||"info-circle";
+  el.innerHTML=`<i class="fa-solid fa-${icon}"></i><span>${escapeHTML(msg)}</span>`;
+  w.appendChild(el);
+  setTimeout(()=>{el.style.transition="opacity .25s, transform .25s";el.style.opacity="0";el.style.transform="translateX(20px)";setTimeout(()=>el.remove(),250);},3200);
 }
 
-h+='<div class="grp"><div class="grp-b"><div class="cell dest" data-action="delete-task" data-id="'+esc(t.id)+'"><div class="cell-ic" style="background:var(--red-bg);color:var(--red-fg)">×</div><div class="cell-b"><div class="cell-t">Görevi sil</div></div></div></div></div>';
-h+='</div></div></div>';
-document.getElementById("sroot").innerHTML=h;
-}
+function openModal(id){$("#"+id).classList.add("show");document.body.style.overflow="hidden";}
+function closeModal(id){$("#"+id).classList.remove("show");document.body.style.overflow="";}
 
-function openForm(id){
-var t=id?findTask(id):null;
-var f=t?JSON.parse(JSON.stringify(t)):{id:"",title:"",description:"",priority:"medium",status:"todo",category:CATS[0],assignee:"",dueDate:"",subtasks:[]};
-formData=f;
-var ed=!!t;
-
-var h='<div class="sbg" data-action="close-sheet"><div class="sht" data-stop="1"><div class="sht-bar"><div></div></div>';
-h+='<div class="sht-hd"><button data-action="close-sheet">İptal</button><span class="tt">'+(ed?"Görevi Düzenle":"Yeni Görev")+'</span><button class="sv" data-action="save-task"'+(f.title.trim()?"":" disabled")+'>'+(ed?"Kaydet":"Ekle")+'</button></div>';
-h+='<div class="sht-ct">';
-h+='<div class="grp"><div class="grp-b">';
-h+='<div style="padding:14px 16px;border-bottom:.5px solid var(--sep)"><input id="ft" value="'+esc(f.title)+'" placeholder="Görev başlığı" style="width:100%;font-size:17px;font-weight:500;letter-spacing:-.2px" autocomplete="off"></div>';
-h+='<div style="padding:12px 16px"><textarea id="fd" placeholder="Açıklama ekle..." rows="3" style="width:100%;font-size:14px;resize:none;line-height:1.5">'+esc(f.description)+'</textarea></div>';
-h+='</div></div>';
-
-h+='<div class="grp"><div class="grp-h">Detaylar</div><div class="grp-b">';
-h+='<div class="ff"><label>Öncelik</label><select id="fp">';Object.keys(P).forEach(function(k){h+='<option value="'+k+'"'+(f.priority===k?" selected":"")+'>'+P[k].l+'</option>'});h+='</select></div>';
-h+='<div class="ff"><label>Durum</label><select id="fs">';Object.keys(S).forEach(function(k){h+='<option value="'+k+'"'+(f.status===k?" selected":"")+'>'+S[k].l+'</option>'});h+='</select></div>';
-h+='<div class="ff"><label>Kategori</label><select id="fc">';CATS.forEach(function(c){h+='<option'+(f.category===c?" selected":"")+'>'+esc(c)+'</option>'});h+='</select></div>';
-h+='<div class="ff"><label>Atanan</label><select id="fa"><option value="">Seçilmedi</option>';team.forEach(function(m){h+='<option value="'+esc(m.id)+'"'+(f.assignee===m.id?" selected":"")+'>'+esc(m.name)+'</option>'});h+='</select></div>';
-h+='<div class="ff"><label>Son Tarih</label><input type="date" id="fdt" value="'+(f.dueDate||"")+'"></div>';
-h+='</div></div>';
-
-h+='<div class="grp"><div class="grp-h">Alt Görevler</div><div class="grp-b">';
-(f.subtasks||[]).forEach(function(st,i){
-h+='<div class="sub-row'+(st.done?" done":"")+'">';
-h+='<button class="chk '+(st.done?"chk-on":"chk-off")+'" data-action="form-toggle-sub" data-idx="'+i+'">'+(st.done?"✓":"")+'</button>';
-h+='<span class="sub-text">'+esc(st.text)+'</span>';
-h+='<button class="del-btn" data-action="form-del-sub" data-idx="'+i+'">−</button>';
-h+='</div>';
-});
-h+='<div class="add-row"><input id="fns" placeholder="Yeni alt görev..." autocomplete="off"><button data-action="form-add-sub">+</button></div>';
-h+='</div></div>';
-
-if(ed){
-h+='<div class="grp"><div class="grp-b"><div class="cell dest" data-action="delete-task" data-id="'+esc(f.id)+'"><div class="cell-ic" style="background:var(--red-bg);color:var(--red-fg)">×</div><div class="cell-b"><div class="cell-t">Görevi sil</div></div></div></div></div>';
-}
-
-h+='</div></div></div>';
-document.getElementById("sroot").innerHTML=h;
-setTimeout(function(){
-var inp=document.getElementById("ft");
-if(inp){inp.addEventListener("input",function(){var btn=document.querySelector("[data-action=save-task]");if(btn)btn.disabled=!inp.value.trim()});if(!ed)inp.focus()}
-},50);
-}
-
-function openTeam(){
-var h='<div class="sbg" data-action="close-sheet"><div class="sht" data-stop="1"><div class="sht-bar"><div></div></div>';
-h+='<div class="sht-hd"><button data-action="close-sheet">Kapat</button><span class="tt">Ekip</span><div style="min-width:60px"></div></div>';
-h+='<div class="sht-ct">';
-h+='<div class="grp"><div class="grp-h">'+team.length+' üye</div><div class="grp-b">';
-team.forEach(function(m){
-h+='<div class="cell">'+avH(m.name,38)+'<div class="cell-b"><div class="cell-t">'+esc(m.name)+'</div><div class="cell-sub">'+esc(m.role)+'</div></div>';
-if(team.length>1)h+='<button class="del-btn" data-action="del-member" data-id="'+esc(m.id)+'">−</button>';
-h+='</div>';
-});
-h+='</div></div>';
-h+='<div class="grp"><div class="grp-h">Yeni Üye</div><div class="grp-b">';
-h+='<div class="ff"><label>Ad Soyad</label><input id="tmn" placeholder="İsim" class="right"></div>';
-h+='<div class="ff"><label>Rol</label><input id="tmr" placeholder="Yazılımcı" class="right"></div>';
-h+='<div style="padding:14px 16px"><button class="btn-p" data-action="add-member">Üye Ekle</button></div>';
-h+='</div></div>';
-h+='</div></div></div>';
-document.getElementById("sroot").innerHTML=h;
-setTimeout(function(){var inp=document.getElementById("tmn");if(inp)inp.focus()},100);
-}
-
-function syncForm(){
-if(!formData)return;
-var el;
-el=document.getElementById("ft");if(el)formData.title=el.value;
-el=document.getElementById("fd");if(el)formData.description=el.value;
-el=document.getElementById("fp");if(el)formData.priority=el.value;
-el=document.getElementById("fs");if(el)formData.status=el.value;
-el=document.getElementById("fc");if(el)formData.category=el.value;
-el=document.getElementById("fa");if(el)formData.assignee=el.value;
-el=document.getElementById("fdt");if(el)formData.dueDate=el.value;
-}
-
-function exportData(){
-var data={tasks:tasks,team:team,exportDate:new Date().toISOString()};
-var blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
-var url=URL.createObjectURL(blob);
-var a=document.createElement("a");a.href=url;a.download="hfit-"+new Date().toISOString().slice(0,10)+".json";
-document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
-}
-
-function syncToFB(t){
-if(!fbok||!db)return;
-var data={};
-Object.keys(t).forEach(function(k){if(k!=="id")data[k]=t[k]});
-db.collection("tasks").doc(t.id).set(data).catch(function(e){console.error(e)});
-}
-
-document.addEventListener("click",function(e){
-var el=e.target.closest("[data-action]");
-if(!el)return;
-var act=el.getAttribute("data-action");
-var id=el.getAttribute("data-id");
-var val=el.getAttribute("data-val");
-
-if(act==="close-sheet"){
-if(el.classList.contains("sbg")||el.tagName==="BUTTON"){closeSheet()}
-return;
-}
-
-switch(act){
-case"tab":tab=val;sfilt="all";render();var c=document.getElementById("content");if(c)c.scrollTop=0;break;
-case"new-task":openForm(null);break;
-case"toggle-dark":dark=!dark;ls("hfit-dark",dark);render();break;
-case"detail":openDetail(id);break;
-case"edit-task":closeSheet();setTimeout(function(){openForm(id)},50);break;
-case"change-status":
-  var tt=findTask(id);
-  if(tt){tt.status=val;sv();if(fbok)syncToFB(tt);openDetail(id);render()}
-  break;
-case"toggle-sub":
-  var tid=el.getAttribute("data-tid"),sid=el.getAttribute("data-sid");
-  var tsk=findTask(tid);
-  if(tsk){(tsk.subtasks||[]).forEach(function(s){if(s.id===sid)s.done=!s.done});sv();if(fbok)syncToFB(tsk);openDetail(tid);render()}
-  break;
-case"delete-task":
-  if(!confirm("Bu görevi silmek istediğine emin misin?"))return;
-  if(fbok&&db)db.collection("tasks").doc(id).delete().catch(function(e){console.error(e)});
-  tasks=tasks.filter(function(t){return t.id!==id});sv();closeSheet();render();
-  break;
-case"save-task":
-  syncForm();if(!formData||!formData.title.trim())return;
-  if(formData.id){
-    var idx=-1;tasks.forEach(function(t,i){if(t.id===formData.id)idx=i});
-    if(idx>=0)tasks[idx]=formData;
-    if(fbok)syncToFB(formData);
+/* ===========================================================
+ * AUTH
+ * =========================================================== */
+async function doLogin(email,pass){
+  if(USE_FIREBASE){
+    const cred=await signInFn(fbAuth,email,pass);
+    // Firebase user id ile users koleksiyonundan rol bilgisini çek
+    const userDoc=await getDocFn(docFn(fbDb,"users",cred.user.uid));
+    if(!userDoc.exists())throw new Error("Kullanıcı kaydı bulunamadı.");
+    const u={id:cred.user.uid,...userDoc.data()};
+    if(u.isActive===false)throw new Error("Kullanıcı pasif durumda.");
+    Store.user_set(u);return u;
   }else{
-    formData.id=uid();
-    formData.createdAt=new Date().toISOString();
-    tasks.unshift(formData);
-    if(fbok)syncToFB(formData);
+    Store.load();
+    const q=(email||"").trim().toLowerCase();
+    // Demo modunda hem tam mail hem de kullanıcı adı (@ öncesi) ile giriş kabul edilir
+    const u=Store.list("users",x=>{
+      if(!x.isActive||x.pass!==pass)return false;
+      const mail=(x.email||"").toLowerCase();
+      const userName=mail.split("@")[0];
+      return mail===q||userName===q;
+    });
+    if(u.length===0)throw new Error("Kullanıcı adı veya şifre hatalı.");
+    Store.user_set(u[0]);return u[0];
   }
-  sv();closeSheet();render();
-  break;
-case"form-toggle-sub":
-  syncForm();var fi=parseInt(el.getAttribute("data-idx"));
-  if(formData&&formData.subtasks[fi])formData.subtasks[fi].done=!formData.subtasks[fi].done;
-  openForm(formData.id||null);
-  break;
-case"form-del-sub":
-  syncForm();var di=parseInt(el.getAttribute("data-idx"));
-  if(formData)formData.subtasks.splice(di,1);
-  openForm(formData.id||null);
-  break;
-case"form-add-sub":
-  syncForm();var ns=document.getElementById("fns");
-  if(ns&&ns.value.trim()){formData.subtasks.push({id:uid(),text:ns.value.trim(),done:false});openForm(formData.id||null);setTimeout(function(){var n=document.getElementById("fns");if(n)n.focus()},50)}
-  break;
-case"filter-status":
-  sfilt=val;
-  document.querySelectorAll("#sseg button").forEach(function(b){b.classList.toggle("active",b.getAttribute("data-val")===val)});
-  doFilter();
-  break;
-case"clear-search":
-  var qi=document.getElementById("qinp");if(qi){qi.value="";doFilter();el.style.display="none"}
-  break;
-case"team-sheet":openTeam();break;
-case"add-member":
-  var mn=document.getElementById("tmn"),mr=document.getElementById("tmr");
-  if(mn&&mn.value.trim()){
-    var newM={id:uid(),name:mn.value.trim(),role:(mr?mr.value.trim():"")||"Ekip Üyesi"};
-    team.push(newM);
-    if(fbok&&db)db.collection("team").doc(newM.id).set({name:newM.name,role:newM.role}).catch(function(e){console.error(e)});
-    sv();openTeam();render();
-  }
-  break;
-case"del-member":
-  if(!confirm("Bu üyeyi silmek istediğine emin misin?"))return;
-  if(fbok&&db)db.collection("team").doc(id).delete().catch(function(e){console.error(e)});
-  team=team.filter(function(m){return m.id!==id});sv();openTeam();render();
-  break;
-case"export":exportData();break;
-case"reset":
-  if(!confirm("Tüm görevler silinecek. Emin misin?"))return;
-  if(!confirm("Geri alınamaz. Devam edelim mi?"))return;
-  tasks=[];team=[{id:"1",name:"Cengiz Gülcan",role:"IT Yönetici"}];sv();render();
-  break;
 }
-});
-
-if(fbok){
-db.collection("tasks").onSnapshot(function(snap){
-var r=[];
-snap.forEach(function(d){var x=d.data();if(x.createdAt&&x.createdAt.toDate)x.createdAt=x.createdAt.toDate().toISOString();r.push(Object.assign({id:d.id},x))});
-if(r.length){tasks=r.sort(function(a,b){return new Date(b.createdAt)-new Date(a.createdAt)});sv();render()}
-});
-db.collection("team").onSnapshot(function(snap){
-var r=[];snap.forEach(function(d){r.push(Object.assign({id:d.id},d.data()))});
-if(r.length){team=r;sv();render()}
-});
+async function doLogout(){
+  if(USE_FIREBASE){try{await signOutFn(fbAuth);}catch(e){}}
+  Store.user_clear();
+  $("#app").classList.remove("show");
+  $("#loginWrap").style.display="grid";
+  $("#loginEmail").value="";$("#loginPass").value="";
+  $("#loginErr").classList.remove("show");
 }
 
-render();
-console.log("HF IT v4.0 Premium loaded");
+$("#loginForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const btn=$("#loginBtn");const errEl=$("#loginErr");
+  errEl.classList.remove("show");
+  btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Giriş yapılıyor...';
+  try{
+    await doLogin($("#loginEmail").value.trim(),$("#loginPass").value);
+    bootApp();
+  }catch(e){
+    errEl.textContent=e.message||"Giriş yapılamadı.";errEl.classList.add("show");
+  }finally{
+    btn.disabled=false;btn.innerHTML='<span>Giriş Yap</span><i class="fa-solid fa-arrow-right"></i>';
+  }
+});
+
+$("#logoutBtn").addEventListener("click",doLogout);
+
+/* ===========================================================
+ * APP BOOT & ROUTING
+ * =========================================================== */
+let currentView="dashboard";
+let calCursor=new Date();
+let calView="month";
+
+function bootApp(){
+  Store.load();
+  const u=Store.user_get();
+  if(!u){$("#loginWrap").style.display="grid";return;}
+  $("#loginWrap").style.display="none";
+  $("#app").classList.add("show");
+  $("#sbName").textContent=u.fullName;
+  $("#sbRole").textContent=u.role==="admin"?"Yönetici":"Personel";
+  $("#sbAvatar").textContent=initials(u.fullName);
+
+  // Admin only öğeleri rol göre göster/gizle
+  document.querySelectorAll(".admin-only").forEach(el=>{
+    el.style.display=u.role==="admin"?"":"none";
+  });
+
+  // İlk yükleme
+  if(u.role!=="admin"&&["all-tasks","kanban","projects","reports","param-users","param-categories","param-projects","param-statuses","param-priorities","param-departments"].includes(currentView)){
+    currentView="dashboard";
+  }
+  navigate(currentView);
+}
+
+function navigate(view){
+  currentView=view;
+  document.querySelectorAll(".sb-item[data-view]").forEach(el=>{
+    el.classList.toggle("active",el.dataset.view===view);
+  });
+  // Mobile menüyü kapat
+  $("#sidebar").classList.remove("open");
+  $("#sbOverlay").classList.remove("show");
+
+  // Top title
+  const titles={
+    dashboard:["Ana Görünüm","Dashboard"],
+    "my-tasks":["Görevlerim","Bana Atanan Görevler"],
+    "all-tasks":["Yönetim","Tüm Görevler"],
+    kanban:["Yönetim","Kanban Pano"],
+    calendar:["Görünüm","Takvim"],
+    projects:["Yönetim","Projeler"],
+    reports:["Yönetim","Raporlar"],
+    "param-users":["Parametre","Personeller"],
+    "param-categories":["Parametre","Görev Konuları"],
+    "param-projects":["Parametre","Proje Tanımları"],
+    "param-statuses":["Parametre","Durumlar"],
+    "param-priorities":["Parametre","Öncelikler"],
+    "param-departments":["Parametre","Departmanlar"],
+    settings:["Sistem","Ayarlar"]
+  };
+  const t=titles[view]||["",""];
+  $("#crumb").textContent=t[0];
+  $("#topTitle").textContent=t[1];
+
+  const renderers={
+    dashboard:renderDashboard,
+    "my-tasks":()=>renderTaskList({onlyMine:true,title:"Görevlerim",sub:"Size atanmış aktif ve geçmiş görevler"}),
+    "all-tasks":()=>renderTaskList({onlyMine:false,title:"Tüm Görevler",sub:"Sistemdeki tüm görevler ve filtreler"}),
+    kanban:renderKanban,
+    calendar:renderCalendar,
+    projects:renderProjects,
+    reports:renderReports,
+    "param-users":()=>renderParamTable("users"),
+    "param-categories":()=>renderParamTable("categories"),
+    "param-projects":()=>renderParamTable("projects"),
+    "param-statuses":()=>renderParamTable("statuses"),
+    "param-priorities":()=>renderParamTable("priorities"),
+    "param-departments":()=>renderParamTable("departments"),
+    settings:renderSettings
+  };
+  (renderers[view]||renderDashboard)();
+  // Görev sayısı badge
+  const u=Store.user_get();
+  if(u){
+    const n=Store.list("tasks",t=>!t.isDeleted&&t.assignedToUserId===u.id&&t.status!=="tamam"&&t.status!=="iptal").length;
+    $("#myTaskBadge").textContent=n;
+  }
+}
+
+document.querySelectorAll(".sb-item[data-view]").forEach(el=>{
+  el.addEventListener("click",()=>navigate(el.dataset.view));
+});
+
+$("#burger").addEventListener("click",()=>{
+  $("#sidebar").classList.toggle("open");
+  $("#sbOverlay").classList.toggle("show");
+});
+$("#sbOverlay").addEventListener("click",()=>{
+  $("#sidebar").classList.remove("open");
+  $("#sbOverlay").classList.remove("show");
+});
+
+/* THEME */
+function applyTheme(t){
+  document.documentElement.setAttribute("data-theme",t);
+  $("#themeBtn").innerHTML=t==="dark"?'<i class="fa-solid fa-sun"></i>':'<i class="fa-solid fa-moon"></i>';
+  try{localStorage.setItem(LS_KEY+"_theme",t);}catch(e){}
+}
+$("#themeBtn").addEventListener("click",()=>{
+  const cur=document.documentElement.getAttribute("data-theme")||"light";
+  applyTheme(cur==="dark"?"light":"dark");
+});
+applyTheme(localStorage.getItem(LS_KEY+"_theme")||"light");
+
+/* MODAL CLOSE */
+document.addEventListener("click",e=>{
+  const c=e.target.closest("[data-close]");
+  if(c)closeModal(c.dataset.close);
+  if(e.target.classList.contains("modal-bg"))closeModal(e.target.id);
+});
+
+/* NEW TASK BUTTON */
+$("#newTaskBtn").addEventListener("click",()=>openTaskForm());
+
+/* ===========================================================
+ * DASHBOARD
+ * =========================================================== */
+function renderDashboard(){
+  const u=Store.user_get();
+  const isAdmin=u.role==="admin";
+  let tasks=Store.list("tasks",t=>!t.isDeleted);
+  if(!isAdmin)tasks=tasks.filter(t=>t.assignedToUserId===u.id);
+
+  const total=tasks.length;
+  const open=tasks.filter(t=>t.status==="yeni").length;
+  const progress=tasks.filter(t=>t.status==="devam").length;
+  const done=tasks.filter(t=>t.status==="tamam").length;
+  const late=tasks.filter(isLate).length;
+  const todayDue=tasks.filter(t=>t.dueDate===fmtDateInput(today())&&t.status!=="tamam"&&t.status!=="iptal").length;
+
+  // Personel bazlı (admin)
+  const users=Store.list("users",x=>x.isActive&&x.role==="personel");
+  const perUser=users.map(usr=>({
+    name:usr.fullName,
+    count:tasks.filter(t=>t.assignedToUserId===usr.id&&t.status!=="tamam"&&t.status!=="iptal").length
+  })).sort((a,b)=>b.count-a.count);
+  const maxUser=Math.max(1,...perUser.map(x=>x.count));
+
+  // Proje bazlı
+  const projects=Store.list("projects",p=>p.isActive);
+  const perProj=projects.map(p=>({
+    name:p.projectName,
+    count:tasks.filter(t=>t.projectId===p.id).length
+  })).sort((a,b)=>b.count-a.count).slice(0,6);
+  const maxProj=Math.max(1,...perProj.map(x=>x.count));
+
+  // Donut data
+  const donutData=[
+    {label:"Yeni",value:open,color:"#3b82f6",key:"yeni"},
+    {label:"Devam",value:progress,color:"#f59e0b",key:"devam"},
+    {label:"Beklemede",value:tasks.filter(t=>t.status==="bekleme").length,color:"#6366f1",key:"bekleme"},
+    {label:"Tamamlandı",value:done,color:"#10b981",key:"tamam"},
+    {label:"İptal",value:tasks.filter(t=>t.status==="iptal").length,color:"#94a3b8",key:"iptal"}
+  ];
+  const donutTotal=donutData.reduce((s,d)=>s+d.value,0)||1;
+
+  // Aylık trend (son 6 ay)
+  const months=[];
+  for(let i=5;i>=0;i--){
+    const d=new Date();d.setMonth(d.getMonth()-i);
+    const key=d.toISOString().slice(0,7);
+    const lbl=d.toLocaleDateString("tr-TR",{month:"short"});
+    const cnt=tasks.filter(t=>t.completedDate&&t.completedDate.slice(0,7)===key).length;
+    months.push({key,lbl,cnt});
+  }
+  const maxMonth=Math.max(1,...months.map(m=>m.cnt));
+
+  $("#page").innerHTML=`
+    <div class="page-head">
+      <h1>${isAdmin?"Yönetim Paneli":"Çalışma Alanım"}</h1>
+      <p>${isAdmin?"Tüm görev, personel ve proje aktivitelerinin özeti.":"Size atanmış görevlerin durumu ve yaklaşan teslimler."}</p>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi"><div class="lbl"><i class="fa-solid fa-list"></i>Toplam Görev</div><div class="val">${total}</div></div>
+      <div class="kpi k-open"><div class="lbl"><i class="fa-solid fa-circle-dot"></i>Açık</div><div class="val">${open}</div></div>
+      <div class="kpi k-progress"><div class="lbl"><i class="fa-solid fa-spinner"></i>Devam Eden</div><div class="val">${progress}</div></div>
+      <div class="kpi k-done"><div class="lbl"><i class="fa-solid fa-circle-check"></i>Tamamlanan</div><div class="val">${done}</div></div>
+      <div class="kpi k-late"><div class="lbl"><i class="fa-solid fa-triangle-exclamation"></i>Geciken</div><div class="val">${late}</div></div>
+      <div class="kpi"><div class="lbl"><i class="fa-regular fa-clock"></i>Bugün Bitmesi Gereken</div><div class="val">${todayDue}</div></div>
+    </div>
+
+    <div class="dash-grid">
+      ${isAdmin?`
+      <div class="card">
+        <div class="card-head">
+          <div><h3>Personel Görev Yoğunluğu</h3><p>Aktif görev sayısına göre sıralı.</p></div>
+          <span class="tag">${perUser.length} kişi</span>
+        </div>
+        <div class="chart-bars">
+          ${perUser.map(p=>`
+            <div class="bar-row">
+              <div class="nm">${escapeHTML(p.name)}</div>
+              <div class="bar-track"><div class="bar-fill" style="width:${(p.count/maxUser*100).toFixed(0)}%"></div></div>
+              <div class="num">${p.count}</div>
+            </div>
+          `).join("")||'<div class="empty"><i class="fa-solid fa-users"></i><h4>Personel yok</h4></div>'}
+        </div>
+      </div>
+      `:`
+      <div class="card">
+        <div class="card-head">
+          <div><h3>Yaklaşan Teslimler</h3><p>Öncelikle bitmesi gereken görevler.</p></div>
+        </div>
+        <div class="chart-bars">
+          ${tasks.filter(t=>t.status!=="tamam"&&t.status!=="iptal").sort((a,b)=>new Date(a.dueDate)-new Date(b.dueDate)).slice(0,6).map(t=>`
+            <div class="bar-row" style="grid-template-columns:1fr 90px 70px;cursor:pointer" data-task-id="${t.id}">
+              <div class="nm" style="color:var(--ink);font-weight:600">${escapeHTML(t.title)}</div>
+              <div class="bar-track" style="height:5px"><div class="bar-fill" style="width:${t.progress}%"></div></div>
+              <div class="num ${isLate(t)?'':''}" style="color:${isLate(t)?'var(--err)':'var(--ink-3)'}">${fmtDate(t.dueDate)}</div>
+            </div>
+          `).join("")||'<div class="empty"><i class="fa-regular fa-calendar-check"></i><h4>Teslim bekleyen görev yok</h4></div>'}
+        </div>
+      </div>
+      `}
+
+      <div class="card">
+        <div class="card-head">
+          <div><h3>Durum Dağılımı</h3><p>Mevcut durum yüzdeleri.</p></div>
+        </div>
+        <div class="donut-wrap">
+          ${renderDonut(donutData,donutTotal)}
+          <div class="legend">
+            ${donutData.filter(d=>d.value>0).map(d=>`
+              <div class="lg-row">
+                <span class="lg-dot" style="background:${d.color}"></span>
+                <span class="nm">${d.label}</span>
+                <span class="num">${d.value}</span>
+              </div>
+            `).join("")||'<div style="color:var(--ink-3);font-size:13px">Veri yok</div>'}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    ${isAdmin?`
+    <div class="dash-grid" style="grid-template-columns:1fr 1fr;">
+      <div class="card">
+        <div class="card-head">
+          <div><h3>Proje Görev Dağılımı</h3><p>En aktif 6 proje.</p></div>
+          <span class="tag">${perProj.length} proje</span>
+        </div>
+        <div class="chart-bars">
+          ${perProj.map(p=>`
+            <div class="bar-row">
+              <div class="nm">${escapeHTML(p.name)}</div>
+              <div class="bar-track"><div class="bar-fill" style="width:${(p.count/maxProj*100).toFixed(0)}%;background:linear-gradient(90deg,#1a3b3a,#7dd3c4)"></div></div>
+              <div class="num">${p.count}</div>
+            </div>
+          `).join("")||'<div class="empty">Proje yok</div>'}
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head">
+          <div><h3>Aylık Tamamlanma Trendi</h3><p>Son 6 ay.</p></div>
+        </div>
+        <div class="spark-wrap">
+          <div class="spark-stats">
+            <div>Bu ay<b>${months[months.length-1].cnt}</b></div>
+            <div>Geçen ay<b>${months[months.length-2]?.cnt||0}</b></div>
+            <div>6 ay toplam<b>${months.reduce((s,m)=>s+m.cnt,0)}</b></div>
+          </div>
+          ${renderSparkBars(months,maxMonth)}
+        </div>
+      </div>
+    </div>
+    `:""}
+  `;
+
+  // tıklama
+  document.querySelectorAll("[data-task-id]").forEach(el=>{
+    el.addEventListener("click",()=>openTaskDetail(el.dataset.taskId));
+  });
+}
+
+function renderDonut(data,total){
+  const r=64,c=2*Math.PI*r;
+  let off=0;
+  const segs=data.filter(d=>d.value>0).map(d=>{
+    const len=(d.value/total)*c;
+    const seg=`<circle cx="80" cy="80" r="${r}" fill="none" stroke="${d.color}" stroke-width="22" stroke-dasharray="${len} ${c}" stroke-dashoffset="${-off}" stroke-linecap="butt"/>`;
+    off+=len;
+    return seg;
+  }).join("");
+  return `
+    <div class="donut">
+      <svg width="160" height="160" viewBox="0 0 160 160">
+        <circle cx="80" cy="80" r="${r}" fill="none" stroke="var(--bg-soft)" stroke-width="22"/>
+        ${segs}
+      </svg>
+      <div class="center"><div><div class="v">${total}</div><div class="l">Görev</div></div></div>
+    </div>
+  `;
+}
+
+function renderSparkBars(months,max){
+  return `
+    <div style="display:grid;grid-template-columns:repeat(${months.length},1fr);gap:6px;align-items:end;height:140px">
+      ${months.map(m=>`
+        <div style="display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end">
+          <div style="font-family:var(--mono);font-size:11px;font-weight:700;color:var(--ink-3)">${m.cnt}</div>
+          <div style="width:100%;background:linear-gradient(180deg,var(--accent),var(--accent-2));border-radius:6px 6px 0 0;height:${Math.max(4,(m.cnt/max*100))}%;transition:height .5s"></div>
+          <div style="font-size:11px;font-weight:600;color:var(--ink-2);text-transform:uppercase;letter-spacing:.05em">${m.lbl}</div>
+        </div>
+      `).join("")}
+    </div>
+  `;
+}
+
+/* ===========================================================
+ * TASK LIST
+ * =========================================================== */
+let taskListFilters={search:"",status:"",priority:"",project:"",category:"",assignee:"",lateOnly:false};
+function renderTaskList(opts){
+  const u=Store.user_get();
+  const isAdmin=u.role==="admin";
+  const cats=Store.list("categories",c=>c.isActive);
+  const projs=Store.list("projects",p=>p.isActive);
+  const personnel=Store.list("users",x=>x.isActive);
+
+  $("#page").innerHTML=`
+    <div class="page-head">
+      <h1>${opts.title}</h1>
+      <p>${opts.sub}</p>
+    </div>
+    <div class="toolbar">
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="flSearch" placeholder="Görev başlığında ara..." value="${escapeHTML(taskListFilters.search)}" />
+      </div>
+      <select id="flStatus">
+        <option value="">Tüm Durumlar</option>
+        ${STATUS_ORDER.map(s=>`<option value="${s}" ${taskListFilters.status===s?"selected":""}>${STATUS_LABELS[s]}</option>`).join("")}
+      </select>
+      <select id="flPriority">
+        <option value="">Tüm Öncelikler</option>
+        ${Object.keys(PRIORITY_LABELS).map(p=>`<option value="${p}" ${taskListFilters.priority===p?"selected":""}>${PRIORITY_LABELS[p]}</option>`).join("")}
+      </select>
+      <select id="flProject">
+        <option value="">Tüm Projeler</option>
+        ${projs.map(p=>`<option value="${p.id}" ${taskListFilters.project===p.id?"selected":""}>${escapeHTML(p.projectName)}</option>`).join("")}
+      </select>
+      <select id="flCategory">
+        <option value="">Tüm Konular</option>
+        ${cats.map(c=>`<option value="${c.id}" ${taskListFilters.category===c.id?"selected":""}>${escapeHTML(c.categoryName)}</option>`).join("")}
+      </select>
+      ${isAdmin&&!opts.onlyMine?`
+      <select id="flAssignee">
+        <option value="">Tüm Personel</option>
+        ${personnel.map(p=>`<option value="${p.id}" ${taskListFilters.assignee===p.id?"selected":""}>${escapeHTML(p.fullName)}</option>`).join("")}
+      </select>`:""}
+      <button class="tb-btn" id="flLate" style="${taskListFilters.lateOnly?'background:var(--err);color:#fff;border-color:var(--err)':''}">
+        <i class="fa-solid fa-triangle-exclamation"></i><span>Geciken</span>
+      </button>
+      <button class="tb-btn" id="flClear"><i class="fa-solid fa-rotate-left"></i><span>Sıfırla</span></button>
+    </div>
+    <div id="taskListContent"></div>
+  `;
+
+  function apply(){
+    let arr=Store.list("tasks",t=>!t.isDeleted);
+    if(opts.onlyMine)arr=arr.filter(t=>t.assignedToUserId===u.id);
+    if(taskListFilters.search)arr=arr.filter(t=>t.title.toLowerCase().includes(taskListFilters.search.toLowerCase())||(t.description||"").toLowerCase().includes(taskListFilters.search.toLowerCase()));
+    if(taskListFilters.status)arr=arr.filter(t=>t.status===taskListFilters.status);
+    if(taskListFilters.priority)arr=arr.filter(t=>t.priority===taskListFilters.priority);
+    if(taskListFilters.project)arr=arr.filter(t=>t.projectId===taskListFilters.project);
+    if(taskListFilters.category)arr=arr.filter(t=>t.categoryId===taskListFilters.category);
+    if(taskListFilters.assignee)arr=arr.filter(t=>t.assignedToUserId===taskListFilters.assignee);
+    if(taskListFilters.lateOnly)arr=arr.filter(isLate);
+    arr.sort((a,b)=>{
+      // Açık görevler önce, sonra deadline
+      const aClosed=a.status==="tamam"||a.status==="iptal";
+      const bClosed=b.status==="tamam"||b.status==="iptal";
+      if(aClosed!==bClosed)return aClosed?1:-1;
+      return new Date(a.dueDate)-new Date(b.dueDate);
+    });
+
+    const c=$("#taskListContent");
+    if(arr.length===0){
+      c.innerHTML='<div class="empty"><i class="fa-regular fa-folder-open"></i><h4>Görev bulunamadı</h4><div>Filtreleri değiştirerek tekrar deneyin.</div></div>';
+      return;
+    }
+    c.innerHTML=`<div class="task-grid">${arr.map(t=>taskCardHTML(t)).join("")}</div>`;
+    c.querySelectorAll(".task-card").forEach(el=>{
+      el.addEventListener("click",()=>openTaskDetail(el.dataset.id));
+    });
+  }
+
+  $("#flSearch").addEventListener("input",e=>{taskListFilters.search=e.target.value;apply();});
+  $("#flStatus").addEventListener("change",e=>{taskListFilters.status=e.target.value;apply();});
+  $("#flPriority").addEventListener("change",e=>{taskListFilters.priority=e.target.value;apply();});
+  $("#flProject").addEventListener("change",e=>{taskListFilters.project=e.target.value;apply();});
+  $("#flCategory").addEventListener("change",e=>{taskListFilters.category=e.target.value;apply();});
+  if($("#flAssignee"))$("#flAssignee").addEventListener("change",e=>{taskListFilters.assignee=e.target.value;apply();});
+  $("#flLate").addEventListener("click",()=>{taskListFilters.lateOnly=!taskListFilters.lateOnly;renderTaskList(opts);});
+  $("#flClear").addEventListener("click",()=>{taskListFilters={search:"",status:"",priority:"",project:"",category:"",assignee:"",lateOnly:false};renderTaskList(opts);});
+  apply();
+}
+
+function taskCardHTML(t){
+  const usr=Store.get("users",t.assignedToUserId);
+  const proj=Store.get("projects",t.projectId);
+  const cat=Store.get("categories",t.categoryId);
+  const late=isLate(t);
+  const due=new Date(t.dueDate);
+  const dleft=Math.ceil((due-today())/(1000*60*60*24));
+  const soon=!late&&dleft>=0&&dleft<=3&&t.status!=="tamam";
+  return `
+    <div class="task-card p-${t.priority} ${late?'late':''}" data-id="${t.id}">
+      <div class="tc-head">
+        <div class="tc-title">${escapeHTML(t.title)}</div>
+      </div>
+      <div class="tc-desc">${escapeHTML(t.description||"")}</div>
+      <div class="tc-meta">
+        <span class="chip s-${t.status}"><i class="fa-solid fa-circle"></i>${STATUS_LABELS[t.status]}</span>
+        <span class="chip p-${t.priority}">${PRIORITY_LABELS[t.priority]}</span>
+        ${proj?`<span class="chip"><i class="fa-solid fa-diagram-project"></i>${escapeHTML(proj.projectName)}</span>`:""}
+        ${cat?`<span class="chip"><i class="fa-solid fa-tag"></i>${escapeHTML(cat.categoryName)}</span>`:""}
+      </div>
+      <div class="tc-progress"><div class="tc-progress-fill" style="width:${t.progress}%"></div></div>
+      <div class="tc-foot">
+        <div class="ass">
+          <div class="tc-avatar">${initials(usr?.fullName||"?")}</div>
+          <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHTML(usr?.fullName||"—")}</span>
+        </div>
+        <div class="due ${late?'late':soon?'soon':''}">
+          <i class="fa-regular fa-calendar"></i> ${fmtDate(t.dueDate)}
+          ${late?` <i class="fa-solid fa-triangle-exclamation"></i>`:""}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* ===========================================================
+ * KANBAN
+ * =========================================================== */
+function renderKanban(){
+  const u=Store.user_get();
+  const tasks=Store.list("tasks",t=>!t.isDeleted&&(u.role==="admin"||t.assignedToUserId===u.id));
+  $("#page").innerHTML=`
+    <div class="page-head">
+      <h1>Kanban Pano</h1>
+      <p>Görevleri durumlarına göre sürükleyerek (status etiketinden) takip edin.</p>
+    </div>
+    <div class="kanban">
+      ${STATUS_ORDER.map(s=>{
+        const items=tasks.filter(t=>t.status===s);
+        return `
+          <div class="kb-col" data-status="${s}">
+            <div class="kb-col-head">
+              <span>${STATUS_LABELS[s]}</span>
+              <span class="count">${items.length}</span>
+            </div>
+            <div class="kb-list">
+              ${items.map(t=>taskCardHTML(t)).join("")||'<div style="font-size:12px;color:var(--ink-3);padding:14px;text-align:center;border:1px dashed var(--line);border-radius:10px">Boş</div>'}
+            </div>
+          </div>
+        `;
+      }).join("")}
+    </div>
+  `;
+  document.querySelectorAll(".task-card").forEach(el=>{
+    el.addEventListener("click",()=>openTaskDetail(el.dataset.id));
+  });
+}
+
+/* ===========================================================
+ * CALENDAR
+ * =========================================================== */
+function renderCalendar(){
+  const u=Store.user_get();
+  const ay=calCursor.getFullYear(),am=calCursor.getMonth();
+  $("#page").innerHTML=`
+    <div class="page-head">
+      <h1>Takvim</h1>
+      <p>Görevlerin başlangıç ve bitiş tarihleri ile aylık görünüm.</p>
+    </div>
+    <div class="cal-head">
+      <div class="cal-nav">
+        <button id="calPrev"><i class="fa-solid fa-chevron-left"></i></button>
+        <button id="calToday" style="width:auto;padding:0 12px;font-size:13px;font-weight:600;font-family:var(--mono);text-transform:uppercase;letter-spacing:.05em">Bugün</button>
+        <button id="calNext"><i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+      <div class="cal-title" id="calTitle"></div>
+      <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;font-size:11.5px;color:var(--ink-3);font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em">
+        <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;background:#3b82f6;border-radius:3px"></span>Yeni</span>
+        <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;background:#f59e0b;border-radius:3px"></span>Devam</span>
+        <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;background:#10b981;border-radius:3px"></span>Tamamlandı</span>
+        <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;background:#dc2626;border-radius:3px"></span>Geciken</span>
+      </div>
+    </div>
+    <div class="cal-grid">
+      <div class="cal-week-head">
+        ${["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"].map(d=>`<div>${d}</div>`).join("")}
+      </div>
+      <div class="cal-month" id="calMonth"></div>
+    </div>
+  `;
+
+  function paint(){
+    const ay=calCursor.getFullYear(),am=calCursor.getMonth();
+    $("#calTitle").textContent=calCursor.toLocaleDateString("tr-TR",{month:"long",year:"numeric"});
+    const first=new Date(ay,am,1);
+    let startDow=first.getDay();startDow=startDow===0?6:startDow-1; // Pazartesi başlangıç
+    const daysInMonth=new Date(ay,am+1,0).getDate();
+    const days=[];
+    // önceki ay
+    const prevDays=new Date(ay,am,0).getDate();
+    for(let i=startDow;i>0;i--)days.push({d:new Date(ay,am-1,prevDays-i+1),other:true});
+    // bu ay
+    for(let i=1;i<=daysInMonth;i++)days.push({d:new Date(ay,am,i),other:false});
+    // sonraki ay (toplam 42)
+    while(days.length<42){const last=days[days.length-1].d;const nd=new Date(last);nd.setDate(nd.getDate()+1);days.push({d:nd,other:nd.getMonth()!==am});}
+
+    const tasks=Store.list("tasks",t=>!t.isDeleted&&(u.role==="admin"||t.assignedToUserId===u.id));
+    const todayStr=fmtDateInput(today());
+
+    $("#calMonth").innerHTML=days.map(({d,other})=>{
+      const ds=fmtDateInput(d);
+      // Görev: dueDate'i bugün ile eşleşen
+      const evs=tasks.filter(t=>t.dueDate===ds);
+      const isToday=ds===todayStr;
+      return `
+        <div class="cal-day ${other?'other':''} ${isToday?'today':''}" data-date="${ds}">
+          <div class="num">${d.getDate()}</div>
+          ${evs.slice(0,3).map(t=>`<div class="cal-event s-${t.status} ${isLate(t)?'late':''}" data-id="${t.id}" title="${escapeHTML(t.title)}">${escapeHTML(t.title)}</div>`).join("")}
+          ${evs.length>3?`<div class="cal-more">+${evs.length-3} daha</div>`:""}
+        </div>
+      `;
+    }).join("");
+
+    document.querySelectorAll(".cal-event").forEach(el=>{
+      el.addEventListener("click",e=>{e.stopPropagation();openTaskDetail(el.dataset.id);});
+    });
+    document.querySelectorAll(".cal-day").forEach(el=>{
+      el.addEventListener("click",()=>{
+        if(u.role!=="admin")return;
+        openTaskForm(null,{startDate:el.dataset.date,dueDate:el.dataset.date});
+      });
+    });
+  }
+  paint();
+
+  $("#calPrev").addEventListener("click",()=>{calCursor.setMonth(calCursor.getMonth()-1);paint();});
+  $("#calNext").addEventListener("click",()=>{calCursor.setMonth(calCursor.getMonth()+1);paint();});
+  $("#calToday").addEventListener("click",()=>{calCursor=new Date();paint();});
+}
+
+/* ===========================================================
+ * PROJECTS VIEW
+ * =========================================================== */
+function renderProjects(){
+  const projs=Store.list("projects");
+  const tasks=Store.list("tasks",t=>!t.isDeleted);
+  $("#page").innerHTML=`
+    <div class="page-head">
+      <h1>Projeler</h1>
+      <p>Aktif projeler ve görev dağılımları.</p>
+    </div>
+    <div class="task-grid">
+      ${projs.map(p=>{
+        const ts=tasks.filter(t=>t.projectId===p.id);
+        const done=ts.filter(t=>t.status==="tamam").length;
+        const pct=ts.length?Math.round((done/ts.length)*100):0;
+        const overdue=ts.filter(isLate).length;
+        return `
+          <div class="task-card" style="cursor:default" onclick="event.stopPropagation()">
+            <div class="tc-head">
+              <div class="tc-title">${escapeHTML(p.projectName)}</div>
+            </div>
+            <div class="tc-desc">${escapeHTML(p.description||"")}</div>
+            <div class="tc-meta">
+              <span class="chip ${p.isActive?'s-tamam':'s-iptal'}"><i class="fa-solid fa-circle"></i>${p.isActive?"Aktif":"Pasif"}</span>
+              <span class="chip"><i class="fa-regular fa-calendar"></i>${fmtDate(p.startDate)} → ${fmtDate(p.targetEndDate)}</span>
+              ${overdue>0?`<span class="chip p-critical"><i class="fa-solid fa-triangle-exclamation"></i>${overdue} geciken</span>`:""}
+            </div>
+            <div class="tc-progress"><div class="tc-progress-fill" style="width:${pct}%"></div></div>
+            <div class="tc-foot">
+              <div class="ass"><i class="fa-solid fa-list-check"></i> ${ts.length} görev (${done} tamam)</div>
+              <div class="due">${pct}%</div>
+            </div>
+          </div>
+        `;
+      }).join("")||'<div class="empty"><i class="fa-solid fa-diagram-project"></i><h4>Henüz proje yok</h4></div>'}
+    </div>
+  `;
+}
+
+/* ===========================================================
+ * REPORTS
+ * =========================================================== */
+let reportType="user";
+function renderReports(){
+  $("#page").innerHTML=`
+    <div class="page-head">
+      <h1>Raporlar</h1>
+      <p>Personel, durum, gecikme, tamamlanma ve proje bazlı detaylı raporlar.</p>
+    </div>
+    <div class="toolbar">
+      <select id="rType">
+        <option value="user">Personel Bazlı Görev Raporu</option>
+        <option value="status">Durum Bazlı Rapor</option>
+        <option value="late">Geciken Görevler</option>
+        <option value="done">Tamamlanan Görevler</option>
+        <option value="project">Proje Bazlı Rapor</option>
+        <option value="range">Tarih Aralığına Göre Görevler</option>
+      </select>
+      <input type="date" id="rStart" />
+      <input type="date" id="rEnd" />
+      <button class="tb-btn primary" id="rExport"><i class="fa-solid fa-file-csv"></i><span>CSV İndir</span></button>
+    </div>
+    <div id="reportBody"></div>
+  `;
+
+  $("#rType").value=reportType;
+  $("#rType").addEventListener("change",e=>{reportType=e.target.value;paint();});
+  $("#rStart").addEventListener("change",paint);
+  $("#rEnd").addEventListener("change",paint);
+  $("#rExport").addEventListener("click",exportCsv);
+
+  let lastRows=[],lastHeaders=[];
+
+  function paint(){
+    const tasks=Store.list("tasks",t=>!t.isDeleted);
+    const start=$("#rStart").value;const end=$("#rEnd").value;
+    let filtered=tasks;
+    if(start)filtered=filtered.filter(t=>t.dueDate>=start);
+    if(end)filtered=filtered.filter(t=>t.dueDate<=end);
+
+    let html="",headers=[],rows=[];
+
+    if(reportType==="user"){
+      const users=Store.list("users",u=>u.isActive&&u.role==="personel");
+      headers=["Personel","Toplam","Yeni","Devam","Beklemede","Tamamlandı","İptal","Geciken"];
+      rows=users.map(u=>{
+        const ts=filtered.filter(t=>t.assignedToUserId===u.id);
+        return [u.fullName,ts.length,ts.filter(t=>t.status==="yeni").length,ts.filter(t=>t.status==="devam").length,ts.filter(t=>t.status==="bekleme").length,ts.filter(t=>t.status==="tamam").length,ts.filter(t=>t.status==="iptal").length,ts.filter(isLate).length];
+      });
+    }else if(reportType==="status"){
+      headers=["Durum","Görev Sayısı","Yüzde"];
+      const total=filtered.length||1;
+      rows=STATUS_ORDER.map(s=>{const c=filtered.filter(t=>t.status===s).length;return [STATUS_LABELS[s],c,((c/total)*100).toFixed(1)+"%"];});
+    }else if(reportType==="late"){
+      const late=filtered.filter(isLate);
+      headers=["Görev","Personel","Bitiş","Gecikme (gün)","Öncelik","Durum"];
+      rows=late.map(t=>{
+        const u=Store.get("users",t.assignedToUserId);
+        const days=Math.floor((today()-new Date(t.dueDate))/(1000*60*60*24));
+        return [t.title,u?.fullName||"—",fmtDate(t.dueDate),days,PRIORITY_LABELS[t.priority],STATUS_LABELS[t.status]];
+      });
+    }else if(reportType==="done"){
+      const done=filtered.filter(t=>t.status==="tamam");
+      headers=["Görev","Personel","Bitiş","Tamamlandı","Süre (gün)"];
+      rows=done.map(t=>{
+        const u=Store.get("users",t.assignedToUserId);
+        const days=t.completedDate&&t.startDate?Math.floor((new Date(t.completedDate)-new Date(t.startDate))/(1000*60*60*24)):"—";
+        return [t.title,u?.fullName||"—",fmtDate(t.dueDate),fmtDate(t.completedDate),days];
+      });
+    }else if(reportType==="project"){
+      const projs=Store.list("projects");
+      headers=["Proje","Toplam","Tamamlandı","Devam","Geciken","Tamamlanma %"];
+      rows=projs.map(p=>{
+        const ts=filtered.filter(t=>t.projectId===p.id);
+        const done=ts.filter(t=>t.status==="tamam").length;
+        const pct=ts.length?((done/ts.length)*100).toFixed(1)+"%":"—";
+        return [p.projectName,ts.length,done,ts.filter(t=>t.status==="devam").length,ts.filter(isLate).length,pct];
+      });
+    }else if(reportType==="range"){
+      headers=["Görev","Personel","Proje","Başlangıç","Bitiş","Durum","İlerleme"];
+      rows=filtered.map(t=>{
+        const u=Store.get("users",t.assignedToUserId);
+        const p=Store.get("projects",t.projectId);
+        return [t.title,u?.fullName||"—",p?.projectName||"—",fmtDate(t.startDate),fmtDate(t.dueDate),STATUS_LABELS[t.status],t.progress+"%"];
+      });
+    }
+
+    html=`
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr>${headers.map(h=>`<th>${escapeHTML(h)}</th>`).join("")}</tr></thead>
+          <tbody>
+            ${rows.map(r=>`<tr>${r.map(c=>`<td>${escapeHTML(String(c))}</td>`).join("")}</tr>`).join("")||`<tr><td colspan="${headers.length}" style="text-align:center;padding:30px;color:var(--ink-3)">Veri bulunamadı.</td></tr>`}
+          </tbody>
+        </table>
+      </div>
+    `;
+    $("#reportBody").innerHTML=html;
+    lastRows=rows;lastHeaders=headers;
+  }
+
+  function exportCsv(){
+    if(lastRows.length===0){toast("Dışa aktarılacak veri yok","warn");return;}
+    const csv=[lastHeaders.join(";"),...lastRows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(";"))].join("\n");
+    const blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8"});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");
+    a.href=url;a.download=`rapor_${reportType}_${Date.now()}.csv`;
+    document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+    toast("CSV indirildi","ok");
+  }
+
+  paint();
+}
+
+/* ===========================================================
+ * PARAM TABLES
+ * =========================================================== */
+function renderParamTable(kind){
+  const u=Store.user_get();
+  if(u.role!=="admin"){
+    $("#page").innerHTML='<div class="empty"><i class="fa-solid fa-lock"></i><h4>Yetkisiz Erişim</h4><div>Bu ekranı yalnızca yöneticiler görüntüleyebilir.</div></div>';
+    return;
+  }
+
+  // Sabit listeler (durum & öncelik)
+  if(kind==="statuses"||kind==="priorities"){
+    const map=kind==="statuses"?STATUS_LABELS:PRIORITY_LABELS;
+    const order=kind==="statuses"?STATUS_ORDER:Object.keys(PRIORITY_LABELS);
+    $("#page").innerHTML=`
+      <div class="page-head">
+        <h1>${kind==="statuses"?"Durumlar":"Öncelik Seviyeleri"}</h1>
+        <p>Sistem genelinde sabit olarak tanımlı ${kind==="statuses"?"görev durumları":"öncelik seviyeleri"}. Yapısal alanlar oldukları için silinemez/eklenemez.</p>
+      </div>
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <thead><tr><th>Anahtar</th><th>Görünen Ad</th><th>Renk</th></tr></thead>
+          <tbody>
+            ${order.map(k=>`
+              <tr>
+                <td><code style="font-family:var(--mono);background:var(--bg-soft);padding:2px 8px;border-radius:5px;font-size:12px">${k}</code></td>
+                <td>${map[k]}</td>
+                <td><span class="chip ${kind==="statuses"?'s-':'p-'}${k}">${map[k]}</span></td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </div>
+    `;
+    return;
+  }
+
+  const config={
+    users:{
+      title:"Personeller",sub:"Sistemde tanımlı kullanıcılar.",
+      coll:"users",addLbl:"Yeni Personel",
+      headers:["Ad Soyad","E-posta","Telefon","Ünvan","Departman","Rol","Durum",""],
+      cols:r=>[r.fullName,r.email,r.phone||"—",r.title||"—",r.department||"—",r.role==="admin"?'<span class="chip p-critical">Yönetici</span>':'<span class="chip p-low">Personel</span>',`<span class="status-dot ${r.isActive?'':'off'}">${r.isActive?"Aktif":"Pasif"}</span>`],
+      fields:[
+        {n:"fullName",l:"Ad Soyad",t:"text",req:true},
+        {n:"email",l:"E-posta",t:"email",req:true},
+        {n:"phone",l:"Telefon",t:"text"},
+        {n:"title",l:"Ünvan",t:"text"},
+        {n:"department",l:"Departman",t:"text"},
+        {n:"role",l:"Rol",t:"select",options:[{v:"personel",l:"Personel"},{v:"admin",l:"Yönetici"}],req:true},
+        {n:"isActive",l:"Aktif",t:"check"}
+      ]
+    },
+    categories:{
+      title:"Görev Konuları",sub:"Görev tipi/konu tanımları.",
+      coll:"categories",addLbl:"Yeni Konu",
+      headers:["Konu Adı","Açıklama","Durum",""],
+      cols:r=>[r.categoryName,r.description||"—",`<span class="status-dot ${r.isActive?'':'off'}">${r.isActive?"Aktif":"Pasif"}</span>`],
+      fields:[
+        {n:"categoryName",l:"Konu Adı",t:"text",req:true},
+        {n:"description",l:"Açıklama",t:"textarea"},
+        {n:"isActive",l:"Aktif",t:"check"}
+      ]
+    },
+    projects:{
+      title:"Proje Tanımları",sub:"Görev atayabileceğiniz projeler.",
+      coll:"projects",addLbl:"Yeni Proje",
+      headers:["Proje Adı","Açıklama","Başlangıç","Hedef Bitiş","Durum",""],
+      cols:r=>[r.projectName,r.description||"—",fmtDate(r.startDate),fmtDate(r.targetEndDate),`<span class="status-dot ${r.isActive?'':'off'}">${r.isActive?"Aktif":"Pasif"}</span>`],
+      fields:[
+        {n:"projectName",l:"Proje Adı",t:"text",req:true},
+        {n:"description",l:"Açıklama",t:"textarea"},
+        {n:"startDate",l:"Başlangıç Tarihi",t:"date"},
+        {n:"targetEndDate",l:"Hedef Bitiş",t:"date"},
+        {n:"isActive",l:"Aktif",t:"check"}
+      ]
+    },
+    departments:{
+      title:"Departmanlar",sub:"Birim/departman tanımları.",
+      coll:"departments",addLbl:"Yeni Departman",
+      headers:["Ad","Durum",""],
+      cols:r=>[r.name,`<span class="status-dot ${r.isActive?'':'off'}">${r.isActive?"Aktif":"Pasif"}</span>`],
+      fields:[
+        {n:"name",l:"Ad",t:"text",req:true},
+        {n:"isActive",l:"Aktif",t:"check"}
+      ]
+    }
+  };
+
+  const cfg=config[kind];
+  const rows=Store.list(cfg.coll);
+
+  $("#page").innerHTML=`
+    <div class="page-head" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px">
+      <div>
+        <h1>${cfg.title}</h1>
+        <p>${cfg.sub}</p>
+      </div>
+      <button class="tb-btn primary" id="paramAdd"><i class="fa-solid fa-plus"></i><span>${cfg.addLbl}</span></button>
+    </div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr>${cfg.headers.map(h=>`<th${h===""?' style="text-align:right;width:90px"':''}>${h}</th>`).join("")}</tr></thead>
+        <tbody>
+          ${rows.map(r=>`
+            <tr>
+              ${cfg.cols(r).map(c=>`<td>${c}</td>`).join("")}
+              <td><div class="row-act">
+                <button data-edit="${r.id}" title="Düzenle"><i class="fa-solid fa-pen"></i></button>
+                <button class="danger" data-del="${r.id}" title="Sil"><i class="fa-solid fa-trash"></i></button>
+              </div></td>
+            </tr>
+          `).join("")||`<tr><td colspan="${cfg.headers.length}" style="text-align:center;padding:40px;color:var(--ink-3)"><i class="fa-regular fa-folder-open" style="font-size:32px;display:block;margin-bottom:8px;color:var(--line)"></i>Kayıt yok</td></tr>`}
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  $("#paramAdd").addEventListener("click",()=>openParamForm(cfg,null));
+  document.querySelectorAll("[data-edit]").forEach(b=>b.addEventListener("click",()=>{
+    const r=Store.get(cfg.coll,b.dataset.edit);openParamForm(cfg,r);
+  }));
+  document.querySelectorAll("[data-del]").forEach(b=>b.addEventListener("click",()=>{
+    confirmAction("Bu kaydı silmek istediğinizden emin misiniz? Soft delete uygulanacaktır.",()=>{
+      const r=Store.get(cfg.coll,b.dataset.del);
+      // soft delete (isActive=false), gerçek silme yerine
+      if("isActive" in r)Store.update(cfg.coll,r.id,{isActive:false});
+      else Store.remove(cfg.coll,r.id);
+      toast("Kayıt silindi (pasif yapıldı)","ok");
+      renderParamTable(kind);
+    });
+  }));
+}
+
+function openParamForm(cfg,row){
+  $("#pmTitle").textContent=row?"Düzenle":cfg.addLbl;
+  $("#pmSub").textContent=cfg.title;
+  const data=row||{};
+  $("#pmBody").innerHTML=`
+    <div class="form-grid">
+      ${cfg.fields.map(f=>{
+        const v=data[f.n];
+        if(f.t==="textarea")return `<div class="form-row full"><label>${f.l}${f.req?' <span class="req">*</span>':''}</label><textarea data-name="${f.n}">${escapeHTML(v||"")}</textarea></div>`;
+
+```
+    if(f.t==="select")return `<div class="form-row full"><label>${f.l}${f.req?' <span class="req">*</span>':''}</label><select data-name="${f.n}">${f.options.map(o=>`<option value="${o.v}" ${v===o.v?"selected":""}>${o.l}</option>`).join("")}</select></div>`;
+    if(f.t==="check")return `<div class="form-row full"><label style="display:flex;align-items:center;gap:8px"><input type="checkbox" data-name="${f.n}" ${v!==false?"checked":""} style="width:18px;height:18px;accent-color:var(--ink)"> ${f.l}</label></div>`;
+    return `<div class="form-row full"><label>${f.l}${f.req?' <span class="req">*</span>':''}</label><input type="${f.t}" data-name="${f.n}" value="${escapeHTML(v||"")}" ${f.req?"required":""}></div>`;
+  }).join("")}
+</div>
+```
+
+`;
+openModal(“paramModal”);
+
+$(”#pmSave”).onclick=()=>{
+const obj={…(row||{})};
+let valid=true;
+cfg.fields.forEach(f=>{
+const el=$(”#pmBody”).querySelector(`[data-name="${f.n}"]`);
+if(!el)return;
+let v;
+if(f.t===“check”)v=el.checked;
+else v=el.value.trim();
+if(f.req&&!v&&f.t!==“check”){valid=false;el.style.borderColor=“var(–err)”;}
+obj[f.n]=v;
+});
+if(!valid){toast(“Zorunlu alanları doldurun”,“err”);return;}
+if(row){
+Store.update(cfg.coll,row.id,obj);
+toast(“Güncellendi”,“ok”);
+}else{
+Store.add(cfg.coll,obj);
+toast(“Eklendi”,“ok”);
+}
+closeModal(“paramModal”);
+renderParamTable(currentView.replace(“param-”,””));
+};
+}
+
+/* ===========================================================
+
+- SETTINGS
+- =========================================================== */
+  function renderSettings(){
+  const u=Store.user_get();
+  $(”#page”).innerHTML=`
+  
+   <div class="page-head">
+     <h1>Ayarlar</h1>
+     <p>Görsel tema, hesap bilgileri ve sistem yardımcı fonksiyonları.</p>
+   </div>
+   <div class="set-grid">
+     <div class="set-card">
+       <h4>Hesap Bilgisi</h4>
+       <p>Aktif olarak giriş yapmış kullanıcı.</p>
+       <div style="display:flex;align-items:center;gap:14px;padding:14px;background:var(--bg-soft);border-radius:10px">
+         <div class="sb-avatar" style="width:48px;height:48px;font-size:16px">${initials(u.fullName)}</div>
+         <div>
+           <div style="font-weight:700;font-family:var(--display)">${escapeHTML(u.fullName)}</div>
+           <div style="font-size:12px;color:var(--ink-3);font-family:var(--mono)">${escapeHTML(u.email)}</div>
+           <div style="font-size:11.5px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.1em;margin-top:3px">${u.role==="admin"?"Yönetici":"Personel"} · ${escapeHTML(u.title||"")}</div>
+         </div>
+       </div>
+     </div>
+     <div class="set-card">
+       <h4>Görünüm</h4>
+       <p>Açık veya koyu tema seçimi.</p>
+       <div class="toggle-row">
+         <span><i class="fa-solid fa-moon" style="color:var(--ink-3);margin-right:8px"></i>Karanlık Mod</span>
+         <div class="switch ${document.documentElement.getAttribute('data-theme')==='dark'?'on':''}" id="setDark"></div>
+       </div>
+     </div>
+     ${u.role==="admin"?`
+     <div class="set-card">
+       <h4>Veri Yönetimi</h4>
+       <p>Demo verilerini sıfırlama veya örnek veri yükleme.</p>
+       <div style="display:flex;flex-direction:column;gap:8px">
+         <button class="btn ghost" id="resetData"><i class="fa-solid fa-rotate-left"></i>Demo Verisini Sıfırla</button>
+         <button class="btn ghost" id="exportData"><i class="fa-solid fa-download"></i>Tüm Veriyi JSON İndir</button>
+       </div>
+       <p style="margin-top:14px;font-size:11.5px;color:var(--ink-3)">Üretim ortamında Firebase kullanıldığı zaman bu işlemler devre dışı bırakılmalıdır.</p>
+     </div>
+     `:""}
+     <div class="set-card">
+       <h4>Sistem Bilgisi</h4>
+       <p>Aktif veri kaynağı ve sürüm.</p>
+       <div style="font-family:var(--mono);font-size:12.5px;color:var(--ink-2);line-height:1.9">
+         <div>Sürüm: <b>1.0.0</b></div>
+         <div>Veri Kaynağı: <b style="color:${USE_FIREBASE?'var(--ok)':'var(--warn)'}">${USE_FIREBASE?"Firebase":"Demo (LocalStorage)"}</b></div>
+         <div>Tarih Formatı: <b>tr-TR</b></div>
+         <div>Görev Sayısı: <b>${Store.list("tasks",t=>!t.isDeleted).length}</b></div>
+         <div>Kullanıcı Sayısı: <b>${Store.list("users",u=>u.isActive).length}</b></div>
+       </div>
+     </div>
+   </div>
+
+`;
+
+$(”#setDark”).addEventListener(“click”,()=>{
+const cur=document.documentElement.getAttribute(“data-theme”)||“light”;
+applyTheme(cur===“dark”?“light”:“dark”);
+$(”#setDark”).classList.toggle(“on”);
+});
+
+if($(”#resetData”))$(”#resetData”).addEventListener(“click”,()=>confirmAction(“Tüm yerel demo verileri orijinal hâline döndürülecek. Devam edilsin mi?”,()=>{
+Store.reset();toast(“Demo verisi sıfırlandı”,“ok”);navigate(“dashboard”);
+}));
+if($(”#exportData”))$(”#exportData”).addEventListener(“click”,()=>{
+const blob=new Blob([JSON.stringify(Store.data,null,2)],{type:“application/json”});
+const url=URL.createObjectURL(blob);
+const a=document.createElement(“a”);a.href=url;a.download=`portal_export_${Date.now()}.json`;
+document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+toast(“Veri indirildi”,“ok”);
+});
+}
+
+/* ===========================================================
+
+- TASK FORM
+- =========================================================== */
+  function openTaskForm(task,prefill){
+  const u=Store.user_get();
+  if(u.role!==“admin”&&!task){toast(“Yalnızca yöneticiler görev oluşturabilir”,“err”);return;}
+  const cats=Store.list(“categories”,c=>c.isActive);
+  const projs=Store.list(“projects”,p=>p.isActive);
+  const personnel=Store.list(“users”,x=>x.isActive);
+
+$(”#tfCategory”).innerHTML=’<option value="">— Konu Yok —</option>’+cats.map(c=>`<option value="${c.id}">${escapeHTML(c.categoryName)}</option>`).join(””);
+$(”#tfProject”).innerHTML=’<option value="">— Proje Yok —</option>’+projs.map(p=>`<option value="${p.id}">${escapeHTML(p.projectName)}</option>`).join(””);
+$(”#tfAssignee”).innerHTML=’<option value="">— Seçiniz —</option>’+personnel.map(p=>`<option value="${p.id}">${escapeHTML(p.fullName)}</option>`).join(””);
+
+if(task){
+$(”#taskModalTitle”).textContent=“Görevi Düzenle”;
+$(”#tfId”).value=task.id;
+$(”#tfTitle”).value=task.title;
+$(”#tfDesc”).value=task.description||””;
+$(”#tfCategory”).value=task.categoryId||””;
+$(”#tfProject”).value=task.projectId||””;
+$(”#tfAssignee”).value=task.assignedToUserId;
+$(”#tfPriority”).value=task.priority;
+$(”#tfStatus”).value=task.status;
+$(”#tfProgress”).value=task.progress||0;
+$(”#tfStart”).value=task.startDate;
+$(”#tfDue”).value=task.dueDate;
+$(”#tfLinks”).value=task.links||””;
+$(”#tfNotes”).value=task.notes||””;
+}else{
+$(”#taskModalTitle”).textContent=“Yeni Görev”;
+document.getElementById(“taskForm”).reset();
+$(”#tfId”).value=””;
+$(”#tfStatus”).value=“yeni”;
+$(”#tfPriority”).value=“normal”;
+$(”#tfProgress”).value=0;
+$(”#tfStart”).value=fmtDateInput(today());
+const due=new Date();due.setDate(due.getDate()+7);
+$(”#tfDue”).value=fmtDateInput(due);
+if(prefill){
+Object.keys(prefill).forEach(k=>{
+const map={startDate:“tfStart”,dueDate:“tfDue”};
+if(map[k])$(”#”+map[k]).value=prefill[k];
+});
+}
+}
+openModal(“taskModal”);
+}
+
+$(”#taskSave”).addEventListener(“click”,async()=>{
+const id=$(”#tfId”).value;
+const u=Store.user_get();
+const obj={
+title:$(”#tfTitle”).value.trim(),
+description:$(”#tfDesc”).value.trim(),
+categoryId:$(”#tfCategory”).value||null,
+projectId:$(”#tfProject”).value||null,
+assignedToUserId:$(”#tfAssignee”).value,
+priority:$(”#tfPriority”).value,
+status:$(”#tfStatus”).value,
+progress:Math.max(0,Math.min(100,parseInt($(”#tfProgress”).value)||0)),
+startDate:$(”#tfStart”).value,
+dueDate:$(”#tfDue”).value,
+links:$(”#tfLinks”).value.trim(),
+notes:$(”#tfNotes”).value.trim(),
+updatedAt:new Date().toISOString()
+};
+if(!obj.title){toast(“Başlık zorunludur”,“err”);return;}
+if(!obj.assignedToUserId){toast(“Personel seçimi zorunludur”,“err”);return;}
+if(!obj.startDate||!obj.dueDate){toast(“Tarihler zorunludur”,“err”);return;}
+if(new Date(obj.dueDate)<new Date(obj.startDate)){toast(“Bitiş tarihi başlangıçtan önce olamaz”,“err”);return;}
+
+if(obj.status===“tamam”){obj.progress=100;obj.completedDate=obj.completedDate||new Date().toISOString();}
+
+if(id){
+const old=Store.get(“tasks”,id);
+Store.update(“tasks”,id,obj);
+// log
+if(old.status!==obj.status){
+Store.add(“taskLogs”,{taskId:id,actionType:“update”,description:`Durum '${STATUS_LABELS[old.status]}' → '${STATUS_LABELS[obj.status]}' olarak güncellendi`,updatedBy:u.id,updatedAt:new Date().toISOString()});
+}
+if(old.assignedToUserId!==obj.assignedToUserId){
+const newU=Store.get(“users”,obj.assignedToUserId);
+Store.add(“taskLogs”,{taskId:id,actionType:“update”,description:`Atanan: ${newU?.fullName||"—"}`,updatedBy:u.id,updatedAt:new Date().toISOString()});
+sendAssignmentMail(Store.get(“tasks”,id));
+}
+toast(“Görev güncellendi”,“ok”);
+}else{
+obj.createdBy=u.id;
+obj.createdAt=new Date().toISOString();
+obj.isDeleted=false;
+obj.completedDate=obj.status===“tamam”?new Date().toISOString():null;
+const t=Store.add(“tasks”,obj);
+Store.add(“taskLogs”,{taskId:t.id,actionType:“create”,description:“Görev oluşturuldu”,updatedBy:u.id,updatedAt:new Date().toISOString()});
+sendAssignmentMail(t);
+toast(“Görev oluşturuldu ve atandı”,“ok”);
+}
+closeModal(“taskModal”);
+navigate(currentView);
+});
+
+/* ===========================================================
+
+- TASK DETAIL
+- =========================================================== */
+  let dmCurrentId=null;
+  function openTaskDetail(id){
+  const t=Store.get(“tasks”,id);
+  if(!t){toast(“Görev bulunamadı”,“err”);return;}
+  const u=Store.user_get();
+  const isAdmin=u.role===“admin”;
+  const isAssignee=t.assignedToUserId===u.id;
+  if(!isAdmin&&!isAssignee){toast(“Bu görevi görüntüleme yetkiniz yok”,“err”);return;}
+  dmCurrentId=id;
+  const usr=Store.get(“users”,t.assignedToUserId);
+  const proj=Store.get(“projects”,t.projectId);
+  const cat=Store.get(“categories”,t.categoryId);
+
+$(”#dmTitle”).textContent=t.title;
+$(”#dmSub”).innerHTML=`<span class="chip s-${t.status}">${STATUS_LABELS[t.status]}</span> <span class="chip p-${t.priority}">${PRIORITY_LABELS[t.priority]}</span>${isLate(t)?' <span class="chip p-critical"><i class="fa-solid fa-triangle-exclamation"></i> Geciken</span>':''}`;
+
+// tab default = info
+document.querySelectorAll(”.td-tabs button”).forEach(b=>b.classList.toggle(“active”,b.dataset.tab===“info”));
+paintDetail(“info”);
+
+function paintDetail(tab){
+if(tab===“info”){
+$(”#dmBody”).innerHTML=` <div class="td-info"> <div class="item"><div class="l">Atanan</div><div class="v">${escapeHTML(usr?.fullName||"—")}</div></div> <div class="item"><div class="l">Proje</div><div class="v">${escapeHTML(proj?.projectName||"—")}</div></div> <div class="item"><div class="l">Konu</div><div class="v">${escapeHTML(cat?.categoryName||"—")}</div></div> <div class="item"><div class="l">Oluşturan</div><div class="v">${escapeHTML(Store.get("users",t.createdBy)?.fullName||"—")}</div></div> <div class="item"><div class="l">Başlangıç</div><div class="v">${fmtDate(t.startDate)}</div></div> <div class="item"><div class="l">Bitiş</div><div class="v" style="${isLate(t)?'color:var(--err)':''}">${fmtDate(t.dueDate)}${isLate(t)?' <i class="fa-solid fa-triangle-exclamation"></i>':''}</div></div> <div class="item"><div class="l">Tamamlanma</div><div class="v">${fmtDate(t.completedDate)}</div></div> <div class="item"><div class="l">Son Güncelleme</div><div class="v">${fmtDateTime(t.updatedAt)}</div></div> </div> <div class="td-progress-wrap"> <div class="l"><span>İlerleme</span><span>${t.progress}%</span></div> <div class="td-progress-bar"><div style="width:${t.progress}%"></div></div> ${(isAdmin||isAssignee)&&t.status!=="tamam"&&t.status!=="iptal"?`
+<div class="td-progress-input">
+<input type="range" min="0" max="100" value="${t.progress}" id="dmProgressInput">
+<span id="dmProgressVal">${t.progress}%</span>
+<button class="btn solid" id="dmProgressSave" style="padding:6px 10px"><i class="fa-solid fa-check"></i></button>
+</div>
+`:""} </div> <div style="margin-bottom:18px"> <div style="font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);font-weight:700;font-family:var(--mono);margin-bottom:6px">Açıklama</div> <div style="font-size:14px;line-height:1.6;color:var(--ink-2);white-space:pre-wrap">${escapeHTML(t.description||"—")}</div> </div> ${t.notes?`<div style="margin-bottom:18px">
+<div style="font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);font-weight:700;font-family:var(--mono);margin-bottom:6px">Notlar</div>
+<div style="font-size:14px;line-height:1.6;color:var(--ink-2);white-space:pre-wrap;background:var(--bg-soft);padding:12px;border-radius:8px">${escapeHTML(t.notes)}</div>
+</div>`:""} ${t.links?`<div style="margin-bottom:18px">
+<div style="font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);font-weight:700;font-family:var(--mono);margin-bottom:6px">Bağlantılar</div>
+${t.links.split(”,”).map(l=>l.trim()).filter(Boolean).map(l=>`<a href="${escapeHTML(l)}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:6px 10px;background:var(--bg-soft);border-radius:6px;font-size:12.5px;color:var(--info);margin-right:6px;font-family:var(--mono)"><i class="fa-solid fa-link"></i>${escapeHTML(l)}</a>`).join(””)}
+</div>`:""} <div style="display:flex;gap:8px;flex-wrap:wrap"> ${(isAdmin||isAssignee)&&t.status!=="tamam"&&t.status!=="iptal"?`
+<button class="btn ghost" id="dmSetProgress"><i class="fa-solid fa-spinner"></i>Devam Ediyor</button>
+<button class="btn solid" id="dmSetDone"><i class="fa-solid fa-check-circle"></i>Tamamlandı Olarak İşaretle</button>
+`:""} </div> `;
+// Progress live
+const range=document.getElementById(“dmProgressInput”);
+if(range){
+range.addEventListener(“input”,e=>{$(”#dmProgressVal”).textContent=e.target.value+”%”;});
+document.getElementById(“dmProgressSave”).addEventListener(“click”,()=>{
+const v=parseInt(range.value);
+Store.update(“tasks”,t.id,{progress:v,updatedAt:new Date().toISOString()});
+Store.add(“taskLogs”,{taskId:t.id,actionType:“update”,description:`İlerleme güncellendi: %${v}`,updatedBy:u.id,updatedAt:new Date().toISOString()});
+toast(“İlerleme güncellendi”,“ok”);
+openTaskDetail(t.id);
+});
+}
+const setDone=document.getElementById(“dmSetDone”);
+if(setDone)setDone.addEventListener(“click”,()=>{
+Store.update(“tasks”,t.id,{status:“tamam”,progress:100,completedDate:new Date().toISOString(),updatedAt:new Date().toISOString()});
+Store.add(“taskLogs”,{taskId:t.id,actionType:“update”,description:“Görev tamamlandı olarak işaretlendi”,updatedBy:u.id,updatedAt:new Date().toISOString()});
+toast(“Görev tamamlandı”,“ok”);
+openTaskDetail(t.id);
+navigate(currentView);
+});
+const setProg=document.getElementById(“dmSetProgress”);
+if(setProg)setProg.addEventListener(“click”,()=>{
+Store.update(“tasks”,t.id,{status:“devam”,updatedAt:new Date().toISOString()});
+Store.add(“taskLogs”,{taskId:t.id,actionType:“update”,description:“Durum ‘Devam Ediyor’ olarak güncellendi”,updatedBy:u.id,updatedAt:new Date().toISOString()});
+toast(“Durum güncellendi”,“ok”);
+openTaskDetail(t.id);
+navigate(currentView);
+});
+}else{
+const logs=Store.list(“taskLogs”,l=>l.taskId===t.id).sort((a,b)=>new Date(b.updatedAt)-new Date(a.updatedAt));
+$(”#dmBody”).innerHTML=`<div style="margin-bottom:14px"> ${logs.map(l=>{ const lu=Store.get("users",l.updatedBy); return`<div class="td-log ${l.actionType==='create'?'add':l.actionType==='note'?'note':'update'}">
+<div class="when">${fmtDateTime(l.updatedAt)}</div>
+<div><span class="who">${escapeHTML(lu?.fullName||“Sistem”)}</span></div>
+<div class="what">${escapeHTML(l.description)}</div>
+</div>`; }).join("")||'<div style="color:var(--ink-3);font-size:13px;padding:14px;text-align:center">Henüz kayıt yok.</div>'} </div> ${(isAdmin||isAssignee)?`
+<div style="border-top:1px solid var(--line);padding-top:14px">
+<div style="font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);font-weight:700;font-family:var(--mono);margin-bottom:6px">Yeni Not / Açıklama</div>
+<div class="note-add">
+<textarea id="dmNoteText" placeholder="Açıklama veya ilerleme notu yazın..."></textarea>
+<button class="btn solid" id="dmNoteSave"><i class="fa-solid fa-paper-plane"></i></button>
+</div>
+</div>
+`:""} `;
+const noteSave=document.getElementById(“dmNoteSave”);
+if(noteSave)noteSave.addEventListener(“click”,()=>{
+const v=document.getElementById(“dmNoteText”).value.trim();
+if(!v){toast(“Boş not eklenemez”,“warn”);return;}
+Store.add(“taskLogs”,{taskId:t.id,actionType:“note”,description:v,updatedBy:u.id,updatedAt:new Date().toISOString()});
+Store.update(“tasks”,t.id,{updatedAt:new Date().toISOString()});
+toast(“Not eklendi”,“ok”);
+paintDetail(“logs”);
+});
+}
+}
+
+document.querySelectorAll(”.td-tabs button”).forEach(b=>{
+b.onclick=()=>{
+document.querySelectorAll(”.td-tabs button”).forEach(x=>x.classList.toggle(“active”,x===b));
+paintDetail(b.dataset.tab);
+};
+});
+$(”#dmEdit”).onclick=()=>{closeModal(“detailModal”);openTaskForm(t);};
+$(”#dmDel”).onclick=()=>{
+confirmAction(“Görev silinsin mi? (Soft delete uygulanır)”,()=>{
+Store.update(“tasks”,t.id,{isDeleted:true,updatedAt:new Date().toISOString()});
+Store.add(“taskLogs”,{taskId:t.id,actionType:“delete”,description:“Görev silindi (soft delete)”,updatedBy:u.id,updatedAt:new Date().toISOString()});
+toast(“Görev silindi”,“ok”);
+closeModal(“detailModal”);
+navigate(currentView);
+});
+};
+// Personel ise edit/delete butonlarını gizle
+$(”#dmEdit”).style.display=isAdmin?””:“none”;
+$(”#dmDel”).style.display=isAdmin?””:“none”;
+
+openModal(“detailModal”);
+}
+
+/* ===========================================================
+
+- CONFIRM DIALOG
+- =========================================================== */
+  function confirmAction(text,cb){
+  $(”#cmText”).textContent=text;
+  $(”#cmYes”).onclick=()=>{closeModal(“confirmModal”);cb();};
+  openModal(“confirmModal”);
+  }
+
+/* ===========================================================
+
+- MAIL ENTEGRASYONU - GÖREV ATAMA BİLDİRİMİ
+- -----
+- Demo modda mail gönderimi simüle edilir (toast).
+- Üretim için aşağıdaki YÖNTEMLERDEN biri tercih edilebilir:
+- 
+- YÖNTEM 1: Firebase Cloud Functions (Önerilen, en güvenli)
+- -----
+- Cloud Functions içinde Nodemailer + SMTP kullanılır.
+- Frontend yalnızca Firestore’a kayıt yapar ve trigger ile
+- mail otomatik gönderilir.
+- 
+- functions/index.js:
+- 
+- const functions = require(‘firebase-functions’);
+- const nodemailer = require(‘nodemailer’);
+- const transporter = nodemailer.createTransport({
+- ```
+  host: 'smtp.office365.com', port: 587, secure: false,
+  ```
+- ```
+  auth: { user: functions.config().mail.user,
+  ```
+- ```
+          pass: functions.config().mail.pass }
+  ```
+- });
+- 
+- exports.sendTaskAssignmentMail = functions.firestore
+- ```
+  .document('tasks/{taskId}')
+  ```
+- ```
+  .onCreate(async (snap, ctx) => {
+  ```
+- ```
+    const t = snap.data();
+  ```
+- ```
+    const userDoc = await admin.firestore()
+  ```
+- ```
+      .doc(`users/${t.assignedToUserId}`).get();
+  ```
+- ```
+    const u = userDoc.data();
+  ```
+- 
+- ```
+    // ICS calendar invite oluşturma (Outlook/Google uyumlu):
+  ```
+- ```
+    const ics = [
+  ```
+- ```
+      'BEGIN:VCALENDAR','VERSION:2.0','METHOD:REQUEST',
+  ```
+- ```
+      'BEGIN:VEVENT',`UID:${ctx.params.taskId}@halkfaktoring.com`,
+  ```
+- ```
+      `DTSTAMP:${new Date().toISOString().replace(/[-:.]/g,'').slice(0,15)}Z`,
+  ```
+- ```
+      `DTSTART:${t.startDate.replace(/-/g,'')}T090000`,
+  ```
+- ```
+      `DTEND:${t.dueDate.replace(/-/g,'')}T180000`,
+  ```
+- ```
+      `SUMMARY:[Görev] ${t.title}`,
+  ```
+- ```
+      `DESCRIPTION:${t.description}\\n\\nÖncelik: ${t.priority}`,
+  ```
+- ```
+      `ORGANIZER;CN=Görev Portalı:mailto:[email protected]`,
+  ```
+- ```
+      `ATTENDEE;ROLE=REQ-PARTICIPANT:mailto:${u.email}`,
+  ```
+- ```
+      'END:VEVENT','END:VCALENDAR'
+  ```
+- ```
+    ].join('\r\n');
+  ```
+- 
+- ```
+    await transporter.sendMail({
+  ```
+- ```
+      from: '"Halk Faktoring · Görev Portalı" <[email protected]>',
+  ```
+- ```
+      to: u.email,
+  ```
+- ```
+      subject: `[Yeni Görev] ${t.title}`,
+  ```
+- ```
+      html: htmlTemplate(t),
+  ```
+- ```
+      icalEvent: { method: 'REQUEST', content: ics }
+  ```
+- ```
+    });
+  ```
+- ```
+  });
+  ```
+- 
+- YÖNTEM 2: EmailJS (Hızlı ama frontend tabanlı)
+- -----
+- https://www.emailjs.com hesabı oluşturup template ID alın.
+- 
+- import emailjs from ‘@emailjs/browser’;
+- emailjs.send(‘SERVICE_ID’,‘TEMPLATE_ID’,{
+- ```
+  to_email: assignee.email, task_title: t.title, ...
+  ```
+- },‘PUBLIC_KEY’);
+- 
+- YÖNTEM 3: SendGrid / SMTP REST API (mail gateway üzerinden)
+- =========================================================== */
+  function sendAssignmentMail(task){
+  if(!task)return;
+  const assignee=Store.get(“users”,task.assignedToUserId);
+  if(!assignee)return;
+  const proj=Store.get(“projects”,task.projectId);
+  const portalUrl=window.location.origin+window.location.pathname;
+
+// Demo mod: Console + Toast
+const subject=`[Yeni Görev] ${task.title}`;
+const body=`
+Sayın ${assignee.fullName},
+
+Size yeni bir görev atanmıştır:
+
+📋 Başlık: ${task.title}
+📝 Açıklama: ${task.description||”—”}
+📁 Proje: ${proj?.projectName||”—”}
+⚡ Öncelik: ${PRIORITY_LABELS[task.priority]}
+📅 Başlangıç: ${fmtDate(task.startDate)}
+🎯 Hedef Tarih: ${fmtDate(task.dueDate)}
+
+🔗 Portal: ${portalUrl}
+
+Halk Faktoring · IT Görev Portalı
+`; console.log("📧 [Mail Gönderim Simülasyonu]\nKime: "+assignee.email+"\nKonu: "+subject+"\n"+body); toast(`Mail bildirimi hazırlandı: ${assignee.email}`,“ok”);
+
+// ICS calendar invite blob (kullanıcı isterse indirilebilir)
+// Bu kısım üretimde Cloud Functions tarafına taşınmalıdır.
+}
+
+/* ===========================================================
+
+- BAŞLANGIÇ
+- =========================================================== */
+  (function init(){
+  if(USE_FIREBASE){
+  // Firebase auth state listener
+  onAuthChangedFn(fbAuth, async (fbu)=>{
+  if(fbu){
+  try{
+  const userDoc=await getDocFn(docFn(fbDb,“users”,fbu.uid));
+  if(userDoc.exists()){
+  Store.user_set({id:fbu.uid,…userDoc.data()});
+  // Firestore’dan veri çek
+  await loadFromFirestore();
+  bootApp();
+  }
+  }catch(e){console.error(e);}
+  }
+  });
+  }else{
+  Store.load();
+  if(Store.user_get())bootApp();
+  }
+  })();
+
+async function loadFromFirestore(){
+// Production örneği: koleksiyonlardan veri çek
+const cols=[“users”,“tasks”,“projects”,“categories”,“departments”,“taskLogs”];
+const data={};
+for(const c of cols){
+const snap=await getDocsFn(collFn(fbDb,c));
+data[c]=snap.docs.map(d=>({id:d.id,…d.data()}));
+}
+Store.data=data;
+}
 </script>
+
+<!-- ============================================================
+                  FIRESTORE GÜVENLİK KURALLARI ÖRNEĞİ
+                  Console → Firestore → Rules sekmesine yapıştırın
+============================================================
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn(){ return request.auth != null; }
+    function isAdmin(){
+      return isSignedIn() &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    function isSelf(uid){ return request.auth.uid == uid; }
+
+    match /users/{uid} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+      allow update: if isSelf(uid) && request.resource.data.role == resource.data.role;
+    }
+
+    match /tasks/{taskId} {
+      allow read: if isSignedIn() &&
+        (isAdmin() || resource.data.assignedToUserId == request.auth.uid);
+      allow create: if isAdmin();
+      allow update: if isAdmin() ||
+        (resource.data.assignedToUserId == request.auth.uid &&
+         request.resource.data.assignedToUserId == resource.data.assignedToUserId &&
+         request.resource.data.createdBy == resource.data.createdBy);
+      allow delete: if isAdmin();
+    }
+
+    match /projects/{id}     { allow read: if isSignedIn(); allow write: if isAdmin(); }
+    match /categories/{id}   { allow read: if isSignedIn(); allow write: if isAdmin(); }
+    match /departments/{id}  { allow read: if isSignedIn(); allow write: if isAdmin(); }
+    match /taskLogs/{id}     { allow read: if isSignedIn(); allow create: if isSignedIn(); }
+  }
+}
+============================================================ -->
+
 </body>
 </html>
