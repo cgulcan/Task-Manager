@@ -947,10 +947,8 @@ async function doLogin(email,pass){
 async function doLogout(){
   if(USE_FIREBASE){try{await signOutFn(fbAuth);}catch(e){}}
   Store.user_clear();
-  $("#app").classList.remove("show");
-  $("#loginWrap").style.display="grid";
-  $("#loginEmail").value="";$("#loginPass").value="";
-  $("#loginErr").classList.remove("show");
+  // LOGIN DEVRE DIŞI - sayfa yenilenince tekrar admin olarak giriş yapılır
+  location.reload();
 }
 
 $("#loginForm").addEventListener("submit",async e=>{
@@ -979,8 +977,19 @@ let calView="month";
 
 function bootApp(){
   Store.load();
-  const u=Store.user_get();
-  if(!u){$("#loginWrap").style.display="grid";return;}
+  // LOGIN DEVRE DIŞI - Otomatik admin oturumu
+  let u=Store.user_get();
+  if(!u){
+    // Cengiz Gülcan (admin) ile otomatik giriş
+    u=Store.list("users",x=>x.role==="admin")[0]||Store.list("users")[0];
+    if(u)Store.user_set(u);
+  }
+  if(!u){
+    // Demo verisi yoksa zorla seed
+    Store.reset();
+    u=Store.list("users",x=>x.role==="admin")[0];
+    if(u)Store.user_set(u);
+  }
   $("#loginWrap").style.display="none";
   $("#app").classList.add("show");
   $("#sbName").textContent=u.fullName;
@@ -2348,7 +2357,8 @@ Halk Faktoring · IT Görev Portalı
   });
   }else{
   Store.load();
-  if(Store.user_get())bootApp();
+  // LOGIN DEVRE DIŞI - Her durumda bootApp çağır
+  bootApp();
   }
   })();
 
