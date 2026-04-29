@@ -506,7 +506,7 @@ body{padding-bottom:env(safe-area-inset-bottom)}
       <div class="login-error" id="loginErr"></div>
       <div class="login-help">
         <strong>Demo Modu:</strong> Firebase yapılandırması girilmediği takdirde uygulama yerel demo verisiyle çalışır.<br>
-        Admin: <code>cengiz</code> / <code>admin123</code> &nbsp;·&nbsp; Personel: <code>ali</code>, <code>ayse</code>, <code>mehmet</code> / <code>user123</code>
+        Yönetici: <code>cengiz</code> / <code>Sfr12345</code> &nbsp;·&nbsp; Personel: <code>ali</code>, <code>ayse</code>, <code>mehmet</code> / <code>user123</code>
       </div>
     </form>
   </div>
@@ -787,10 +787,10 @@ if(USE_FIREBASE){
 /* ===========================================================
  * DEMO VERİTABANI (LocalStorage)
  * =========================================================== */
-const LS_KEY="halkfaktoring_portal_v1";
+const LS_KEY="halkfaktoring_portal_v2";
 const DEMO={
   users:[
-    {id:"u1",fullName:"Cengiz Gülcan",email:"[email protected]",role:"admin",department:"Bilgi Teknolojileri",title:"IT Yönetmeni",phone:"+90 212 ...",isActive:true,pass:"admin123"},
+    {id:"u1",fullName:"Cengiz Gülcan",email:"[email protected]",role:"admin",department:"Bilgi Teknolojileri",title:"IT Yönetmeni",phone:"+90 212 ...",isActive:true,pass:"Sfr12345"},
     {id:"u2",fullName:"Ali Demir",email:"[email protected]",role:"personel",department:"Bilgi Teknolojileri",title:"Sistem Uzmanı",phone:"",isActive:true,pass:"user123"},
     {id:"u3",fullName:"Ayşe Yılmaz",email:"[email protected]",role:"personel",department:"Bilgi Teknolojileri",title:"Yazılım Uzmanı",phone:"",isActive:true,pass:"user123"},
     {id:"u4",fullName:"Mehmet Kara",email:"[email protected]",role:"personel",department:"Bilgi Teknolojileri",title:"DBA",phone:"",isActive:true,pass:"user123"}
@@ -928,12 +928,17 @@ async function doLogin(email,pass){
   }else{
     Store.load();
     const q=(email||"").trim().toLowerCase();
+    const p=(pass||"").trim().toLowerCase();
     // Demo modunda hem tam mail hem de kullanıcı adı (@ öncesi) ile giriş kabul edilir
+    // Şifre karşılaştırması da büyük-küçük harf duyarsız
     const u=Store.list("users",x=>{
-      if(!x.isActive||x.pass!==pass)return false;
+      if(!x.isActive)return false;
+      if((x.pass||"").trim().toLowerCase()!==p)return false;
       const mail=(x.email||"").toLowerCase();
       const userName=mail.split("@")[0];
-      return mail===q||userName===q;
+      // Kullanıcı adı için hem "cengiz" hem "cengiz.gulcan" çalışsın
+      const firstName=userName.split(".")[0];
+      return mail===q||userName===q||firstName===q;
     });
     if(u.length===0)throw new Error("Kullanıcı adı veya şifre hatalı.");
     Store.user_set(u[0]);return u[0];
