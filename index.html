@@ -180,11 +180,10 @@ input,select,textarea{font-family:inherit;font-size:14px;color:inherit}
    APP LAYOUT
    ===================================================================== */
 html,body{direction:ltr !important;text-align:left}
-.app{display:grid;min-height:100vh;min-height:100dvh;grid-template-columns:var(--sidebar-w) 1fr;grid-template-areas:"sidebar main";background:var(--bg);direction:ltr}
+.app{display:none;min-height:100vh;min-height:100dvh;grid-template-columns:var(--sidebar-w) 1fr;grid-template-areas:"sidebar main";background:var(--bg);direction:ltr}
 .app.show{display:grid}
 .sidebar{grid-area:sidebar;order:1}
 .main{grid-area:main;order:2}
-.login-wrap{display:none !important}
 
 .sidebar{position:sticky;top:0;height:100vh;height:100dvh;background:var(--bg-elev);border-right:1px solid var(--line);display:flex;flex-direction:column;overflow:hidden}
 .sb-brand{padding:20px 22px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--line-2)}
@@ -562,15 +561,54 @@ html,body{direction:ltr !important;text-align:left}
 </head>
 <body>
 
-<!-- ================= GİRİŞ EKRANI (DEVRE DIŞI) ================= -->
-<div class="login-wrap" id="loginWrap" style="display:none !important">
-  <aside class="login-art" style="display:none"></aside>
-  <div class="login-form-wrap" style="display:none">
-    <form class="login-form" id="loginForm" autocomplete="off" style="display:none">
-      <input type="text" id="loginEmail" />
-      <input type="password" id="loginPass" />
-      <button type="submit" id="loginBtn"></button>
-      <div id="loginErr"></div>
+<!-- ================= GİRİŞ EKRANI ================= -->
+<div class="login-wrap" id="loginWrap">
+  <aside class="login-art">
+    <div class="login-art-inner">
+      <div class="login-brand">
+        <div class="login-brand-mark">H</div>
+        <div>
+          Halk Faktoring<br>
+          <span style="font-size:11px;font-weight:500;opacity:.7;font-family:var(--mono);letter-spacing:.15em;text-transform:uppercase">IT Operasyonları</span>
+        </div>
+      </div>
+      <div class="login-hero">
+        Görev<em>net.</em>
+        <small>Bilgi teknolojileri biriminin görev, proje ve operasyonel takip için tasarlanmış kurumsal çalışma alanı.</small>
+      </div>
+      <div class="login-meta">
+        <span>v1.0</span>
+        <span>· Maslak</span>
+      </div>
+    </div>
+  </aside>
+  <div class="login-form-wrap">
+    <form class="login-form" id="loginForm" autocomplete="on">
+      <h2>Hoş geldiniz</h2>
+      <p class="sub">Portala devam etmek için kullanıcı adı ve şifrenizle giriş yapın.</p>
+      <div class="field">
+        <label>Kullanıcı Adı</label>
+        <div class="field-icon">
+          <i class="fa-regular fa-user"></i>
+          <input type="text" id="loginEmail" required placeholder="Kullanıcı adınız" autocomplete="username" />
+        </div>
+      </div>
+      <div class="field">
+        <label>Şifre</label>
+        <div class="field-icon">
+          <i class="fa-solid fa-lock"></i>
+          <input type="password" id="loginPass" required placeholder="Şifreniz" autocomplete="current-password" />
+        </div>
+      </div>
+      <button type="submit" class="btn-primary" id="loginBtn">
+        <span>Giriş Yap</span>
+        <i class="fa-solid fa-arrow-right"></i>
+      </button>
+      <div class="login-error" id="loginErr"></div>
+      <div class="login-help">
+        <strong>Yönetici:</strong> <code>cengiz</code> / <code>Sfr12345</code><br>
+        <small style="opacity:.7">Personel hesapları yönetici tarafından oluşturulur.</small>
+      </div>
     </form>
   </div>
 </div>
@@ -613,7 +651,7 @@ html,body{direction:ltr !important;text-align:left}
         <div class="nm" id="sbName">-</div>
         <div class="rl" id="sbRole">-</div>
       </div>
-      <button title="Çıkış" id="logoutBtn" style="display:none"><i class="fa-solid fa-right-from-bracket"></i></button>
+      <button title="Çıkış" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i></button>
     </div>
   </aside>
 
@@ -832,13 +870,13 @@ function loadFirebaseAsync(){
 /* ===========================================================
  * DEMO VERİTABANI (LocalStorage)
  * =========================================================== */
-const LS_KEY="halkfaktoring_portal_v3";
+const LS_KEY="halkfaktoring_portal_v4";
 const DEMO={
   users:[
-    {id:"u1",fullName:"Cengiz Gülcan",email:"[email protected]",role:"admin",department:"Bilgi Teknolojileri",title:"IT Yönetmeni",phone:"+90 212 ...",isActive:true,pass:"Sfr12345"},
-    {id:"u2",fullName:"Ali Demir",email:"[email protected]",role:"personel",department:"Bilgi Teknolojileri",title:"Sistem Uzmanı",phone:"",isActive:true,pass:"user123"},
-    {id:"u3",fullName:"Ayşe Yılmaz",email:"[email protected]",role:"personel",department:"Bilgi Teknolojileri",title:"Yazılım Uzmanı",phone:"",isActive:true,pass:"user123"},
-    {id:"u4",fullName:"Mehmet Kara",email:"[email protected]",role:"personel",department:"Bilgi Teknolojileri",title:"DBA",phone:"",isActive:true,pass:"user123"}
+    {id:"u1",username:"cengiz",fullName:"Cengiz Gülcan",email:"[email protected]",role:"admin",department:"Bilgi Teknolojileri",title:"IT Yönetmeni",phone:"+90 212 ...",isActive:true,pass:"Sfr12345"},
+    {id:"u2",username:"ali",fullName:"Ali Demir",email:"[email protected]",role:"personel",department:"Bilgi Teknolojileri",title:"Sistem Uzmanı",phone:"",isActive:true,pass:"Ali12345"},
+    {id:"u3",username:"ayse",fullName:"Ayşe Yılmaz",email:"[email protected]",role:"personel",department:"Bilgi Teknolojileri",title:"Yazılım Uzmanı",phone:"",isActive:true,pass:"Ayse12345"},
+    {id:"u4",username:"mehmet",fullName:"Mehmet Kara",email:"[email protected]",role:"personel",department:"Bilgi Teknolojileri",title:"DBA",phone:"",isActive:true,pass:"Mehmet12345"}
   ],
   categories:[
     {id:"c1",categoryName:"Sunucu / Altyapı",description:"Hyper-V, fiziksel sunucular, ağ",isActive:true},
@@ -961,10 +999,13 @@ function closeModal(id){$("#"+id).classList.remove("show");document.body.style.o
 /* ===========================================================
  * AUTH
  * =========================================================== */
-async function doLogin(email,pass){
+async function doLogin(usernameInput,pass){
   if(USE_FIREBASE){
+    // Firebase Auth e-posta tabanlı çalışır - kullanıcı adından e-postayı bul
+    Store.load();
+    const candidate=Store.list("users",x=>x.username===(usernameInput||"").trim().toLowerCase())[0];
+    const email=candidate?candidate.email:usernameInput;
     const cred=await signInFn(fbAuth,email,pass);
-    // Firebase user id ile users koleksiyonundan rol bilgisini çek
     const userDoc=await getDocFn(docFn(fbDb,"users",cred.user.uid));
     if(!userDoc.exists())throw new Error("Kullanıcı kaydı bulunamadı.");
     const u={id:cred.user.uid,...userDoc.data()};
@@ -972,18 +1013,21 @@ async function doLogin(email,pass){
     Store.user_set(u);return u;
   }else{
     Store.load();
-    const q=(email||"").trim().toLowerCase();
-    const p=(pass||"").trim().toLowerCase();
-    // Demo modunda hem tam mail hem de kullanıcı adı (@ öncesi) ile giriş kabul edilir
-    // Şifre karşılaştırması da büyük-küçük harf duyarsız
+    const q=(usernameInput||"").trim().toLowerCase();
+    const p=(pass||"").trim();
+    if(!q||!p)throw new Error("Kullanıcı adı ve şifre zorunludur.");
+    // Kullanıcı adı eşleşmesi: önce username alanı, sonra fallback olarak e-posta @ öncesi
     const u=Store.list("users",x=>{
-      if(!x.isActive)return false;
-      if((x.pass||"").trim().toLowerCase()!==p)return false;
+      if(x.isActive===false)return false;
+      // Şifre tam eşleşme (case-sensitive)
+      if((x.pass||"")!==p)return false;
+      // Kullanıcı adı eşleşmesi (case-insensitive)
+      if((x.username||"").toLowerCase()===q)return true;
+      // Geriye dönük uyumluluk: e-posta veya e-postanın @ öncesi kısmı
       const mail=(x.email||"").toLowerCase();
-      const userName=mail.split("@")[0];
-      // Kullanıcı adı için hem "cengiz" hem "cengiz.gulcan" çalışsın
-      const firstName=userName.split(".")[0];
-      return mail===q||userName===q||firstName===q;
+      if(mail===q)return true;
+      if(mail.split("@")[0]===q)return true;
+      return false;
     });
     if(u.length===0)throw new Error("Kullanıcı adı veya şifre hatalı.");
     Store.user_set(u[0]);return u[0];
@@ -992,8 +1036,13 @@ async function doLogin(email,pass){
 async function doLogout(){
   if(USE_FIREBASE){try{await signOutFn(fbAuth);}catch(e){}}
   Store.user_clear();
-  // LOGIN DEVRE DIŞI - sayfa yenilenince tekrar admin olarak giriş yapılır
-  location.reload();
+  // Login ekranına dön
+  $("#app").classList.remove("show");
+  $("#app").style.display="";
+  const lw=$("#loginWrap");if(lw)lw.style.display="";
+  const le=$("#loginEmail");if(le)le.value="";
+  const lp=$("#loginPass");if(lp)lp.value="";
+  const er=$("#loginErr");if(er)er.classList.remove("show");
 }
 
 // Login form artık devre dışı ama hata olmasın diye opsiyonel kontrol
@@ -1026,18 +1075,21 @@ let calCursor=new Date();
 let calView="month";
 
 function bootApp(){
-  // === LOGIN DEVRE DIŞI - Otomatik Yönetici (Cengiz Gülcan) Oturumu ===
   Store.load();
   // Seed verisinin yüklendiğinden emin ol
   if(!Store.data||!Store.data.users||Store.data.users.length===0){
     Store.reset();
   }
-  // Cengiz (admin) ile otomatik giriş - oturum bilgisini her zaman tazele
-  let u=Store.list("users",x=>x.role==="admin")[0];
-  if(!u)u=Store.list("users")[0];
-  if(u)Store.user_set(u);
+  const u=Store.user_get();
+  if(!u){
+    // Oturum yok - login ekranını göster
+    const lw=$("#loginWrap");if(lw)lw.style.display="";
+    $("#app").classList.remove("show");
+    $("#app").style.display="";
+    return;
+  }
 
-  // Login ekranını kesinlikle gizle, app'i göster
+  // Aktif kullanıcı - login ekranını gizle, app'i göster
   const lw=$("#loginWrap");if(lw)lw.style.display="none";
   $("#app").classList.add("show");
   $("#app").style.display="grid";
@@ -1050,6 +1102,8 @@ function bootApp(){
   document.querySelectorAll(".admin-only").forEach(el=>{
     el.style.display=u.role==="admin"?"":"none";
   });
+  // Logout butonunu göster
+  const lb=$("#logoutBtn");if(lb)lb.style.display="";
 
   // İlk yükleme
   if(u.role!=="admin"&&["all-tasks","kanban","projects","reports","param-users","param-categories","param-projects","param-statuses","param-priorities","param-departments"].includes(currentView)){
@@ -1829,13 +1883,22 @@ function renderParamTable(kind){
 
   const config={
     users:{
-      title:"Personeller",sub:"Sistemde tanımlı kullanıcılar.",
+      title:"Personeller",sub:"Sistemde tanımlı kullanıcılar. Yeni personel eklerken kullanıcı adı ve şifre belirleyin; personel bu bilgilerle giriş yapacaktır.",
       coll:"users",addLbl:"Yeni Personel",
-      headers:["Ad Soyad","E-posta","Telefon","Ünvan","Departman","Rol","Durum",""],
-      cols:r=>[r.fullName,r.email,r.phone||"-",r.title||"-",r.department||"-",r.role==="admin"?'<span class="chip p-critical">Yönetici</span>':'<span class="chip p-low">Personel</span>',`<span class="status-dot ${r.isActive?'':'off'}">${r.isActive?"Aktif":"Pasif"}</span>`],
+      headers:["Ad Soyad","Kullanıcı Adı","E-posta","Ünvan","Rol","Durum",""],
+      cols:r=>[
+        r.fullName,
+        r.username?`<code style="font-family:var(--mono);background:var(--bg-soft);padding:2px 8px;border-radius:5px;font-size:12px;font-weight:600">${escapeHTML(r.username)}</code>`:'<span style="color:var(--ink-3);font-style:italic">tanımsız</span>',
+        r.email||"-",
+        r.title||"-",
+        r.role==="admin"?'<span class="chip p-critical">Yönetici</span>':'<span class="chip p-low">Personel</span>',
+        `<span class="status-dot ${r.isActive?'':'off'}">${r.isActive?"Aktif":"Pasif"}</span>`
+      ],
       fields:[
         {n:"fullName",l:"Ad Soyad",t:"text",req:true},
-        {n:"email",l:"E-posta",t:"email",req:true},
+        {n:"username",l:"Kullanıcı Adı (giriş için)",t:"text",req:true,hint:"Sadece küçük harf, rakam ve nokta. Örn: ali.demir"},
+        {n:"pass",l:"Şifre",t:"password",req:true,hint:"En az 4 karakter. Personele iletilecek."},
+        {n:"email",l:"E-posta",t:"email"},
         {n:"phone",l:"Telefon",t:"text"},
         {n:"title",l:"Ünvan",t:"text"},
         {n:"department",l:"Departman",t:"text"},
@@ -1982,10 +2045,20 @@ function openParamForm(cfg,row){
     <div class="form-grid">
       ${cfg.fields.map(f=>{
         const v=data[f.n];
-        if(f.t==="textarea")return `<div class="form-row full"><label>${f.l}${f.req?' <span class="req">*</span>':''}</label><textarea data-name="${f.n}">${escapeHTML(v||"")}</textarea></div>`;
-        if(f.t==="select")return `<div class="form-row full"><label>${f.l}${f.req?' <span class="req">*</span>':''}</label><select data-name="${f.n}">${f.options.map(o=>`<option value="${o.v}" ${v===o.v?"selected":""}>${o.l}</option>`).join("")}</select></div>`;
-        if(f.t==="check")return `<div class="form-row full"><label style="display:flex;align-items:center;gap:8px"><input type="checkbox" data-name="${f.n}" ${v!==false?"checked":""} style="width:18px;height:18px;accent-color:var(--ink)"> ${f.l}</label></div>`;
-        return `<div class="form-row full"><label>${f.l}${f.req?' <span class="req">*</span>':''}</label><input type="${f.t}" data-name="${f.n}" value="${escapeHTML(v||"")}" ${f.req?"required":""}></div>`;
+        const hint=f.hint?`<small style="display:block;font-size:11px;color:var(--ink-3);margin-top:4px;font-weight:500">${f.hint}</small>`:'';
+        if(f.t==="textarea")return `<div class="form-row full"><label>${f.l}${f.req?' <span class="req">*</span>':''}</label><textarea data-name="${f.n}">${escapeHTML(v||"")}</textarea>${hint}</div>`;
+        if(f.t==="select")return `<div class="form-row full"><label>${f.l}${f.req?' <span class="req">*</span>':''}</label><select data-name="${f.n}">${f.options.map(o=>`<option value="${o.v}" ${v===o.v?"selected":""}>${o.l}</option>`).join("")}</select>${hint}</div>`;
+        if(f.t==="check")return `<div class="form-row full"><label style="display:flex;align-items:center;gap:8px"><input type="checkbox" data-name="${f.n}" ${v!==false?"checked":""} style="width:18px;height:18px;accent-color:var(--ink)"> ${f.l}</label>${hint}</div>`;
+        // Şifre alanı için özel: düzenleme modunda boş bırakılırsa eski şifre korunur
+        if(f.t==="password"){
+          const placeholder=row?"Değiştirmek için yeni şifre girin (boş bırakılırsa eski korunur)":"Şifre belirleyin";
+          return `<div class="form-row full"><label>${f.l}${f.req&&!row?' <span class="req">*</span>':''}</label>
+            <div style="position:relative">
+              <input type="password" data-name="${f.n}" value="${row?'':escapeHTML(v||'')}" placeholder="${placeholder}" autocomplete="new-password">
+              <button type="button" class="pw-toggle" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:transparent;border:none;color:var(--ink-3);cursor:pointer;padding:4px 8px;font-size:13px" onclick="var i=this.previousElementSibling;i.type=i.type==='password'?'text':'password';this.textContent=i.type==='password'?'Göster':'Gizle'">Göster</button>
+            </div>${hint}</div>`;
+        }
+        return `<div class="form-row full"><label>${f.l}${f.req?' <span class="req">*</span>':''}</label><input type="${f.t}" data-name="${f.n}" value="${escapeHTML(v||"")}" ${f.req?"required":""}>${hint}</div>`;
       }).join("")}
     </div>
   `;
@@ -1994,16 +2067,49 @@ function openParamForm(cfg,row){
   $("#pmSave").onclick=()=>{
     const obj={...(row||{})};
     let valid=true;
+    let validationMsg="";
     cfg.fields.forEach(f=>{
       const el=$("#pmBody").querySelector(`[data-name="${f.n}"]`);
       if(!el)return;
       let v;
       if(f.t==="check")v=el.checked;
       else v=el.value.trim();
-      if(f.req&&!v&&f.t!=="check"){valid=false;el.style.borderColor="var(--err)";}
+
+      // Şifre alanı: düzenleme modunda boşsa eski şifreyi koru
+      if(f.t==="password"){
+        if(row&&!v){
+          // Eski şifre korunur
+          obj[f.n]=row[f.n];
+          el.style.borderColor="";
+          return;
+        }
+        if(f.req&&!row&&!v){valid=false;el.style.borderColor="var(--err)";validationMsg="Şifre zorunlu";}
+        if(v&&v.length<4){valid=false;el.style.borderColor="var(--err)";validationMsg="Şifre en az 4 karakter olmalı";}
+        if(v)obj[f.n]=v;
+        else if(!row)obj[f.n]="";
+        return;
+      }
+
+      // Kullanıcı adı doğrulama: sadece küçük harf, rakam, nokta, alt çizgi
+      if(f.n==="username"&&v){
+        v=v.toLowerCase();
+        if(!/^[a-z0-9._]+$/.test(v)){
+          valid=false;el.style.borderColor="var(--err)";
+          validationMsg="Kullanıcı adı sadece küçük harf, rakam, nokta ve alt çizgi içerebilir";
+        }
+        // Aynı kullanıcı adı zaten var mı?
+        const existing=Store.list("users",x=>x.username===v&&x.id!==(row&&row.id));
+        if(existing.length>0){
+          valid=false;el.style.borderColor="var(--err)";
+          validationMsg="Bu kullanıcı adı zaten kullanılıyor";
+        }
+      }
+
+      if(f.req&&!v&&f.t!=="check"){valid=false;el.style.borderColor="var(--err)";if(!validationMsg)validationMsg="Zorunlu alanları doldurun";}
+      else if(el.style.borderColor==="var(--err)")el.style.borderColor="";
       obj[f.n]=v;
     });
-    if(!valid){toast("Zorunlu alanları doldurun","err");return;}
+    if(!valid){toast(validationMsg||"Zorunlu alanları doldurun","err");return;}
     if(row){
       Store.update(cfg.coll,row.id,obj);
       toast("Güncellendi","ok");
