@@ -104,6 +104,8 @@
   --err:#b91c1c;
   --info:#1d4ed8;
   --shadow:0 1px 2px rgba(11,18,32,.04), 0 8px 24px rgba(11,18,32,.06);
+  --shadow-xs:0 1px 2px rgba(11,18,32,.04);
+  --shadow-sm:0 1px 3px rgba(11,18,32,.06), 0 4px 12px rgba(11,18,32,.04);
   --shadow-lg:0 12px 40px rgba(11,18,32,.12);
   --radius:14px;
   --radius-sm:10px;
@@ -126,6 +128,8 @@
   --accent:#d6a37a;
   --accent-2:#7dd3c4;
   --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+  --shadow-xs:0 1px 2px rgba(0,0,0,.3);
+  --shadow-sm:0 1px 3px rgba(0,0,0,.4), 0 4px 12px rgba(0,0,0,.3);
   --shadow-lg:0 12px 40px rgba(0,0,0,.5);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -347,35 +351,49 @@ html,body{direction:ltr !important;text-align:left}
 /* =====================================================================
    TAKVİM
    ===================================================================== */
-.cal-head{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
-.cal-nav{display:flex;align-items:center;gap:4px;background:var(--bg-elev);border:1px solid var(--line);border-radius:10px;padding:4px}
-.cal-nav button{width:32px;height:32px;border-radius:6px;color:var(--ink-2);transition:background .12s}
-.cal-nav button:hover{background:var(--bg-soft)}
-.cal-title{font-family:var(--display);font-size:22px;font-weight:800;letter-spacing:-.02em;flex:1}
+/* CALENDAR - Geliştirilmiş Görsel */
+.cal-head{display:flex;align-items:center;gap:14px;margin-bottom:14px;flex-wrap:wrap;background:var(--bg-elev);border:1px solid var(--line);border-radius:var(--radius);padding:12px 16px;box-shadow:var(--shadow-xs)}
+.cal-nav{display:flex;align-items:center;gap:2px;background:var(--bg-soft);border:1px solid var(--line);border-radius:10px;padding:3px}
+.cal-nav button{width:34px;height:34px;border-radius:7px;color:var(--ink-2);transition:all .12s;display:inline-flex;align-items:center;justify-content:center;background:transparent;border:none;cursor:pointer}
+.cal-nav button:hover{background:var(--bg-elev);color:var(--ink);box-shadow:var(--shadow-xs)}
+.cal-title{font-family:var(--display);font-size:22px;font-weight:800;letter-spacing:-.02em;flex:1;color:var(--ink);text-transform:capitalize}
 .cal-views{display:flex;background:var(--bg-elev);border:1px solid var(--line);border-radius:10px;padding:4px;gap:2px}
-.cal-views button{padding:6px 14px;border-radius:6px;font-size:13px;font-weight:600;color:var(--ink-3);transition:all .12s}
+.cal-views button{padding:6px 14px;border-radius:6px;font-size:13px;font-weight:600;color:var(--ink-3);transition:all .12s;background:transparent;border:none;cursor:pointer}
 .cal-views button.active{background:var(--ink);color:var(--bg-elev)}
+.cal-legend{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:10.5px;color:var(--ink-2);font-family:var(--mono);text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+.cal-legend span{display:flex;align-items:center;gap:5px}
+.cal-legend .dot{width:9px;height:9px;border-radius:3px;display:inline-block}
 
-.cal-grid{background:var(--bg-elev);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
-.cal-week-head{display:grid;grid-template-columns:repeat(7,1fr);background:var(--bg-soft);border-bottom:1px solid var(--line)}
-.cal-week-head div{padding:10px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--ink-3);font-family:var(--mono)}
-.cal-month{display:grid;grid-template-columns:repeat(7,1fr);grid-auto-rows:minmax(110px,1fr)}
-.cal-day{border-right:1px solid var(--line-2);border-bottom:1px solid var(--line-2);padding:8px;display:flex;flex-direction:column;gap:4px;min-height:100px;cursor:pointer;transition:background .12s;position:relative}
+.cal-grid{background:var(--bg-elev);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm)}
+.cal-week-head{display:grid;grid-template-columns:repeat(7,1fr);background:var(--ink);border-bottom:1px solid var(--line)}
+.cal-week-head div{padding:11px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--bg-elev);font-family:var(--mono);text-align:center;border-right:1px solid rgba(255,255,255,.08)}
+.cal-week-head div:last-child{border-right:none}
+.cal-week-head div:nth-child(6),.cal-week-head div:nth-child(7){color:#d6a37a}
+.cal-month{display:grid;grid-template-columns:repeat(7,1fr);grid-auto-rows:minmax(112px,auto)}
+.cal-day{border-right:1px solid var(--line-2);border-bottom:1px solid var(--line-2);padding:6px 7px 5px;display:flex;flex-direction:column;gap:3px;min-height:108px;cursor:pointer;transition:background .15s;position:relative;background:var(--bg-elev);overflow:hidden}
+.cal-day:nth-child(7n){border-right:none}
+.cal-day:nth-last-child(-n+7){border-bottom:none}
 .cal-day:hover{background:var(--bg-soft)}
-.cal-day.other{background:var(--bg-soft);opacity:.5}
-.cal-day.today{background:linear-gradient(135deg,#fff8ed,#fff)}
-[data-theme="dark"] .cal-day.today{background:linear-gradient(135deg,#1f1815,#111a2c)}
-.cal-day .num{font-family:var(--display);font-size:13px;font-weight:700;color:var(--ink-2);margin-bottom:2px}
-.cal-day.today .num{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--ink);color:var(--bg-elev)}
-.cal-event{font-size:11px;padding:2px 6px;border-radius:4px;background:var(--accent);color:#fff;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
-.cal-event.s-yeni{background:#3b82f6}
-.cal-event.s-devam{background:#f59e0b;color:#fff}
-.cal-event.s-bekleme{background:#6366f1}
-.cal-event.s-tamam{background:#10b981}
-.cal-event.s-iptal{background:#94a3b8}
-.cal-event.late{background:#dc2626;color:#fff;animation:pulse-late 2s ease-in-out infinite}
-@keyframes pulse-late{0%,100%{opacity:1}50%{opacity:.7}}
-.cal-more{font-size:10.5px;color:var(--ink-3);font-weight:700;font-family:var(--mono);padding:0 6px}
+.cal-day.other{background:#fafaf7;opacity:.5}
+[data-theme="dark"] .cal-day.other{background:#0d1626;opacity:.55}
+.cal-day.today{background:linear-gradient(180deg,#fff7ed 0%,#fff 65%);box-shadow:inset 0 0 0 2px var(--accent)}
+[data-theme="dark"] .cal-day.today{background:linear-gradient(180deg,#1a1611 0%,#0f1a2e 65%)}
+.cal-day.weekend{background:#fcfaf5}
+[data-theme="dark"] .cal-day.weekend{background:#0a1424}
+.cal-day .num{font-family:var(--display);font-size:13px;font-weight:700;color:var(--ink-2);display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:6px;align-self:flex-start;margin-bottom:2px;flex-shrink:0}
+.cal-day.today .num{background:var(--ink);color:var(--bg-elev);box-shadow:0 2px 5px rgba(11,18,32,.25)}
+.cal-day.weekend .num{color:#b8895a}
+.cal-event{font-size:10.5px;padding:2px 6px;border-radius:4px;background:var(--accent);color:#fff;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600;border-left:3px solid rgba(0,0,0,.25);transition:transform .1s,box-shadow .1s;line-height:1.4}
+.cal-event:hover{transform:translateX(2px);box-shadow:0 2px 6px rgba(0,0,0,.18)}
+.cal-event.s-yeni{background:#3b82f6;border-left-color:#1d4ed8}
+.cal-event.s-devam{background:#f59e0b;color:#fff;border-left-color:#b45309}
+.cal-event.s-bekleme{background:#8b5cf6;border-left-color:#5b21b6}
+.cal-event.s-tamam{background:#10b981;border-left-color:#047857}
+.cal-event.s-iptal{background:#94a3b8;border-left-color:#475569;text-decoration:line-through;opacity:.7}
+.cal-event.late{background:#dc2626;color:#fff;border-left-color:#7f1d1d;animation:pulse-late 2s ease-in-out infinite}
+@keyframes pulse-late{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.5)}50%{box-shadow:0 0 0 4px rgba(220,38,38,0)}}
+.cal-more{font-size:10px;color:var(--accent);font-weight:700;font-family:var(--mono);padding:1px 5px;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;background:rgba(184,137,90,.1);border-radius:4px;text-align:center}
+.cal-more:hover{background:rgba(184,137,90,.2);text-decoration:none}
 
 /* =====================================================================
    TABLO (Parametreler / Raporlar)
@@ -386,9 +404,11 @@ html,body{direction:ltr !important;text-align:left}
 .tbl tbody td{padding:14px 16px;border-bottom:1px solid var(--line-2);color:var(--ink-2);vertical-align:middle}
 .tbl tbody tr:last-child td{border-bottom:none}
 .tbl tbody tr:hover{background:var(--bg-soft)}
-.tbl .row-act{display:flex;gap:4px;justify-content:flex-end}
-.tbl .row-act button{width:30px;height:30px;border-radius:6px;color:var(--ink-3);transition:background .12s,color .12s}
-.tbl .row-act button:hover{background:var(--bg-soft);color:var(--ink)}
+.tbl .row-act{display:flex;gap:6px;justify-content:flex-end}
+.tbl .row-act button{width:34px;height:34px;border-radius:8px;color:var(--ink-2);background:var(--bg-soft);border:1px solid var(--line);transition:background .12s,color .12s,border-color .12s;font-size:14px}
+.tbl .row-act button:hover{background:var(--ink);color:var(--bg-elev);border-color:var(--ink)}
+.tbl .row-act button.danger{color:var(--err);border-color:#fadcdc;background:#fef5f5}
+.tbl .row-act button.danger:hover{background:var(--err);color:#fff;border-color:var(--err)}
 .tbl .row-act button.danger:hover{background:rgba(185,28,28,.1);color:var(--err)}
 .status-dot{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600}
 .status-dot::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--ok)}
@@ -418,6 +438,10 @@ html,body{direction:ltr !important;text-align:left}
 .btn.solid:hover{opacity:.9}
 .btn.danger{background:var(--err);color:#fff}
 .btn.danger:hover{opacity:.9}
+.btn.warn{background:#d97706;color:#fff;border-color:#b45309}
+.btn.warn:hover{background:#b45309}
+.btn.primary{background:var(--ink);color:var(--bg-elev)}
+.btn.primary:hover{opacity:.9}
 
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .form-grid .full{grid-column:1/-1}
@@ -502,9 +526,15 @@ html,body{direction:ltr !important;text-align:left}
   .form-grid{grid-template-columns:1fr}
   .td-info{grid-template-columns:1fr}
   .kanban{grid-template-columns:repeat(5,260px)}
-  .cal-month{grid-auto-rows:minmax(80px,auto)}
-  .cal-day{min-height:80px;font-size:11px}
-  .cal-event{font-size:9.5px;padding:1px 4px}
+  .cal-month{grid-auto-rows:minmax(72px,auto)}
+  .cal-day{min-height:72px;font-size:11px;padding:4px 5px;gap:2px}
+  .cal-day .num{width:20px;height:20px;font-size:12px}
+  .cal-event{font-size:9.5px;padding:1px 4px;border-left-width:2px}
+  .cal-week-head div{padding:8px 4px;font-size:10px;letter-spacing:.06em}
+  .cal-title{font-size:18px}
+  .cal-head{padding:10px 12px;gap:8px}
+  .cal-legend{font-size:9.5px;gap:6px;width:100%;justify-content:flex-start}
+  .cal-legend .dot{width:8px;height:8px}
 }
 @media (max-width:560px){
   .kpi-grid{grid-template-columns:repeat(2,1fr)}
@@ -737,10 +767,10 @@ html,body{direction:ltr !important;text-align:left}
     <div class="modal-head">
       <div>
         <h3 id="cmTitle">Onay</h3>
-        <p id="cmText">Emin misiniz?</p>
+        <p id="cmText" style="white-space:pre-line;line-height:1.55">Emin misiniz?</p>
       </div>
     </div>
-    <div class="modal-foot">
+    <div class="modal-foot" id="cmFoot">
       <button class="btn ghost" data-close="confirmModal">Vazgeç</button>
       <button class="btn danger" id="cmYes">Evet, devam et</button>
     </div>
@@ -1477,23 +1507,57 @@ function renderKanban(){
 function renderCalendar(){
   const u=Store.user_get();
   const ay=calCursor.getFullYear(),am=calCursor.getMonth();
+
+  // Ay özeti hesapla
+  const allTasks=Store.list("tasks",t=>!t.isDeleted&&(u.role==="admin"||t.assignedToUserId===u.id));
+  const monthTasks=allTasks.filter(t=>{
+    if(!t.dueDate)return false;
+    const d=new Date(t.dueDate);
+    return d.getFullYear()===ay&&d.getMonth()===am;
+  });
+  const summary={
+    total:monthTasks.length,
+    done:monthTasks.filter(t=>t.status==="tamam").length,
+    inProgress:monthTasks.filter(t=>t.status==="devam").length,
+    late:allTasks.filter(t=>isLate(t)).length
+  };
+
   $("#page").innerHTML=`
     <div class="page-head">
       <h1>Takvim</h1>
-      <p>Görevlerin başlangıç ve bitiş tarihleri ile aylık görünüm.</p>
+      <p>Görevlerin başlangıç ve bitiş tarihleri ile aylık görünüm. Bir güne tıklayarak yeni görev ekleyebilirsiniz${u.role==="admin"?"":" (yöneticiler için)"}.</p>
     </div>
     <div class="cal-head">
       <div class="cal-nav">
-        <button id="calPrev"><i class="fa-solid fa-chevron-left"></i></button>
-        <button id="calToday" style="width:auto;padding:0 12px;font-size:13px;font-weight:600;font-family:var(--mono);text-transform:uppercase;letter-spacing:.05em">Bugün</button>
-        <button id="calNext"><i class="fa-solid fa-chevron-right"></i></button>
+        <button id="calPrev" title="Önceki ay"><i class="fa-solid fa-chevron-left"></i></button>
+        <button id="calToday" style="width:auto;padding:0 14px;font-size:12px;font-weight:700;font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em">Bugün</button>
+        <button id="calNext" title="Sonraki ay"><i class="fa-solid fa-chevron-right"></i></button>
       </div>
       <div class="cal-title" id="calTitle"></div>
-      <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;font-size:11.5px;color:var(--ink-3);font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em">
-        <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;background:#3b82f6;border-radius:3px"></span>Yeni</span>
-        <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;background:#f59e0b;border-radius:3px"></span>Devam</span>
-        <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;background:#10b981;border-radius:3px"></span>Tamamlandı</span>
-        <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;background:#dc2626;border-radius:3px"></span>Geciken</span>
+      <div class="cal-legend">
+        <span><i class="dot" style="background:#3b82f6"></i>Yeni</span>
+        <span><i class="dot" style="background:#f59e0b"></i>Devam</span>
+        <span><i class="dot" style="background:#8b5cf6"></i>Bekleme</span>
+        <span><i class="dot" style="background:#10b981"></i>Tamam</span>
+        <span><i class="dot" style="background:#dc2626"></i>Geciken</span>
+      </div>
+    </div>
+    <div class="cal-summary" style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+      <div style="background:var(--bg-elev);border:1px solid var(--line);border-radius:10px;padding:10px 16px;display:flex;align-items:center;gap:10px;flex:1;min-width:140px">
+        <div style="width:36px;height:36px;border-radius:8px;background:var(--bg-soft);display:flex;align-items:center;justify-content:center;color:var(--ink-2);font-size:14px"><i class="fa-solid fa-calendar-days"></i></div>
+        <div><div style="font-size:11px;color:var(--ink-3);font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;font-weight:600">Bu Ay Toplam</div><div style="font-family:var(--display);font-weight:800;font-size:18px">${summary.total}</div></div>
+      </div>
+      <div style="background:var(--bg-elev);border:1px solid var(--line);border-radius:10px;padding:10px 16px;display:flex;align-items:center;gap:10px;flex:1;min-width:140px">
+        <div style="width:36px;height:36px;border-radius:8px;background:#fef3c7;display:flex;align-items:center;justify-content:center;color:#b45309;font-size:14px"><i class="fa-solid fa-spinner"></i></div>
+        <div><div style="font-size:11px;color:var(--ink-3);font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;font-weight:600">Devam Eden</div><div style="font-family:var(--display);font-weight:800;font-size:18px">${summary.inProgress}</div></div>
+      </div>
+      <div style="background:var(--bg-elev);border:1px solid var(--line);border-radius:10px;padding:10px 16px;display:flex;align-items:center;gap:10px;flex:1;min-width:140px">
+        <div style="width:36px;height:36px;border-radius:8px;background:#d1fae5;display:flex;align-items:center;justify-content:center;color:#047857;font-size:14px"><i class="fa-solid fa-check"></i></div>
+        <div><div style="font-size:11px;color:var(--ink-3);font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;font-weight:600">Tamamlanan</div><div style="font-family:var(--display);font-weight:800;font-size:18px">${summary.done}</div></div>
+      </div>
+      <div style="background:var(--bg-elev);border:1px solid var(--line);border-radius:10px;padding:10px 16px;display:flex;align-items:center;gap:10px;flex:1;min-width:140px">
+        <div style="width:36px;height:36px;border-radius:8px;background:#fee2e2;display:flex;align-items:center;justify-content:center;color:#991b1b;font-size:14px"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <div><div style="font-size:11px;color:var(--ink-3);font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;font-weight:600">Geciken (Tüm)</div><div style="font-family:var(--display);font-weight:800;font-size:18px;color:${summary.late>0?'#dc2626':'inherit'}">${summary.late}</div></div>
       </div>
     </div>
     <div class="cal-grid">
@@ -1527,17 +1591,34 @@ function renderCalendar(){
       // Görev: dueDate'i bugün ile eşleşen
       const evs=tasks.filter(t=>t.dueDate===ds);
       const isToday=ds===todayStr;
+      const dow=d.getDay();
+      const isWeekend=(dow===0||dow===6);
+      const cls=[other?'other':'',isToday?'today':'',isWeekend&&!other?'weekend':''].filter(Boolean).join(' ');
       return `
-        <div class="cal-day ${other?'other':''} ${isToday?'today':''}" data-date="${ds}">
+        <div class="cal-day ${cls}" data-date="${ds}">
           <div class="num">${d.getDate()}</div>
           ${evs.slice(0,3).map(t=>`<div class="cal-event s-${t.status} ${isLate(t)?'late':''}" data-id="${t.id}" title="${escapeHTML(t.title)}">${escapeHTML(t.title)}</div>`).join("")}
-          ${evs.length>3?`<div class="cal-more">+${evs.length-3} daha</div>`:""}
+          ${evs.length>3?`<div class="cal-more" data-day-events="${ds}">+${evs.length-3} daha</div>`:""}
         </div>
       `;
     }).join("");
 
     document.querySelectorAll(".cal-event").forEach(el=>{
       el.addEventListener("click",e=>{e.stopPropagation();openTaskDetail(el.dataset.id);});
+    });
+    document.querySelectorAll(".cal-more").forEach(el=>{
+      el.addEventListener("click",e=>{
+        e.stopPropagation();
+        const ds=el.dataset.dayEvents;
+        const evs=tasks.filter(t=>t.dueDate===ds);
+        const dt=new Date(ds);
+        confirmAction(
+          dt.toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric"})+" tarihindeki tüm görevler:\n\n"+
+          evs.map((t,i)=>`${i+1}. ${t.title} (${STATUS_LABELS[t.status]||t.status})`).join("\n"),
+          ()=>{},
+          {title:`${evs.length} Görev`,buttons:[{label:"Kapat",kind:"ghost",value:"close"}]}
+        );
+      });
     });
     document.querySelectorAll(".cal-day").forEach(el=>{
       el.addEventListener("click",()=>{
@@ -1548,9 +1629,9 @@ function renderCalendar(){
   }
   paint();
 
-  $("#calPrev").addEventListener("click",()=>{calCursor.setMonth(calCursor.getMonth()-1);paint();});
-  $("#calNext").addEventListener("click",()=>{calCursor.setMonth(calCursor.getMonth()+1);paint();});
-  $("#calToday").addEventListener("click",()=>{calCursor=new Date();paint();});
+  $("#calPrev").addEventListener("click",()=>{calCursor.setMonth(calCursor.getMonth()-1);renderCalendar();});
+  $("#calNext").addEventListener("click",()=>{calCursor.setMonth(calCursor.getMonth()+1);renderCalendar();});
+  $("#calToday").addEventListener("click",()=>{calCursor=new Date();renderCalendar();});
 }
 
 /* ===========================================================
@@ -1799,7 +1880,10 @@ function renderParamTable(kind){
   };
 
   const cfg=config[kind];
-  const rows=Store.list(cfg.coll);
+  const showInactive=window._paramShowInactive||false;
+  const allRows=Store.list(cfg.coll);
+  const rows=showInactive?allRows:allRows.filter(r=>r.isActive!==false);
+  const inactiveCount=allRows.filter(r=>r.isActive===false).length;
 
   $("#page").innerHTML=`
     <div class="page-head" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px">
@@ -1807,16 +1891,20 @@ function renderParamTable(kind){
         <h1>${cfg.title}</h1>
         <p>${cfg.sub}</p>
       </div>
-      <button class="tb-btn primary" id="paramAdd"><i class="fa-solid fa-plus"></i><span>${cfg.addLbl}</span></button>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        ${inactiveCount>0?`<label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-2);cursor:pointer;padding:8px 12px;background:var(--bg-soft);border:1px solid var(--line);border-radius:8px;font-weight:600"><input type="checkbox" id="paramShowInactive" ${showInactive?"checked":""} style="accent-color:var(--ink)"> Pasifleri göster (${inactiveCount})</label>`:''}
+        <button class="tb-btn primary" id="paramAdd"><i class="fa-solid fa-plus"></i><span>${cfg.addLbl}</span></button>
+      </div>
     </div>
     <div class="tbl-wrap">
       <table class="tbl">
         <thead><tr>${cfg.headers.map(h=>`<th${h===""?' style="text-align:right;width:90px"':''}>${h}</th>`).join("")}</tr></thead>
         <tbody>
           ${rows.map(r=>`
-            <tr>
+            <tr${r.isActive===false?' style="opacity:.55"':''}>
               ${cfg.cols(r).map(c=>`<td>${c}</td>`).join("")}
               <td><div class="row-act">
+                ${r.isActive===false?`<button data-reactivate="${r.id}" title="Yeniden Aktif Et" style="color:var(--ok)"><i class="fa-solid fa-rotate"></i></button>`:""}
                 <button data-edit="${r.id}" title="Düzenle"><i class="fa-solid fa-pen"></i></button>
                 <button class="danger" data-del="${r.id}" title="Sil"><i class="fa-solid fa-trash"></i></button>
               </div></td>
@@ -1828,18 +1916,61 @@ function renderParamTable(kind){
   `;
 
   $("#paramAdd").addEventListener("click",()=>openParamForm(cfg,null));
+  if($("#paramShowInactive")){
+    $("#paramShowInactive").addEventListener("change",e=>{
+      window._paramShowInactive=e.target.checked;
+      renderParamTable(kind);
+    });
+  }
   document.querySelectorAll("[data-edit]").forEach(b=>b.addEventListener("click",()=>{
     const r=Store.get(cfg.coll,b.dataset.edit);openParamForm(cfg,r);
   }));
+  document.querySelectorAll("[data-reactivate]").forEach(b=>b.addEventListener("click",()=>{
+    const r=Store.get(cfg.coll,b.dataset.reactivate);
+    if(!r)return;
+    Store.update(cfg.coll,r.id,{isActive:true});
+    toast((r.fullName||r.categoryName||r.projectName||r.name||"Kayıt")+" yeniden aktif edildi","ok");
+    renderParamTable(kind);
+  }));
   document.querySelectorAll("[data-del]").forEach(b=>b.addEventListener("click",()=>{
-    confirmAction("Bu kaydı silmek istediğinizden emin misiniz? Soft delete uygulanacaktır.",()=>{
-      const r=Store.get(cfg.coll,b.dataset.del);
-      // soft delete (isActive=false), gerçek silme yerine
-      if("isActive" in r)Store.update(cfg.coll,r.id,{isActive:false});
-      else Store.remove(cfg.coll,r.id);
-      toast("Kayıt silindi (pasif yapıldı)","ok");
-      renderParamTable(kind);
-    });
+    const r=Store.get(cfg.coll,b.dataset.del);
+    if(!r)return;
+    const recordName=r.fullName||r.categoryName||r.projectName||r.name||"Kayıt";
+    const hasActiveFlag="isActive" in r;
+    const buttons=[
+      {label:"İptal",kind:"ghost",value:"cancel"}
+    ];
+    if(hasActiveFlag&&r.isActive){
+      buttons.push({label:"Pasife Al",kind:"warn",value:"passive"});
+    }
+    buttons.push({label:"Tamamen Sil",kind:"danger",value:"delete"});
+    confirmAction(
+      `"${recordName}" kaydı için işlem seçin:\n\n• Pasife Al: Kayıt görünmez ama veritabanında kalır, geri açılabilir.\n• Tamamen Sil: Kayıt veritabanından kalıcı olarak silinir, geri alınamaz.`,
+      (choice)=>{
+        if(choice==="passive"){
+          Store.update(cfg.coll,r.id,{isActive:false});
+          toast(recordName+" pasife alındı","ok");
+          renderParamTable(kind);
+        }else if(choice==="delete"){
+          // Çift onay - kalıcı silme tehlikeli
+          confirmAction(
+            `"${recordName}" KALICI olarak silinecek. Bu işlem geri alınamaz. Onaylıyor musunuz?`,
+            (ok)=>{
+              if(ok===true||ok==="confirm"){
+                Store.remove(cfg.coll,r.id);
+                toast(recordName+" kalıcı olarak silindi","ok");
+                renderParamTable(kind);
+              }
+            },
+            {title:"Kalıcı Silme Onayı",buttons:[
+              {label:"Vazgeç",kind:"ghost",value:"cancel"},
+              {label:"Evet, Kalıcı Sil",kind:"danger",value:"confirm"}
+            ]}
+          );
+        }
+      },
+      {title:"Kayıt İşlemi",buttons:buttons}
+    );
   }));
 }
 
@@ -2215,9 +2346,31 @@ function openTaskDetail(id){
 /* ===========================================================
  * CONFIRM DIALOG
  * =========================================================== */
-function confirmAction(text,cb){
+function confirmAction(text,cb,opts){
+  // Geriye dönük uyumluluk: opts verilmezse standart Evet/Vazgeç
+  $("#cmTitle").textContent=(opts&&opts.title)||"Onay";
   $("#cmText").textContent=text;
-  $("#cmYes").onclick=()=>{closeModal("confirmModal");cb();};
+  const foot=$("#cmFoot");
+  foot.innerHTML="";
+  if(opts&&opts.buttons&&opts.buttons.length){
+    // Çoklu buton - opts.buttons = [{label, kind, value}, ...]
+    opts.buttons.forEach(b=>{
+      const btn=document.createElement("button");
+      btn.className="btn "+(b.kind==="ghost"?"ghost":(b.kind==="danger"?"danger":(b.kind==="warn"?"warn":"primary")));
+      btn.textContent=b.label;
+      btn.addEventListener("click",()=>{closeModal("confirmModal");if(typeof cb==="function")cb(b.value);});
+      foot.appendChild(btn);
+    });
+  }else{
+    const cancel=document.createElement("button");
+    cancel.className="btn ghost";cancel.dataset.close="confirmModal";cancel.textContent="Vazgeç";
+    cancel.addEventListener("click",()=>closeModal("confirmModal"));
+    const ok=document.createElement("button");
+    ok.className="btn danger";ok.textContent="Evet, devam et";
+    ok.addEventListener("click",()=>{closeModal("confirmModal");if(typeof cb==="function")cb(true);});
+    foot.appendChild(cancel);
+    foot.appendChild(ok);
+  }
   openModal("confirmModal");
 }
 
